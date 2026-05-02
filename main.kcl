@@ -1,16 +1,18 @@
 @settings(defaultLengthUnit = in)
 
 import sketchGuitar from "guitar_outline.kcl"
-import bodySideProfile from "guitar_side_profile.kcl"
+import bodySideProfile, soundboard, guitarsides, backplate from "guitar_side_profile.kcl"
 
 // Working assembly/reference file.
 // - The finalized guitar body outline lives in guitar_outline.kcl.
-// - The completed YZ side profile lives in guitar_side_profile.kcl.
-// - The closed outline region is exported from guitar_outline.kcl as guitarBodyRegion when needed for future extrusion.
+// - The completed YZ side profile and its three guitar-outline-clipped bodies live in guitar_side_profile.kcl.
+// - The closed outline region is exported from guitar_outline.kcl and is used to clip the side-profile bodies.
 
-// Keep imported sketches visible/edit-addressable from main.kcl.
+// Keep imported sketches edit-addressable from main.kcl, but hidden so the three solid bodies are clear.
 guitarOutline = sketchGuitar
 guitarSideProfile = bodySideProfile
+hiddenGuitarOutline = hide(guitarOutline)
+hiddenSideProfile = hide(guitarSideProfile)
 
-// hiddenGuitarOutline = hide(guitarOutline)
-// hiddenSideProfile = hide(guitarSideProfile)
+// Three separate named bodies from the side-profile regions, clipped to the guitar plan outline:
+// soundboard, guitarsides, backplate.
