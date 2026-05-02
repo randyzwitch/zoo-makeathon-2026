@@ -4,7 +4,9 @@ import sketchGuitar, guitarCenterlineUpperY, guitarCenterlineLowerY from "guitar
 
 // Working file: the finalized guitar body outline lives in guitar_outline.kcl.
 // Continue new construction here using sketchGuitar as the source profile.
-hiddenGuitarOutline = hide(sketchGuitar)
+// The closed region is exported from guitar_outline.kcl as guitarBodyRegion when needed for future extrusion.
+// hiddenGuitarOutline = hide(sketchGuitar)
+
 
 backArcRadius = 28ft
 soundboardArcRadius = 40ft

@@ -3,6 +3,8 @@
 // Final Acoustic Guitar Body Outline
 // All coordinates in inches. Origin = waist center.
 // Left side is authored once; the right side derives from it by mirroring X about the centerline.
+// Arc centers use the original guide centers projected onto each endpoint pair's perpendicular bisector.
+// That preserves an arc-based outline while making each arc exactly equidistant from its endpoints for robust region creation.
 
 centerlineX = 0in
 centerlineTopOffset = 8.99in
@@ -106,64 +108,125 @@ export guitarCenterlineLowerY = bottomArcCenterY - bottomArcRadius
 export guitarCenterlineUpperPoint = [centerlineX, guitarCenterlineUpperY]
 export guitarCenterlineLowerPoint = [centerlineX, guitarCenterlineLowerY]
 
-arcL2CenterX = -3.2789in
-arcL2CenterY = 2.8815in
+// --- Projected side-arc centers ---
+// Each guide center is the original authored center. The active center is its nearest point
+// on the perpendicular bisector of that arc's endpoints.
+
+
+arcL2GuideCenterX = -3.2789in
+arcL2GuideCenterY = 2.8815in
+arcL2MidX = (outlineP02X + outlineP03X) / 2
+arcL2MidY = (outlineP02Y + outlineP03Y) / 2
+arcL2PerpX = outlineP03Y - outlineP02Y
+arcL2PerpY = outlineP02X - outlineP03X
+arcL2T = ((arcL2GuideCenterX - arcL2MidX) * arcL2PerpX + (arcL2GuideCenterY - arcL2MidY) * arcL2PerpY) / (arcL2PerpX * arcL2PerpX + arcL2PerpY * arcL2PerpY)
+arcL2CenterX = arcL2MidX + arcL2T * arcL2PerpX
+arcL2CenterY = arcL2MidY + arcL2T * arcL2PerpY
 arcL2Center = [arcL2CenterX, arcL2CenterY]
 arcL2CenterR = [
   centerlineX + centerlineX - arcL2CenterX,
   arcL2CenterY
 ]
 
-arcL3CenterX = -2.9807in
-arcL3CenterY = 3.0990in
+arcL3GuideCenterX = -2.9807in
+arcL3GuideCenterY = 3.0990in
+arcL3MidX = (outlineP03X + outlineP04X) / 2
+arcL3MidY = (outlineP03Y + outlineP04Y) / 2
+arcL3PerpX = outlineP04Y - outlineP03Y
+arcL3PerpY = outlineP03X - outlineP04X
+arcL3T = ((arcL3GuideCenterX - arcL3MidX) * arcL3PerpX + (arcL3GuideCenterY - arcL3MidY) * arcL3PerpY) / (arcL3PerpX * arcL3PerpX + arcL3PerpY * arcL3PerpY)
+arcL3CenterX = arcL3MidX + arcL3T * arcL3PerpX
+arcL3CenterY = arcL3MidY + arcL3T * arcL3PerpY
 arcL3Center = [arcL3CenterX, arcL3CenterY]
 arcL3CenterR = [
   centerlineX + centerlineX - arcL3CenterX,
   arcL3CenterY
 ]
 
-arcL4CenterX = 6.2875in
-arcL4CenterY = 3.0874in
+arcL4GuideCenterX = 6.2875in
+arcL4GuideCenterY = 3.0874in
+arcL4MidX = (outlineP04X + outlineP05X) / 2
+arcL4MidY = (outlineP04Y + outlineP05Y) / 2
+arcL4PerpX = outlineP05Y - outlineP04Y
+arcL4PerpY = outlineP04X - outlineP05X
+arcL4T = ((arcL4GuideCenterX - arcL4MidX) * arcL4PerpX + (arcL4GuideCenterY - arcL4MidY) * arcL4PerpY) / (arcL4PerpX * arcL4PerpX + arcL4PerpY * arcL4PerpY)
+arcL4CenterX = arcL4MidX + arcL4T * arcL4PerpX
+arcL4CenterY = arcL4MidY + arcL4T * arcL4PerpY
 arcL4Center = [arcL4CenterX, arcL4CenterY]
 arcL4CenterR = [
   centerlineX + centerlineX - arcL4CenterX,
   arcL4CenterY
 ]
 
-arcL5CenterX = -10.2500in
-arcL5CenterY = -0.6248in
+arcL5GuideCenterX = -10.2500in
+arcL5GuideCenterY = -0.6248in
+arcL5MidX = (outlineP06X + outlineP05X) / 2
+arcL5MidY = (outlineP06Y + outlineP05Y) / 2
+arcL5PerpX = outlineP05Y - outlineP06Y
+arcL5PerpY = outlineP06X - outlineP05X
+arcL5T = ((arcL5GuideCenterX - arcL5MidX) * arcL5PerpX + (arcL5GuideCenterY - arcL5MidY) * arcL5PerpY) / (arcL5PerpX * arcL5PerpX + arcL5PerpY * arcL5PerpY)
+arcL5CenterX = arcL5MidX + arcL5T * arcL5PerpX
+arcL5CenterY = arcL5MidY + arcL5T * arcL5PerpY
 arcL5Center = [arcL5CenterX, arcL5CenterY]
 arcL5CenterR = [
   centerlineX + centerlineX - arcL5CenterX,
   arcL5CenterY
 ]
 
-arcL6CenterX = -187.2286in
-arcL6CenterY = 79.8025in
+arcL6GuideCenterX = -187.2286in
+arcL6GuideCenterY = 79.8025in
+arcL6MidX = (outlineP07X + outlineP06X) / 2
+arcL6MidY = (outlineP07Y + outlineP06Y) / 2
+arcL6PerpX = outlineP06Y - outlineP07Y
+arcL6PerpY = outlineP07X - outlineP06X
+arcL6T = ((arcL6GuideCenterX - arcL6MidX) * arcL6PerpX + (arcL6GuideCenterY - arcL6MidY) * arcL6PerpY) / (arcL6PerpX * arcL6PerpX + arcL6PerpY * arcL6PerpY)
+arcL6CenterX = arcL6MidX + arcL6T * arcL6PerpX
+arcL6CenterY = arcL6MidY + arcL6T * arcL6PerpY
 arcL6Center = [arcL6CenterX, arcL6CenterY]
 arcL6CenterR = [
   centerlineX + centerlineX - arcL6CenterX,
   arcL6CenterY
 ]
 
-arcL7CenterX = -0.7220in
-arcL7CenterY = -8.6480in
+arcL7GuideCenterX = -0.7220in
+arcL7GuideCenterY = -8.6480in
+arcL7MidX = (outlineP07X + outlineP08X) / 2
+arcL7MidY = (outlineP07Y + outlineP08Y) / 2
+arcL7PerpX = outlineP08Y - outlineP07Y
+arcL7PerpY = outlineP07X - outlineP08X
+arcL7T = ((arcL7GuideCenterX - arcL7MidX) * arcL7PerpX + (arcL7GuideCenterY - arcL7MidY) * arcL7PerpY) / (arcL7PerpX * arcL7PerpX + arcL7PerpY * arcL7PerpY)
+arcL7CenterX = arcL7MidX + arcL7T * arcL7PerpX
+arcL7CenterY = arcL7MidY + arcL7T * arcL7PerpY
 arcL7Center = [arcL7CenterX, arcL7CenterY]
 arcL7CenterR = [
   centerlineX + centerlineX - arcL7CenterX,
   arcL7CenterY
 ]
 
-arcL8CenterX = -2.8465in
-arcL8CenterY = -9.2293in
+arcL8GuideCenterX = -2.8465in
+arcL8GuideCenterY = -9.2293in
+arcL8MidX = (outlineP08X + outlineP09X) / 2
+arcL8MidY = (outlineP08Y + outlineP09Y) / 2
+arcL8PerpX = outlineP09Y - outlineP08Y
+arcL8PerpY = outlineP08X - outlineP09X
+arcL8T = ((arcL8GuideCenterX - arcL8MidX) * arcL8PerpX + (arcL8GuideCenterY - arcL8MidY) * arcL8PerpY) / (arcL8PerpX * arcL8PerpX + arcL8PerpY * arcL8PerpY)
+arcL8CenterX = arcL8MidX + arcL8T * arcL8PerpX
+arcL8CenterY = arcL8MidY + arcL8T * arcL8PerpY
 arcL8Center = [arcL8CenterX, arcL8CenterY]
 arcL8CenterR = [
   centerlineX + centerlineX - arcL8CenterX,
   arcL8CenterY
 ]
 
-arcL9CenterX = -0.19221818in
-arcL9CenterY = -1.51380571in
+arcL9GuideCenterX = -0.19221818in
+arcL9GuideCenterY = -1.51380571in
+arcL9MidX = (outlineP09X + outlineP10X) / 2
+arcL9MidY = (outlineP09Y + outlineP10Y) / 2
+arcL9PerpX = outlineP10Y - outlineP09Y
+arcL9PerpY = outlineP09X - outlineP10X
+arcL9T = ((arcL9GuideCenterX - arcL9MidX) * arcL9PerpX + (arcL9GuideCenterY - arcL9MidY) * arcL9PerpY) / (arcL9PerpX * arcL9PerpX + arcL9PerpY * arcL9PerpY)
+arcL9CenterX = arcL9MidX + arcL9T * arcL9PerpX
+arcL9CenterY = arcL9MidY + arcL9T * arcL9PerpY
 arcL9Center = [arcL9CenterX, arcL9CenterY]
 arcL9CenterR = [
   centerlineX + centerlineX - arcL9CenterX,
@@ -176,6 +239,10 @@ export sketchGuitar = sketch(on = XY) {
   horizontalDistance([centerline.start, ORIGIN]) == centerlineX
   verticalDistance([ORIGIN, centerline.start]) == centerlineTopOffset
   verticalDistance([centerline.end, centerline.start]) == centerlineLength
+
+  // Interior selector for closed profile/region creation. Keep it away from the perimeter.
+  insideBody = point(at = [var 0in, var -4in])
+  coincident([insideBody, [0in, -4in]])
 
   // --- AUTHORED LEFT SIDE ---
   arcL2 = arc(start = outlineP02, end = outlineP03, center = arcL2Center)
@@ -228,3 +295,5 @@ export sketchGuitar = sketch(on = XY) {
   tangent([arcL9, bottomArc])
   tangent([bottomArc, arcR9])
 }
+
+export guitarBodyRegion = region(point = sketchGuitar.insideBody)
