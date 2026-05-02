@@ -1,215 +1,42 @@
 @settings(defaultLengthUnit = in)
 
-// Acoustic Guitar Body Outline
-// All coordinates in inches. Origin = waist center.
-// Left side is authored once; the right side derives from it by mirroring X about the centerline.
+import sketchGuitar, guitarCenterlineUpperY, guitarCenterlineLowerY from "guitar_outline.kcl"
 
-centerlineX = 0in
-centerlineTopOffset = 8.99in
-centerlineLength = 26.82in
+// Working file: the finalized guitar body outline lives in guitar_outline.kcl.
+// Continue new construction here using sketchGuitar as the source profile.
+sketchGuitar
 
-// Centerline seam control points used to derive the continuous top/bottom arcs.
-outlineP01X = 0.0in
-outlineP01Y = 5.7500in
-outlineP11X = 0.0in
-outlineP11Y = -14.6250in
+soundboardArcRadius = 40ft
 
-// Shared left-side outline vertex coordinates. These are data values, not sketch point entities.
-outlineP02X = -3.5138in
-outlineP02Y = 5.6133in
-outlineP02 = [outlineP02X, outlineP02Y]
-outlineP02R = [
-  centerlineX + centerlineX - outlineP02X,
-  outlineP02Y
-]
+bodySideProfile = sketch(on = YZ) {
+  // In this YZ sketch, local horizontal coordinates are guitar-body Y stations.
+  upperCenterlineStation = point(at = [var 5.76in, var 0in])
+  lowerCenterlineStation = point(at = [var -14.63in, var 0in])
 
-outlineP03X = -5.1056in
-outlineP03Y = 4.9263in
-outlineP03 = [outlineP03X, outlineP03Y]
-outlineP03R = [
-  centerlineX + centerlineX - outlineP03X,
-  outlineP03Y
-]
+  horizontalDistance([ORIGIN, upperCenterlineStation]) == guitarCenterlineUpperY
+  verticalDistance([ORIGIN, upperCenterlineStation]) == 0in
 
-outlineP04X = -5.7827in
-outlineP04Y = 3.0430in
-outlineP04 = [outlineP04X, outlineP04Y]
-outlineP04R = [
-  centerlineX + centerlineX - outlineP04X,
-  outlineP04Y
-]
+  horizontalDistance([lowerCenterlineStation, ORIGIN]) == 0in - guitarCenterlineLowerY
+  verticalDistance([ORIGIN, lowerCenterlineStation]) == 0in
 
-outlineP05X = -5.4668in
-outlineP05Y = 0.3435in
-outlineP05 = [outlineP05X, outlineP05Y]
-outlineP05R = [
-  centerlineX + centerlineX - outlineP05X,
-  outlineP05Y
-]
+  taildef = line(start = [var -14.63in, var 0in], end = [var -14.63in, var -4.25in])
+  coincident([taildef.start, lowerCenterlineStation])
+  vertical(taildef)
+  verticalDistance([taildef.end, taildef.start]) == 4.25in
 
-outlineP06X = -5.8302in
-outlineP06Y = -2.6941in
-outlineP06 = [outlineP06X, outlineP06Y]
-outlineP06R = [
-  centerlineX + centerlineX - outlineP06X,
-  outlineP06Y
-]
+  neckdef = line(start = [var 5.76in, var 0in], end = [var 5.76in, var -3.75in])
+  coincident([neckdef.start, upperCenterlineStation])
+  vertical(neckdef)
+  verticalDistance([neckdef.end, neckdef.start]) == 3.75in
 
-outlineP07X = -7.2244in
-outlineP07Y = -5.6934in
-outlineP07 = [outlineP07X, outlineP07Y]
-outlineP07R = [
-  centerlineX + centerlineX - outlineP07X,
-  outlineP07Y
-]
+  backarc = arc(start = [var -14.63in, var -4.25in], end = [var 5.76in, var -3.75in], center = [var -12.66in, var 331.74in])
+  coincident([backarc.start, taildef.end])
+  coincident([backarc.end, neckdef.end])
+  radius(backarc) == 28ft
 
-outlineP08X = -7.4232in
-outlineP08Y = -11.1187in
-outlineP08 = [outlineP08X, outlineP08Y]
-outlineP08R = [
-  centerlineX + centerlineX - outlineP08X,
-  outlineP08Y
-]
-
-outlineP09X = -4.6353in
-outlineP09Y = -13.8463in
-outlineP09 = [outlineP09X, outlineP09Y]
-outlineP09R = [
-  centerlineX + centerlineX - outlineP09X,
-  outlineP09Y
-]
-
-outlineP10X = -0.5668in
-outlineP10Y = -14.6169in
-outlineP10 = [outlineP10X, outlineP10Y]
-outlineP10R = [
-  centerlineX + centerlineX - outlineP10X,
-  outlineP10Y
-]
-
-// Continuous seam arcs. Centers are tuned for tangency into the adjacent outline arcs.
-topArcCenter = [centerlineX, -35.250893in]
-bottomArcCenter = [centerlineX, 5.2101in]
-
-arcL2CenterX = -3.2789in
-arcL2CenterY = 2.8815in
-arcL2Center = [arcL2CenterX, arcL2CenterY]
-arcL2CenterR = [
-  centerlineX + centerlineX - arcL2CenterX,
-  arcL2CenterY
-]
-
-arcL3CenterX = -2.9807in
-arcL3CenterY = 3.0990in
-arcL3Center = [arcL3CenterX, arcL3CenterY]
-arcL3CenterR = [
-  centerlineX + centerlineX - arcL3CenterX,
-  arcL3CenterY
-]
-
-arcL4CenterX = 6.2875in
-arcL4CenterY = 3.0874in
-arcL4Center = [arcL4CenterX, arcL4CenterY]
-arcL4CenterR = [
-  centerlineX + centerlineX - arcL4CenterX,
-  arcL4CenterY
-]
-
-arcL5CenterX = -10.2500in
-arcL5CenterY = -0.6248in
-arcL5Center = [arcL5CenterX, arcL5CenterY]
-arcL5CenterR = [
-  centerlineX + centerlineX - arcL5CenterX,
-  arcL5CenterY
-]
-
-arcL6CenterX = -187.2286in
-arcL6CenterY = 79.8025in
-arcL6Center = [arcL6CenterX, arcL6CenterY]
-arcL6CenterR = [
-  centerlineX + centerlineX - arcL6CenterX,
-  arcL6CenterY
-]
-
-arcL7CenterX = -0.7220in
-arcL7CenterY = -8.6480in
-arcL7Center = [arcL7CenterX, arcL7CenterY]
-arcL7CenterR = [
-  centerlineX + centerlineX - arcL7CenterX,
-  arcL7CenterY
-]
-
-arcL8CenterX = -2.8465in
-arcL8CenterY = -9.2293in
-arcL8Center = [arcL8CenterX, arcL8CenterY]
-arcL8CenterR = [
-  centerlineX + centerlineX - arcL8CenterX,
-  arcL8CenterY
-]
-
-arcL9CenterX = -0.19221818in
-arcL9CenterY = -1.51380571in
-arcL9Center = [arcL9CenterX, arcL9CenterY]
-arcL9CenterR = [
-  centerlineX + centerlineX - arcL9CenterX,
-  arcL9CenterY
-]
-
-sketchGuitar = sketch(on = XY) {
-  centerline = line(start = [var 0in, var 8.99in], end = [var 0in, var -17.83in], construction = true)
-  vertical(centerline)
-  horizontalDistance([centerline.start, ORIGIN]) == centerlineX
-  verticalDistance([ORIGIN, centerline.start]) == centerlineTopOffset
-  verticalDistance([centerline.end, centerline.start]) == centerlineLength
-
-  // --- AUTHORED LEFT SIDE ---
-  arcL2 = arc(start = outlineP02, end = outlineP03, center = arcL2Center)
-  arcL3 = arc(start = outlineP03, end = outlineP04, center = arcL3Center)
-  arcL4 = arc(start = outlineP04, end = outlineP05, center = arcL4Center)
-  arcL5 = arc(start = outlineP06, end = outlineP05, center = arcL5Center)
-  arcL6 = arc(start = outlineP07, end = outlineP06, center = arcL6Center)
-  arcL7 = arc(start = outlineP07, end = outlineP08, center = arcL7Center)
-  arcL8 = arc(start = outlineP08, end = outlineP09, center = arcL8Center)
-  arcL9 = arc(start = outlineP09, end = outlineP10, center = arcL9Center)
-
-  // --- CONTINUOUS CENTERLINE SEAMS ---
-  bottomArc = arc(start = outlineP10, end = outlineP10R, center = bottomArcCenter)
-  topArc = arc(start = outlineP02R, end = outlineP02, center = topArcCenter)
-
-  // --- MIRRORED RIGHT SIDE ---
-  // Mirrored arcs swap start/end to preserve the same geometric arc after reflection.
-  arcR9 = arc(start = outlineP10R, end = outlineP09R, center = arcL9CenterR)
-  arcR8 = arc(start = outlineP09R, end = outlineP08R, center = arcL8CenterR)
-  arcR7 = arc(start = outlineP08R, end = outlineP07R, center = arcL7CenterR)
-  arcR6 = arc(start = outlineP06R, end = outlineP07R, center = arcL6CenterR)
-  arcR5 = arc(start = outlineP05R, end = outlineP06R, center = arcL5CenterR)
-  arcR4 = arc(start = outlineP05R, end = outlineP04R, center = arcL4CenterR)
-  arcR3 = arc(start = outlineP04R, end = outlineP03R, center = arcL3CenterR)
-  arcR2 = arc(start = outlineP03R, end = outlineP02R, center = arcL2CenterR)
-
-  // Connectivity for one closed outline.
-  coincident([topArc.end, arcL2.start])
-  coincident([arcL2.end, arcL3.start])
-  coincident([arcL3.end, arcL4.start])
-  coincident([arcL4.end, arcL5.end])
-  coincident([arcL5.start, arcL6.end])
-  coincident([arcL6.start, arcL7.start])
-  coincident([arcL7.end, arcL8.start])
-  coincident([arcL8.end, arcL9.start])
-  coincident([arcL9.end, bottomArc.start])
-  coincident([bottomArc.end, arcR9.start])
-  coincident([arcR9.end, arcR8.start])
-  coincident([arcR8.end, arcR7.start])
-  coincident([arcR7.end, arcR6.end])
-  coincident([arcR6.start, arcR5.end])
-  coincident([arcR5.start, arcR4.start])
-  coincident([arcR4.end, arcR3.start])
-  coincident([arcR3.end, arcR2.start])
-  coincident([arcR2.end, topArc.start])
-
-  // Tangency at the continuous seam arcs for the smoothest shoulder and lower-bout transitions.
-  tangent([topArc, arcL2])
-  tangent([arcR2, topArc])
-  tangent([arcL9, bottomArc])
-  tangent([bottomArc, arcR9])
+  arc1 = arc(start = [var 5.76in, var 0in], end = [var -14.63in, var 0in], center = [var -4.43in, var -479.89in])
+  coincident([arc1.start, upperCenterlineStation])
+  coincident([arc1.end, lowerCenterlineStation])
+  horizontalDistance([arc1.center, upperCenterlineStation]) == (guitarCenterlineUpperY - guitarCenterlineLowerY) / 2
+  radius(arc1) == soundboardArcRadius
 }
