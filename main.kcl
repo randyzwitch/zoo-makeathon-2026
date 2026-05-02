@@ -1,109 +1,16 @@
 @settings(defaultLengthUnit = in)
 
-import sketchGuitar, guitarCenterlineUpperY, guitarCenterlineLowerY from "guitar_outline.kcl"
+import sketchGuitar from "guitar_outline.kcl"
+import bodySideProfile from "guitar_side_profile.kcl"
 
-// Working file: the finalized guitar body outline lives in guitar_outline.kcl.
-// Continue new construction here using sketchGuitar as the source profile.
-// The closed region is exported from guitar_outline.kcl as guitarBodyRegion when needed for future extrusion.
-// hiddenGuitarOutline = hide(sketchGuitar)
+// Working assembly/reference file.
+// - The finalized guitar body outline lives in guitar_outline.kcl.
+// - The completed YZ side profile lives in guitar_side_profile.kcl.
+// - The closed outline region is exported from guitar_outline.kcl as guitarBodyRegion when needed for future extrusion.
 
+// Keep imported sketches visible/edit-addressable from main.kcl.
+guitarOutline = sketchGuitar
+guitarSideProfile = bodySideProfile
 
-backArcRadius = 28ft
-soundboardArcRadius = 40ft
-sideProfileArcOffset = 0.125in
-
-bodySideProfile = sketch(on = YZ) {
-  // In this YZ sketch, local horizontal coordinates are guitar-body Y stations.
-  upperCenterlineStation = point(at = [var 5.76in, var 0in])
-  lowerCenterlineStation = point(at = [var -14.63in, var 0in])
-
-  horizontalDistance([ORIGIN, upperCenterlineStation]) == guitarCenterlineUpperY
-  verticalDistance([ORIGIN, upperCenterlineStation]) == 0in
-
-  horizontalDistance([lowerCenterlineStation, ORIGIN]) == 0in - guitarCenterlineLowerY
-  verticalDistance([ORIGIN, lowerCenterlineStation]) == 0in
-
-  // Full-depth reference lines keep the original end depths controlled.
-  taildef = line(start = [var -14.63in, var 0in], end = [var -14.63in, var -4.25in], construction = true)
-  coincident([taildef.start, lowerCenterlineStation])
-  vertical(taildef)
-  verticalDistance([taildef.end, taildef.start]) == 4.25in
-
-  neckdef = line(start = [var 5.76in, var 0in], end = [var 5.76in, var -3.75in], construction = true)
-  coincident([neckdef.start, upperCenterlineStation])
-  vertical(neckdef)
-  verticalDistance([neckdef.end, neckdef.start]) == 3.75in
-
-  // Outer arcs.
-  backarc = arc(start = [var -14.63in, var -4.25in], end = [var 5.76in, var -3.75in], center = [var -12.66in, var 331.74in])
-  coincident([backarc.start, taildef.end])
-  coincident([backarc.end, neckdef.end])
-  radius(backarc) == backArcRadius
-
-  toparc = arc(start = [var 5.76in, var 0in], end = [var -14.63in, var 0in], center = [var -4.43in, var -479.89in])
-  coincident([toparc.start, upperCenterlineStation])
-  coincident([toparc.end, lowerCenterlineStation])
-  horizontalDistance([toparc.center, upperCenterlineStation]) == (guitarCenterlineUpperY - guitarCenterlineLowerY) / 2
-  radius(toparc) == soundboardArcRadius
-
-  // Inside offset arcs.
-  backarcInside = arc(start = [var -14.63in, var -4.13in], end = [var 5.76in, var -3.63in], center = [var -12.66in, var 331.74in])
-  coincident([backarcInside.center, backarc.center])
-  coincident([backarcInside.start, taildef])
-  coincident([backarcInside.end, neckdef])
-  radius(backarcInside) == backArcRadius - sideProfileArcOffset
-
-  toparcInside = arc(start = [var 5.76in, var -0.13in], end = [var -14.63in, var -0.13in], center = [var -4.43in, var -479.89in])
-  coincident([toparcInside.center, toparc.center])
-  coincident([toparcInside.start, neckdef])
-  coincident([toparcInside.end, taildef])
-  radius(toparcInside) == soundboardArcRadius - sideProfileArcOffset
-
-  // Closed top 1/8 in profile side walls.
-  tailTopWall = line(start = [var -14.63in, var 0in], end = [var -14.63in, var -0.13in])
-  coincident([
-    tailTopWall.start,
-    lowerCenterlineStation
-  ])
-  coincident([tailTopWall.end, toparcInside.end])
-  vertical(tailTopWall)
-
-  neckTopWall = line(start = [var 5.76in, var 0in], end = [var 5.76in, var -0.13in])
-  coincident([
-    neckTopWall.start,
-    upperCenterlineStation
-  ])
-  coincident([neckTopWall.end, toparcInside.start])
-  vertical(neckTopWall)
-
-  // Closed middle profile side walls.
-  tailMiddleWall = line(start = [var -14.63in, var -0.13in], end = [var -14.63in, var -4.13in])
-  coincident([tailMiddleWall.start, toparcInside.end])
-  coincident([
-    tailMiddleWall.end,
-    backarcInside.start
-  ])
-  vertical(tailMiddleWall)
-
-  neckMiddleWall = line(start = [var 5.76in, var -0.13in], end = [var 5.76in, var -3.63in])
-  coincident([
-    neckMiddleWall.start,
-    toparcInside.start
-  ])
-  coincident([neckMiddleWall.end, backarcInside.end])
-  vertical(neckMiddleWall)
-
-  // Closed back 1/8 in profile side walls.
-  tailBackWall = line(start = [var -14.63in, var -4.13in], end = [var -14.63in, var -4.25in])
-  coincident([
-    tailBackWall.start,
-    backarcInside.start
-  ])
-  coincident([tailBackWall.end, taildef.end])
-  vertical(tailBackWall)
-
-  neckBackWall = line(start = [var 5.76in, var -3.63in], end = [var 5.76in, var -3.75in])
-  coincident([neckBackWall.start, backarcInside.end])
-  coincident([neckBackWall.end, neckdef.end])
-  vertical(neckBackWall)
-}
+// hiddenGuitarOutline = hide(guitarOutline)
+// hiddenSideProfile = hide(guitarSideProfile)
