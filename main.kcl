@@ -2,11 +2,12 @@
 
 import sketchGuitar from "guitar_outline.kcl"
 import bodySideProfile, soundboard, guitarsides, backplate from "guitar_side_profile.kcl"
+import neckBlock, tailBlock from "guitar_blocks.kcl"
 
 // Working assembly/reference file.
 // - The finalized guitar body outline lives in guitar_outline.kcl.
 // - The completed YZ side profile and its three guitar-outline-clipped bodies live in guitar_side_profile.kcl.
-// - The closed outline region is exported from guitar_outline.kcl and is used to clip the side-profile bodies.
+// - Tail and neck blocks live in guitar_blocks.kcl.
 
 // Keep imported sketches edit-addressable from main.kcl, but hidden so the current body work is clear.
 guitarOutline = sketchGuitar
@@ -14,10 +15,10 @@ guitarSideProfile = bodySideProfile
 hiddenGuitarOutline = hide(guitarOutline)
 hiddenSideProfile = hide(guitarSideProfile)
 
-// Working view: sides only.
-// Keep soundboard and backplate imported/edit-addressable, but hidden while we work on guitarsides.
+// Working view: sides and internal end blocks.
+// Keep soundboard and backplate imported/edit-addressable, but hidden while we work on the sides/interior.
 hiddenSoundboard = hide(soundboard)
 hiddenBackplate = hide(backplate)
 
-// Visible body for the current task:
-// guitarsides
+// Visible bodies for the current task:
+// guitarsides, neckBlock, tailBlock
