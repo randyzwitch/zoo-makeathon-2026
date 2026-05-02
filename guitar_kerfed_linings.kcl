@@ -1,0 +1,351 @@
+@settings(defaultLengthUnit = in)
+
+import guitarCenterlineUpperY, guitarCenterlineLowerY, sketchGuitarInner from "guitar_outline.kcl"
+
+// Traditional kerfed linings based on StewMac-style rough dimensions:
+// 7/32 in radial width x 9/16 in vertical height.
+// The linings are separate light-wood bodies that sit just inside the 0.08 in side shell,
+// one just below the soundboard edge and one just above the backplate edge.
+
+
+kerfedLiningRadialWidth = 0.21875in
+kerfedLiningHeight = 0.5625in
+liningSideWallOffset = 0.08in
+liningInnerOffsetFromOuter = liningSideWallOffset + kerfedLiningRadialWidth
+liningBodyWidth = 16in
+liningClipDepth = 10in
+
+sideProfileArcOffset = 0.125in
+liningWoodColor = "#caa06a"
+
+// Duplicated arc math from guitar_outline.kcl so this module can create one more
+// inward-offset outline for the inside edge of the kerfed lining.
+centerlineX = 0in
+outlineP02X = -3.5138in
+outlineP02Y = 5.6133in
+outlineP03X = -5.1056in
+outlineP03Y = 4.9263in
+outlineP04X = -5.7827in
+outlineP04Y = 3.0430in
+outlineP05X = -5.4668in
+outlineP05Y = 0.3435in
+outlineP06X = -5.8302in
+outlineP06Y = -2.6941in
+outlineP07X = -7.2244in
+outlineP07Y = -5.6934in
+outlineP08X = -7.4232in
+outlineP08Y = -11.1187in
+outlineP09X = -4.6353in
+outlineP09Y = -13.8463in
+outlineP10X = -0.5668in
+outlineP10Y = -14.6169in
+
+topArcCenterX = centerlineX
+topArcCenterY = -35.250893in
+topArcCenter = [topArcCenterX, topArcCenterY]
+bottomArcCenterX = centerlineX
+bottomArcCenterY = 5.2101in
+bottomArcCenter = [bottomArcCenterX, bottomArcCenterY]
+
+topArcRadius = sqrt((outlineP02X - topArcCenterX) * (outlineP02X - topArcCenterX) + (outlineP02Y - topArcCenterY) * (outlineP02Y - topArcCenterY))
+bottomArcRadius = sqrt((outlineP10X - bottomArcCenterX) * (outlineP10X - bottomArcCenterX) + (outlineP10Y - bottomArcCenterY) * (outlineP10Y - bottomArcCenterY))
+
+arcL2GuideCenterX = -3.2789in
+arcL2GuideCenterY = 2.8815in
+arcL2MidX = (outlineP02X + outlineP03X) / 2
+arcL2MidY = (outlineP02Y + outlineP03Y) / 2
+arcL2PerpX = outlineP03Y - outlineP02Y
+arcL2PerpY = outlineP02X - outlineP03X
+arcL2T = ((arcL2GuideCenterX - arcL2MidX) * arcL2PerpX + (arcL2GuideCenterY - arcL2MidY) * arcL2PerpY) / (arcL2PerpX * arcL2PerpX + arcL2PerpY * arcL2PerpY)
+arcL2CenterX = arcL2MidX + arcL2T * arcL2PerpX
+arcL2CenterY = arcL2MidY + arcL2T * arcL2PerpY
+arcL2Center = [arcL2CenterX, arcL2CenterY]
+arcL2CenterR = [0in - arcL2CenterX, arcL2CenterY]
+
+arcL3GuideCenterX = -2.9807in
+arcL3GuideCenterY = 3.0990in
+arcL3MidX = (outlineP03X + outlineP04X) / 2
+arcL3MidY = (outlineP03Y + outlineP04Y) / 2
+arcL3PerpX = outlineP04Y - outlineP03Y
+arcL3PerpY = outlineP03X - outlineP04X
+arcL3T = ((arcL3GuideCenterX - arcL3MidX) * arcL3PerpX + (arcL3GuideCenterY - arcL3MidY) * arcL3PerpY) / (arcL3PerpX * arcL3PerpX + arcL3PerpY * arcL3PerpY)
+arcL3CenterX = arcL3MidX + arcL3T * arcL3PerpX
+arcL3CenterY = arcL3MidY + arcL3T * arcL3PerpY
+arcL3Center = [arcL3CenterX, arcL3CenterY]
+arcL3CenterR = [0in - arcL3CenterX, arcL3CenterY]
+
+arcL4GuideCenterX = 6.2875in
+arcL4GuideCenterY = 3.0874in
+arcL4MidX = (outlineP04X + outlineP05X) / 2
+arcL4MidY = (outlineP04Y + outlineP05Y) / 2
+arcL4PerpX = outlineP05Y - outlineP04Y
+arcL4PerpY = outlineP04X - outlineP05X
+arcL4T = ((arcL4GuideCenterX - arcL4MidX) * arcL4PerpX + (arcL4GuideCenterY - arcL4MidY) * arcL4PerpY) / (arcL4PerpX * arcL4PerpX + arcL4PerpY * arcL4PerpY)
+arcL4CenterX = arcL4MidX + arcL4T * arcL4PerpX
+arcL4CenterY = arcL4MidY + arcL4T * arcL4PerpY
+arcL4Center = [arcL4CenterX, arcL4CenterY]
+arcL4CenterR = [0in - arcL4CenterX, arcL4CenterY]
+
+arcL5GuideCenterX = -10.2500in
+arcL5GuideCenterY = -0.6248in
+arcL5MidX = (outlineP06X + outlineP05X) / 2
+arcL5MidY = (outlineP06Y + outlineP05Y) / 2
+arcL5PerpX = outlineP05Y - outlineP06Y
+arcL5PerpY = outlineP06X - outlineP05X
+arcL5T = ((arcL5GuideCenterX - arcL5MidX) * arcL5PerpX + (arcL5GuideCenterY - arcL5MidY) * arcL5PerpY) / (arcL5PerpX * arcL5PerpX + arcL5PerpY * arcL5PerpY)
+arcL5CenterX = arcL5MidX + arcL5T * arcL5PerpX
+arcL5CenterY = arcL5MidY + arcL5T * arcL5PerpY
+arcL5Center = [arcL5CenterX, arcL5CenterY]
+arcL5CenterR = [0in - arcL5CenterX, arcL5CenterY]
+
+arcL6GuideCenterX = -187.2286in
+arcL6GuideCenterY = 79.8025in
+arcL6MidX = (outlineP07X + outlineP06X) / 2
+arcL6MidY = (outlineP07Y + outlineP06Y) / 2
+arcL6PerpX = outlineP06Y - outlineP07Y
+arcL6PerpY = outlineP07X - outlineP06X
+arcL6T = ((arcL6GuideCenterX - arcL6MidX) * arcL6PerpX + (arcL6GuideCenterY - arcL6MidY) * arcL6PerpY) / (arcL6PerpX * arcL6PerpX + arcL6PerpY * arcL6PerpY)
+arcL6CenterX = arcL6MidX + arcL6T * arcL6PerpX
+arcL6CenterY = arcL6MidY + arcL6T * arcL6PerpY
+arcL6Center = [arcL6CenterX, arcL6CenterY]
+arcL6CenterR = [0in - arcL6CenterX, arcL6CenterY]
+
+arcL7GuideCenterX = -0.7220in
+arcL7GuideCenterY = -8.6480in
+arcL7MidX = (outlineP07X + outlineP08X) / 2
+arcL7MidY = (outlineP07Y + outlineP08Y) / 2
+arcL7PerpX = outlineP08Y - outlineP07Y
+arcL7PerpY = outlineP07X - outlineP08X
+arcL7T = ((arcL7GuideCenterX - arcL7MidX) * arcL7PerpX + (arcL7GuideCenterY - arcL7MidY) * arcL7PerpY) / (arcL7PerpX * arcL7PerpX + arcL7PerpY * arcL7PerpY)
+arcL7CenterX = arcL7MidX + arcL7T * arcL7PerpX
+arcL7CenterY = arcL7MidY + arcL7T * arcL7PerpY
+arcL7Center = [arcL7CenterX, arcL7CenterY]
+arcL7CenterR = [0in - arcL7CenterX, arcL7CenterY]
+
+arcL8GuideCenterX = -2.8465in
+arcL8GuideCenterY = -9.2293in
+arcL8MidX = (outlineP08X + outlineP09X) / 2
+arcL8MidY = (outlineP08Y + outlineP09Y) / 2
+arcL8PerpX = outlineP09Y - outlineP08Y
+arcL8PerpY = outlineP08X - outlineP09X
+arcL8T = ((arcL8GuideCenterX - arcL8MidX) * arcL8PerpX + (arcL8GuideCenterY - arcL8MidY) * arcL8PerpY) / (arcL8PerpX * arcL8PerpX + arcL8PerpY * arcL8PerpY)
+arcL8CenterX = arcL8MidX + arcL8T * arcL8PerpX
+arcL8CenterY = arcL8MidY + arcL8T * arcL8PerpY
+arcL8Center = [arcL8CenterX, arcL8CenterY]
+arcL8CenterR = [0in - arcL8CenterX, arcL8CenterY]
+
+arcL9GuideCenterX = -0.19221818in
+arcL9GuideCenterY = -1.51380571in
+arcL9MidX = (outlineP09X + outlineP10X) / 2
+arcL9MidY = (outlineP09Y + outlineP10Y) / 2
+arcL9PerpX = outlineP10Y - outlineP09Y
+arcL9PerpY = outlineP09X - outlineP10X
+arcL9T = ((arcL9GuideCenterX - arcL9MidX) * arcL9PerpX + (arcL9GuideCenterY - arcL9MidY) * arcL9PerpY) / (arcL9PerpX * arcL9PerpX + arcL9PerpY * arcL9PerpY)
+arcL9CenterX = arcL9MidX + arcL9T * arcL9PerpX
+arcL9CenterY = arcL9MidY + arcL9T * arcL9PerpY
+arcL9Center = [arcL9CenterX, arcL9CenterY]
+arcL9CenterR = [0in - arcL9CenterX, arcL9CenterY]
+
+arcL2Radius = sqrt((outlineP02X - arcL2CenterX) * (outlineP02X - arcL2CenterX) + (outlineP02Y - arcL2CenterY) * (outlineP02Y - arcL2CenterY))
+arcL3Radius = sqrt((outlineP03X - arcL3CenterX) * (outlineP03X - arcL3CenterX) + (outlineP03Y - arcL3CenterY) * (outlineP03Y - arcL3CenterY))
+arcL4Radius = sqrt((outlineP04X - arcL4CenterX) * (outlineP04X - arcL4CenterX) + (outlineP04Y - arcL4CenterY) * (outlineP04Y - arcL4CenterY))
+arcL5Radius = sqrt((outlineP05X - arcL5CenterX) * (outlineP05X - arcL5CenterX) + (outlineP05Y - arcL5CenterY) * (outlineP05Y - arcL5CenterY))
+arcL6Radius = sqrt((outlineP06X - arcL6CenterX) * (outlineP06X - arcL6CenterX) + (outlineP06Y - arcL6CenterY) * (outlineP06Y - arcL6CenterY))
+arcL7Radius = sqrt((outlineP07X - arcL7CenterX) * (outlineP07X - arcL7CenterX) + (outlineP07Y - arcL7CenterY) * (outlineP07Y - arcL7CenterY))
+arcL8Radius = sqrt((outlineP08X - arcL8CenterX) * (outlineP08X - arcL8CenterX) + (outlineP08Y - arcL8CenterY) * (outlineP08Y - arcL8CenterY))
+arcL9Radius = sqrt((outlineP09X - arcL9CenterX) * (outlineP09X - arcL9CenterX) + (outlineP09Y - arcL9CenterY) * (outlineP09Y - arcL9CenterY))
+
+liningTopArcRadius = topArcRadius - liningInnerOffsetFromOuter
+liningBottomArcRadius = bottomArcRadius - liningInnerOffsetFromOuter
+liningArcL2Radius = arcL2Radius - liningInnerOffsetFromOuter
+liningArcL3Radius = arcL3Radius - liningInnerOffsetFromOuter
+liningArcL4Radius = arcL4Radius - liningInnerOffsetFromOuter
+liningArcL5Radius = arcL5Radius + liningInnerOffsetFromOuter
+liningArcL6Radius = arcL6Radius + liningInnerOffsetFromOuter
+liningArcL7Radius = arcL7Radius - liningInnerOffsetFromOuter
+liningArcL8Radius = arcL8Radius - liningInnerOffsetFromOuter
+liningArcL9Radius = arcL9Radius - liningInnerOffsetFromOuter
+
+export sketchGuitarLiningInner = sketch(on = XY) {
+  insideLining = point(at = [var 0in, var -4in])
+  coincident([insideLining, [0in, -4in]])
+
+  liningTopArc = arc(start = [var 3.25in, var 5.33in], end = [var -3.25in, var 5.33in], center = topArcCenter)
+  liningArcL2 = arc(start = [var -3.25in, var 5.33in], end = [var -4.83in, var 4.72in], center = arcL2Center)
+  liningArcL3 = arc(start = [var -4.83in, var 4.72in], end = [var -5.48in, var 3.04in], center = arcL3Center)
+  liningArcL4 = arc(start = [var -5.48in, var 3.04in], end = [var -5.17in, var 0.34in], center = arcL4Center)
+  liningArcL5 = arc(start = [var -5.53in, var -2.69in], end = [var -5.17in, var 0.34in], center = arcL5Center)
+  liningArcL6 = arc(start = [var -6.94in, var -5.71in], end = [var -5.53in, var -2.69in], center = arcL6Center)
+  liningArcL7 = arc(start = [var -6.94in, var -5.71in], end = [var -7.12in, var -11.05in], center = arcL7Center)
+  liningArcL8 = arc(start = [var -7.12in, var -11.05in], end = [var -4.42in, var -13.58in], center = arcL8Center)
+  liningArcL9 = arc(start = [var -4.42in, var -13.58in], end = [var -0.55in, var -14.33in], center = arcL9Center)
+  liningBottomArc = arc(start = [var -0.55in, var -14.33in], end = [var 0.55in, var -14.33in], center = bottomArcCenter)
+  liningArcR9 = arc(start = [var 0.55in, var -14.33in], end = [var 4.42in, var -13.58in], center = arcL9CenterR)
+  liningArcR8 = arc(start = [var 4.42in, var -13.58in], end = [var 7.12in, var -11.05in], center = arcL8CenterR)
+  liningArcR7 = arc(start = [var 7.12in, var -11.05in], end = [var 6.94in, var -5.71in], center = arcL7CenterR)
+  liningArcR6 = arc(start = [var 5.53in, var -2.69in], end = [var 6.94in, var -5.71in], center = arcL6CenterR)
+  liningArcR5 = arc(start = [var 5.17in, var 0.34in], end = [var 5.53in, var -2.69in], center = arcL5CenterR)
+  liningArcR4 = arc(start = [var 5.17in, var 0.34in], end = [var 5.48in, var 3.04in], center = arcL4CenterR)
+  liningArcR3 = arc(start = [var 5.48in, var 3.04in], end = [var 4.83in, var 4.72in], center = arcL3CenterR)
+  liningArcR2 = arc(start = [var 4.83in, var 4.72in], end = [var 3.25in, var 5.33in], center = arcL2CenterR)
+
+  coincident([liningTopArc.end, liningArcL2.start])
+  coincident([liningArcL2.end, liningArcL3.start])
+  coincident([liningArcL3.end, liningArcL4.start])
+  coincident([liningArcL4.end, liningArcL5.end])
+  coincident([liningArcL5.start, liningArcL6.end])
+  coincident([liningArcL6.start, liningArcL7.start])
+  coincident([liningArcL7.end, liningArcL8.start])
+  coincident([liningArcL8.end, liningArcL9.start])
+  coincident([liningArcL9.end, liningBottomArc.start])
+  coincident([liningBottomArc.end, liningArcR9.start])
+  coincident([liningArcR9.end, liningArcR8.start])
+  coincident([liningArcR8.end, liningArcR7.start])
+  coincident([liningArcR7.end, liningArcR6.end])
+  coincident([liningArcR6.start, liningArcR5.end])
+  coincident([liningArcR5.start, liningArcR4.start])
+  coincident([liningArcR4.end, liningArcR3.start])
+  coincident([liningArcR3.end, liningArcR2.start])
+  coincident([liningArcR2.end, liningTopArc.start])
+
+  radius(liningTopArc) == liningTopArcRadius
+  distance([liningTopArc.end, liningTopArc.center]) == liningTopArcRadius
+  radius(liningArcL2) == liningArcL2Radius
+  distance([liningArcL2.end, liningArcL2.center]) == liningArcL2Radius
+  radius(liningArcL3) == liningArcL3Radius
+  distance([liningArcL3.end, liningArcL3.center]) == liningArcL3Radius
+  radius(liningArcL4) == liningArcL4Radius
+  distance([liningArcL4.end, liningArcL4.center]) == liningArcL4Radius
+  radius(liningArcL5) == liningArcL5Radius
+  distance([liningArcL5.end, liningArcL5.center]) == liningArcL5Radius
+  radius(liningArcL6) == liningArcL6Radius
+  distance([liningArcL6.end, liningArcL6.center]) == liningArcL6Radius
+  radius(liningArcL7) == liningArcL7Radius
+  distance([liningArcL7.end, liningArcL7.center]) == liningArcL7Radius
+  radius(liningArcL8) == liningArcL8Radius
+  distance([liningArcL8.end, liningArcL8.center]) == liningArcL8Radius
+  radius(liningArcL9) == liningArcL9Radius
+  distance([liningArcL9.end, liningArcL9.center]) == liningArcL9Radius
+  radius(liningBottomArc) == liningBottomArcRadius
+  distance([
+  liningBottomArc.end,
+  liningBottomArc.center
+]) == liningBottomArcRadius
+  radius(liningArcR9) == liningArcL9Radius
+  distance([liningArcR9.end, liningArcR9.center]) == liningArcL9Radius
+  radius(liningArcR8) == liningArcL8Radius
+  distance([liningArcR8.end, liningArcR8.center]) == liningArcL8Radius
+  radius(liningArcR7) == liningArcL7Radius
+  distance([liningArcR7.end, liningArcR7.center]) == liningArcL7Radius
+  radius(liningArcR6) == liningArcL6Radius
+  distance([liningArcR6.end, liningArcR6.center]) == liningArcL6Radius
+  radius(liningArcR5) == liningArcL5Radius
+  distance([liningArcR5.end, liningArcR5.center]) == liningArcL5Radius
+  radius(liningArcR4) == liningArcL4Radius
+  distance([liningArcR4.end, liningArcR4.center]) == liningArcL4Radius
+  radius(liningArcR3) == liningArcL3Radius
+  distance([liningArcR3.end, liningArcR3.center]) == liningArcL3Radius
+  radius(liningArcR2) == liningArcL2Radius
+  distance([liningArcR2.end, liningArcR2.center]) == liningArcL2Radius
+}
+
+export guitarLiningInnerRegion = region(point = sketchGuitarLiningInner.insideLining)
+liningOuterBodyRegion = region(point = [0in, -4in], sketch = sketchGuitarInner)
+
+export topLiningProfile = sketch(on = YZ) {
+  topOuterEdge = line(start = [var -14.63in, var -0.13in], end = [var 5.76in, var -0.13in])
+  topNeckWall = line(start = [var 5.76in, var -0.13in], end = [var 5.76in, var -0.69in])
+  topInnerEdge = line(start = [var 5.76in, var -0.69in], end = [var -14.63in, var -0.69in])
+  topTailWall = line(start = [var -14.63in, var -0.69in], end = [var -14.63in, var -0.13in])
+
+  coincident([topOuterEdge.end, topNeckWall.start])
+  coincident([topNeckWall.end, topInnerEdge.start])
+  coincident([topInnerEdge.end, topTailWall.start])
+  coincident([topTailWall.end, topOuterEdge.start])
+
+  horizontal(topOuterEdge)
+  vertical(topNeckWall)
+  horizontal(topInnerEdge)
+  vertical(topTailWall)
+
+  horizontalDistance([topOuterEdge.start, ORIGIN]) == 0in - guitarCenterlineLowerY
+  verticalDistance([topOuterEdge.start, ORIGIN]) == sideProfileArcOffset
+  distance([topOuterEdge.start, topOuterEdge.end]) == guitarCenterlineUpperY - guitarCenterlineLowerY
+  distance([topNeckWall.start, topNeckWall.end]) == kerfedLiningHeight
+}
+
+topLiningProfileRegion = region(point = [0in, -0.4in], sketch = topLiningProfile)
+
+export backLiningProfile = sketch(on = YZ) {
+  backOuterEdge = line(start = [var -14.63in, var -4.13in], end = [var 5.76in, var -3.63in])
+  backNeckWall = line(start = [var 5.76in, var -3.63in], end = [var 5.76in, var -3.06in])
+  backInnerEdge = line(start = [var 5.76in, var -3.06in], end = [var -14.63in, var -3.56in])
+  backTailWall = line(start = [var -14.63in, var -3.56in], end = [var -14.63in, var -4.13in])
+
+  coincident([backOuterEdge.end, backNeckWall.start])
+  coincident([backNeckWall.end, backInnerEdge.start])
+  coincident([backInnerEdge.end, backTailWall.start])
+  coincident([backTailWall.end, backOuterEdge.start])
+
+  vertical(backNeckWall)
+  vertical(backTailWall)
+  parallel([backOuterEdge, backInnerEdge])
+
+  horizontalDistance([backOuterEdge.start, ORIGIN]) == 0in - guitarCenterlineLowerY
+  verticalDistance([backOuterEdge.start, ORIGIN]) == 4.25in - sideProfileArcOffset
+  horizontalDistance([ORIGIN, backOuterEdge.end]) == guitarCenterlineUpperY
+  verticalDistance([backOuterEdge.end, ORIGIN]) == 3.75in - sideProfileArcOffset
+  distance([backTailWall.start, backTailWall.end]) == kerfedLiningHeight
+  distance([backNeckWall.start, backNeckWall.end]) == kerfedLiningHeight
+}
+
+backLiningProfileRegion = region(point = [0in, -3.6in], sketch = backLiningProfile)
+
+liningPlanOuterSolid = extrude(
+  liningOuterBodyRegion,
+  length = liningClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+
+liningPlanInnerSolid = extrude(
+  guitarLiningInnerRegion,
+  length = liningClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+
+liningPlanBandForTop = subtract(liningPlanOuterSolid, tools = [liningPlanInnerSolid], legacyMethod = true)
+liningPlanBandForBack = clone(liningPlanBandForTop)
+
+topLiningDepthEnvelope = extrude(
+  topLiningProfileRegion,
+  length = liningBodyWidth,
+  symmetric = true,
+  method = NEW,
+)
+
+backLiningDepthEnvelope = extrude(
+  backLiningProfileRegion,
+  length = liningBodyWidth,
+  symmetric = true,
+  method = NEW,
+)
+
+export topKerfedLining = intersect(
+  [
+    liningPlanBandForTop,
+    topLiningDepthEnvelope
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = liningWoodColor, metalness = 0, roughness = 82)
+
+export backKerfedLining = intersect(
+  [
+    liningPlanBandForBack,
+    backLiningDepthEnvelope
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = liningWoodColor, metalness = 0, roughness = 82)
