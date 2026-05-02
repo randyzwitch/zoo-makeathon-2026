@@ -8,11 +8,16 @@ import bodySideProfile, soundboard, guitarsides, backplate from "guitar_side_pro
 // - The completed YZ side profile and its three guitar-outline-clipped bodies live in guitar_side_profile.kcl.
 // - The closed outline region is exported from guitar_outline.kcl and is used to clip the side-profile bodies.
 
-// Keep imported sketches edit-addressable from main.kcl, but hidden so the three solid bodies are clear.
+// Keep imported sketches edit-addressable from main.kcl, but hidden so the current body work is clear.
 guitarOutline = sketchGuitar
 guitarSideProfile = bodySideProfile
 hiddenGuitarOutline = hide(guitarOutline)
 hiddenSideProfile = hide(guitarSideProfile)
 
-// Three separate named bodies from the side-profile regions, clipped to the guitar plan outline:
-// soundboard, guitarsides, backplate.
+// Working view: sides only.
+// Keep soundboard and backplate imported/edit-addressable, but hidden while we work on guitarsides.
+hiddenSoundboard = hide(soundboard)
+hiddenBackplate = hide(backplate)
+
+// Visible body for the current task:
+// guitarsides

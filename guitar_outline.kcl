@@ -233,6 +233,16 @@ arcL9CenterR = [
   arcL9CenterY
 ]
 
+// Radii for the outer side arcs, used by the inward offset side-shell cutter.
+arcL2Radius = sqrt((outlineP02X - arcL2CenterX) * (outlineP02X - arcL2CenterX) + (outlineP02Y - arcL2CenterY) * (outlineP02Y - arcL2CenterY))
+arcL3Radius = sqrt((outlineP03X - arcL3CenterX) * (outlineP03X - arcL3CenterX) + (outlineP03Y - arcL3CenterY) * (outlineP03Y - arcL3CenterY))
+arcL4Radius = sqrt((outlineP04X - arcL4CenterX) * (outlineP04X - arcL4CenterX) + (outlineP04Y - arcL4CenterY) * (outlineP04Y - arcL4CenterY))
+arcL5Radius = sqrt((outlineP05X - arcL5CenterX) * (outlineP05X - arcL5CenterX) + (outlineP05Y - arcL5CenterY) * (outlineP05Y - arcL5CenterY))
+arcL6Radius = sqrt((outlineP06X - arcL6CenterX) * (outlineP06X - arcL6CenterX) + (outlineP06Y - arcL6CenterY) * (outlineP06Y - arcL6CenterY))
+arcL7Radius = sqrt((outlineP07X - arcL7CenterX) * (outlineP07X - arcL7CenterX) + (outlineP07Y - arcL7CenterY) * (outlineP07Y - arcL7CenterY))
+arcL8Radius = sqrt((outlineP08X - arcL8CenterX) * (outlineP08X - arcL8CenterX) + (outlineP08Y - arcL8CenterY) * (outlineP08Y - arcL8CenterY))
+arcL9Radius = sqrt((outlineP09X - arcL9CenterX) * (outlineP09X - arcL9CenterX) + (outlineP09Y - arcL9CenterY) * (outlineP09Y - arcL9CenterY))
+
 export sketchGuitar = sketch(on = XY) {
   centerline = line(start = [var 0in, var 8.99in], end = [var 0in, var -17.83in], construction = true)
   vertical(centerline)
@@ -297,3 +307,111 @@ export sketchGuitar = sketch(on = XY) {
 }
 
 export guitarBodyRegion = region(point = sketchGuitar.insideBody)
+
+// Inward offset used to hollow the guitar sides. This is a separate cutter profile,
+// not a scaled copy. Most arcs offset toward their centers; the concave waist arcs
+// offset away from their centers so the side wall remains 0.08 in thick in plan.
+export guitarSideWallThickness = 0.08in
+innerTopArcRadius = topArcRadius - guitarSideWallThickness
+innerBottomArcRadius = bottomArcRadius - guitarSideWallThickness
+innerArcL2Radius = arcL2Radius - guitarSideWallThickness
+innerArcL3Radius = arcL3Radius - guitarSideWallThickness
+innerArcL4Radius = arcL4Radius - guitarSideWallThickness
+innerArcL5Radius = arcL5Radius + guitarSideWallThickness
+innerArcL6Radius = arcL6Radius + guitarSideWallThickness
+innerArcL7Radius = arcL7Radius - guitarSideWallThickness
+innerArcL8Radius = arcL8Radius - guitarSideWallThickness
+innerArcL9Radius = arcL9Radius - guitarSideWallThickness
+
+export sketchGuitarInner = sketch(on = XY) {
+  insideCutter = point(at = [var 0in, var -4in])
+  coincident([insideCutter, [0in, -4in]])
+
+  innerTopArc = arc(start = [var 3.45in, var 5.54in], end = [var -3.45in, var 5.54in], center = topArcCenter)
+
+  innerArcL2 = arc(start = [var -3.45in, var 5.54in], end = [var -5.03in, var 4.87in], center = arcL2Center)
+  innerArcL3 = arc(start = [var -5.03in, var 4.87in], end = [var -5.70in, var 3.04in], center = arcL3Center)
+  innerArcL4 = arc(start = [var -5.70in, var 3.04in], end = [var -5.39in, var 0.34in], center = arcL4Center)
+  innerArcL5 = arc(start = [var -5.75in, var -2.69in], end = [var -5.39in, var 0.34in], center = arcL5Center)
+  innerArcL6 = arc(start = [var -7.15in, var -5.70in], end = [var -5.75in, var -2.69in], center = arcL6Center)
+  innerArcL7 = arc(start = [var -7.15in, var -5.70in], end = [var -7.34in, var -11.10in], center = arcL7Center)
+  innerArcL8 = arc(start = [var -7.34in, var -11.10in], end = [var -4.58in, var -13.78in], center = arcL8Center)
+  innerArcL9 = arc(start = [var -4.58in, var -13.78in], end = [var -0.56in, var -14.54in], center = arcL9Center)
+
+  innerBottomArc = arc(start = [var -0.56in, var -14.54in], end = [var 0.56in, var -14.54in], center = bottomArcCenter)
+
+  innerArcR9 = arc(start = [var 0.56in, var -14.54in], end = [var 4.58in, var -13.78in], center = arcL9CenterR)
+  innerArcR8 = arc(start = [var 4.58in, var -13.78in], end = [var 7.34in, var -11.10in], center = arcL8CenterR)
+  innerArcR7 = arc(start = [var 7.34in, var -11.10in], end = [var 7.15in, var -5.70in], center = arcL7CenterR)
+  innerArcR6 = arc(start = [var 5.75in, var -2.69in], end = [var 7.15in, var -5.70in], center = arcL6CenterR)
+  innerArcR5 = arc(start = [var 5.39in, var 0.34in], end = [var 5.75in, var -2.69in], center = arcL5CenterR)
+  innerArcR4 = arc(start = [var 5.39in, var 0.34in], end = [var 5.70in, var 3.04in], center = arcL4CenterR)
+  innerArcR3 = arc(start = [var 5.70in, var 3.04in], end = [var 5.03in, var 4.87in], center = arcL3CenterR)
+  innerArcR2 = arc(start = [var 5.03in, var 4.87in], end = [var 3.45in, var 5.54in], center = arcL2CenterR)
+
+  // Connectivity for one closed inward-offset cutter outline.
+  coincident([innerTopArc.end, innerArcL2.start])
+  coincident([innerArcL2.end, innerArcL3.start])
+  coincident([innerArcL3.end, innerArcL4.start])
+  coincident([innerArcL4.end, innerArcL5.end])
+  coincident([innerArcL5.start, innerArcL6.end])
+  coincident([innerArcL6.start, innerArcL7.start])
+  coincident([innerArcL7.end, innerArcL8.start])
+  coincident([innerArcL8.end, innerArcL9.start])
+  coincident([innerArcL9.end, innerBottomArc.start])
+  coincident([innerBottomArc.end, innerArcR9.start])
+  coincident([innerArcR9.end, innerArcR8.start])
+  coincident([innerArcR8.end, innerArcR7.start])
+  coincident([innerArcR7.end, innerArcR6.end])
+  coincident([innerArcR6.start, innerArcR5.end])
+  coincident([innerArcR5.start, innerArcR4.start])
+  coincident([innerArcR4.end, innerArcR3.start])
+  coincident([innerArcR3.end, innerArcR2.start])
+  coincident([innerArcR2.end, innerTopArc.start])
+
+  // Keep every endpoint on its offset circle so the cutter is a true arc offset, not a scaled outline.
+  radius(innerTopArc) == innerTopArcRadius
+  distance([innerTopArc.end, innerTopArc.center]) == innerTopArcRadius
+
+  radius(innerArcL2) == innerArcL2Radius
+  distance([innerArcL2.end, innerArcL2.center]) == innerArcL2Radius
+  radius(innerArcL3) == innerArcL3Radius
+  distance([innerArcL3.end, innerArcL3.center]) == innerArcL3Radius
+  radius(innerArcL4) == innerArcL4Radius
+  distance([innerArcL4.end, innerArcL4.center]) == innerArcL4Radius
+  radius(innerArcL5) == innerArcL5Radius
+  distance([innerArcL5.end, innerArcL5.center]) == innerArcL5Radius
+  radius(innerArcL6) == innerArcL6Radius
+  distance([innerArcL6.end, innerArcL6.center]) == innerArcL6Radius
+  radius(innerArcL7) == innerArcL7Radius
+  distance([innerArcL7.end, innerArcL7.center]) == innerArcL7Radius
+  radius(innerArcL8) == innerArcL8Radius
+  distance([innerArcL8.end, innerArcL8.center]) == innerArcL8Radius
+  radius(innerArcL9) == innerArcL9Radius
+  distance([innerArcL9.end, innerArcL9.center]) == innerArcL9Radius
+
+  radius(innerBottomArc) == innerBottomArcRadius
+  distance([
+  innerBottomArc.end,
+  innerBottomArc.center
+]) == innerBottomArcRadius
+
+  radius(innerArcR9) == innerArcL9Radius
+  distance([innerArcR9.end, innerArcR9.center]) == innerArcL9Radius
+  radius(innerArcR8) == innerArcL8Radius
+  distance([innerArcR8.end, innerArcR8.center]) == innerArcL8Radius
+  radius(innerArcR7) == innerArcL7Radius
+  distance([innerArcR7.end, innerArcR7.center]) == innerArcL7Radius
+  radius(innerArcR6) == innerArcL6Radius
+  distance([innerArcR6.end, innerArcR6.center]) == innerArcL6Radius
+  radius(innerArcR5) == innerArcL5Radius
+  distance([innerArcR5.end, innerArcR5.center]) == innerArcL5Radius
+  radius(innerArcR4) == innerArcL4Radius
+  distance([innerArcR4.end, innerArcR4.center]) == innerArcL4Radius
+  radius(innerArcR3) == innerArcL3Radius
+  distance([innerArcR3.end, innerArcR3.center]) == innerArcL3Radius
+  radius(innerArcR2) == innerArcL2Radius
+  distance([innerArcR2.end, innerArcR2.center]) == innerArcL2Radius
+}
+
+export guitarInnerBodyRegion = region(point = sketchGuitarInner.insideCutter)

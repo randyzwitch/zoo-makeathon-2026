@@ -1,11 +1,12 @@
 @settings(defaultLengthUnit = in)
 
-import guitarCenterlineUpperY, guitarCenterlineLowerY, guitarBodyRegion from "guitar_outline.kcl"
+import guitarCenterlineUpperY, guitarCenterlineLowerY, guitarBodyRegion, guitarInnerBodyRegion from "guitar_outline.kcl"
 
 // Acoustic guitar body side-profile sketch.
 // In this YZ sketch, local horizontal coordinates are guitar-body Y stations.
 // The three closed regions are first extruded symmetrically about the YZ plane to a total 16 in body width,
 // then intersected with the closed guitar outline so only the guitar-shaped inside portions remain.
+// The middle side body is additionally hollowed by subtracting the inward 0.08 in offset guitar outline.
 
 
 backArcRadius = 28ft
@@ -150,6 +151,14 @@ guitarOutlineClipTop = extrude(
 guitarOutlineClipMiddle = clone(guitarOutlineClipTop)
 guitarOutlineClipBack = clone(guitarOutlineClipTop)
 
+// Inner guitar-outline cutter for the side shell. This removes the inside volume and leaves a 0.08 in side wall.
+guitarInnerSideCut = extrude(
+  guitarInnerBodyRegion,
+  length = sideProfileClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+
 // Final three separate guitar-shaped bodies: each side-profile prism clipped to the guitar plan outline.
 // legacyMethod is used because the current engine path cannot handle this curved-prism 3D intersection yet.
 export soundboard = intersect(
@@ -160,14 +169,18 @@ export soundboard = intersect(
   legacyMethod = true,
 )
   |> appearance(color = spruceColor, metalness = 0, roughness = 78)
-export guitarsides = intersect(
+
+sideMiddleGuitarSolid = intersect(
   [
     sideMiddleProfilePrism,
     guitarOutlineClipMiddle
   ],
   legacyMethod = true,
 )
+
+export guitarsides = subtract(sideMiddleGuitarSolid, tools = [guitarInnerSideCut], legacyMethod = true)
   |> appearance(color = walnutSideColor, metalness = 0, roughness = 72)
+
 export backplate = intersect(
   [
     sideBackProfilePrism,
