@@ -8,111 +8,152 @@ centerlineX = 0in
 centerlineTopOffset = 8.99in
 centerlineLength = 26.82in
 
-// Shared left-side outline vertex coordinates. These are data values, not sketch point entities.
+// Centerline seam control points used to derive the continuous top/bottom arcs.
 outlineP01X = 0.0in
 outlineP01Y = 5.7500in
-outlineP01 = [outlineP01X, outlineP01Y]
-outlineP01R = [0in - outlineP01X, outlineP01Y]
+outlineP11X = 0.0in
+outlineP11Y = -14.6250in
 
+// Shared left-side outline vertex coordinates. These are data values, not sketch point entities.
 outlineP02X = -3.5138in
 outlineP02Y = 5.6133in
 outlineP02 = [outlineP02X, outlineP02Y]
-outlineP02R = [0in - outlineP02X, outlineP02Y]
+outlineP02R = [
+  centerlineX + centerlineX - outlineP02X,
+  outlineP02Y
+]
 
 outlineP03X = -5.1056in
 outlineP03Y = 4.9263in
 outlineP03 = [outlineP03X, outlineP03Y]
-outlineP03R = [0in - outlineP03X, outlineP03Y]
+outlineP03R = [
+  centerlineX + centerlineX - outlineP03X,
+  outlineP03Y
+]
 
 outlineP04X = -5.7827in
 outlineP04Y = 3.0430in
 outlineP04 = [outlineP04X, outlineP04Y]
-outlineP04R = [0in - outlineP04X, outlineP04Y]
+outlineP04R = [
+  centerlineX + centerlineX - outlineP04X,
+  outlineP04Y
+]
 
 outlineP05X = -5.4668in
 outlineP05Y = 0.3435in
 outlineP05 = [outlineP05X, outlineP05Y]
-outlineP05R = [0in - outlineP05X, outlineP05Y]
+outlineP05R = [
+  centerlineX + centerlineX - outlineP05X,
+  outlineP05Y
+]
 
 outlineP06X = -5.8302in
 outlineP06Y = -2.6941in
 outlineP06 = [outlineP06X, outlineP06Y]
-outlineP06R = [0in - outlineP06X, outlineP06Y]
+outlineP06R = [
+  centerlineX + centerlineX - outlineP06X,
+  outlineP06Y
+]
 
 outlineP07X = -7.2244in
 outlineP07Y = -5.6934in
 outlineP07 = [outlineP07X, outlineP07Y]
-outlineP07R = [0in - outlineP07X, outlineP07Y]
+outlineP07R = [
+  centerlineX + centerlineX - outlineP07X,
+  outlineP07Y
+]
 
 outlineP08X = -7.4232in
 outlineP08Y = -11.1187in
 outlineP08 = [outlineP08X, outlineP08Y]
-outlineP08R = [0in - outlineP08X, outlineP08Y]
+outlineP08R = [
+  centerlineX + centerlineX - outlineP08X,
+  outlineP08Y
+]
 
 outlineP09X = -4.6353in
 outlineP09Y = -13.8463in
 outlineP09 = [outlineP09X, outlineP09Y]
-outlineP09R = [0in - outlineP09X, outlineP09Y]
+outlineP09R = [
+  centerlineX + centerlineX - outlineP09X,
+  outlineP09Y
+]
 
 outlineP10X = -0.5668in
 outlineP10Y = -14.6169in
 outlineP10 = [outlineP10X, outlineP10Y]
-outlineP10R = [0in - outlineP10X, outlineP10Y]
+outlineP10R = [
+  centerlineX + centerlineX - outlineP10X,
+  outlineP10Y
+]
 
-outlineP11X = 0.0in
-outlineP11Y = -14.6250in
-outlineP11 = [outlineP11X, outlineP11Y]
-outlineP11R = [0in - outlineP11X, outlineP11Y]
-
-arcL1CenterX = -0.7961in
-arcL1CenterY = -19.0252in
-arcL1Center = [arcL1CenterX, arcL1CenterY]
-arcL1CenterR = [0in - arcL1CenterX, arcL1CenterY]
+// Continuous seam arcs. Centers are tuned for tangency into the adjacent outline arcs.
+topArcCenter = [centerlineX, -35.250893in]
+bottomArcCenter = [centerlineX, 5.2101in]
 
 arcL2CenterX = -3.2789in
 arcL2CenterY = 2.8815in
 arcL2Center = [arcL2CenterX, arcL2CenterY]
-arcL2CenterR = [0in - arcL2CenterX, arcL2CenterY]
+arcL2CenterR = [
+  centerlineX + centerlineX - arcL2CenterX,
+  arcL2CenterY
+]
 
 arcL3CenterX = -2.9807in
 arcL3CenterY = 3.0990in
 arcL3Center = [arcL3CenterX, arcL3CenterY]
-arcL3CenterR = [0in - arcL3CenterX, arcL3CenterY]
+arcL3CenterR = [
+  centerlineX + centerlineX - arcL3CenterX,
+  arcL3CenterY
+]
 
 arcL4CenterX = 6.2875in
 arcL4CenterY = 3.0874in
 arcL4Center = [arcL4CenterX, arcL4CenterY]
-arcL4CenterR = [0in - arcL4CenterX, arcL4CenterY]
+arcL4CenterR = [
+  centerlineX + centerlineX - arcL4CenterX,
+  arcL4CenterY
+]
 
 arcL5CenterX = -10.2500in
 arcL5CenterY = -0.6248in
 arcL5Center = [arcL5CenterX, arcL5CenterY]
-arcL5CenterR = [0in - arcL5CenterX, arcL5CenterY]
+arcL5CenterR = [
+  centerlineX + centerlineX - arcL5CenterX,
+  arcL5CenterY
+]
 
 arcL6CenterX = -187.2286in
 arcL6CenterY = 79.8025in
 arcL6Center = [arcL6CenterX, arcL6CenterY]
-arcL6CenterR = [0in - arcL6CenterX, arcL6CenterY]
+arcL6CenterR = [
+  centerlineX + centerlineX - arcL6CenterX,
+  arcL6CenterY
+]
 
 arcL7CenterX = -0.7220in
 arcL7CenterY = -8.6480in
 arcL7Center = [arcL7CenterX, arcL7CenterY]
-arcL7CenterR = [0in - arcL7CenterX, arcL7CenterY]
+arcL7CenterR = [
+  centerlineX + centerlineX - arcL7CenterX,
+  arcL7CenterY
+]
 
 arcL8CenterX = -2.8465in
 arcL8CenterY = -9.2293in
 arcL8Center = [arcL8CenterX, arcL8CenterY]
-arcL8CenterR = [0in - arcL8CenterX, arcL8CenterY]
+arcL8CenterR = [
+  centerlineX + centerlineX - arcL8CenterX,
+  arcL8CenterY
+]
 
-arcL9CenterX = -0.5795in
-arcL9CenterY = -3.5586in
+arcL9CenterX = -0.19221818in
+arcL9CenterY = -1.51380571in
 arcL9Center = [arcL9CenterX, arcL9CenterY]
-arcL9CenterR = [0in - arcL9CenterX, arcL9CenterY]
-
-arcL10CenterX = -0.0052in
-arcL10CenterY = 4.7675in
-arcL10Center = [arcL10CenterX, arcL10CenterY]
-arcL10CenterR = [0in - arcL10CenterX, arcL10CenterY]
+arcL9CenterR = [
+  centerlineX + centerlineX - arcL9CenterX,
+  arcL9CenterY
+]
 
 sketchGuitar = sketch(on = XY) {
   centerline = line(start = [var 0in, var 8.99in], end = [var 0in, var -17.83in], construction = true)
@@ -122,7 +163,6 @@ sketchGuitar = sketch(on = XY) {
   verticalDistance([centerline.end, centerline.start]) == centerlineLength
 
   // --- AUTHORED LEFT SIDE ---
-  arcL1 = arc(start = outlineP01, end = outlineP02, center = arcL1Center)
   arcL2 = arc(start = outlineP02, end = outlineP03, center = arcL2Center)
   arcL3 = arc(start = outlineP03, end = outlineP04, center = arcL3Center)
   arcL4 = arc(start = outlineP04, end = outlineP05, center = arcL4Center)
@@ -131,11 +171,13 @@ sketchGuitar = sketch(on = XY) {
   arcL7 = arc(start = outlineP07, end = outlineP08, center = arcL7Center)
   arcL8 = arc(start = outlineP08, end = outlineP09, center = arcL8Center)
   arcL9 = arc(start = outlineP09, end = outlineP10, center = arcL9Center)
-  arcL10 = arc(start = outlineP10, end = outlineP11, center = arcL10Center)
+
+  // --- CONTINUOUS CENTERLINE SEAMS ---
+  bottomArc = arc(start = outlineP10, end = outlineP10R, center = bottomArcCenter)
+  topArc = arc(start = outlineP02R, end = outlineP02, center = topArcCenter)
 
   // --- MIRRORED RIGHT SIDE ---
   // Mirrored arcs swap start/end to preserve the same geometric arc after reflection.
-  arcR10 = arc(start = outlineP11R, end = outlineP10R, center = arcL10CenterR)
   arcR9 = arc(start = outlineP10R, end = outlineP09R, center = arcL9CenterR)
   arcR8 = arc(start = outlineP09R, end = outlineP08R, center = arcL8CenterR)
   arcR7 = arc(start = outlineP08R, end = outlineP07R, center = arcL7CenterR)
@@ -144,10 +186,9 @@ sketchGuitar = sketch(on = XY) {
   arcR4 = arc(start = outlineP05R, end = outlineP04R, center = arcL4CenterR)
   arcR3 = arc(start = outlineP04R, end = outlineP03R, center = arcL3CenterR)
   arcR2 = arc(start = outlineP03R, end = outlineP02R, center = arcL2CenterR)
-  arcR1 = arc(start = outlineP02R, end = outlineP01R, center = arcL1CenterR)
 
   // Connectivity for one closed outline.
-  coincident([arcL1.end, arcL2.start])
+  coincident([topArc.end, arcL2.start])
   coincident([arcL2.end, arcL3.start])
   coincident([arcL3.end, arcL4.start])
   coincident([arcL4.end, arcL5.end])
@@ -155,9 +196,8 @@ sketchGuitar = sketch(on = XY) {
   coincident([arcL6.start, arcL7.start])
   coincident([arcL7.end, arcL8.start])
   coincident([arcL8.end, arcL9.start])
-  coincident([arcL9.end, arcL10.start])
-  coincident([arcL10.end, arcR10.start])
-  coincident([arcR10.end, arcR9.start])
+  coincident([arcL9.end, bottomArc.start])
+  coincident([bottomArc.end, arcR9.start])
   coincident([arcR9.end, arcR8.start])
   coincident([arcR8.end, arcR7.start])
   coincident([arcR7.end, arcR6.end])
@@ -165,6 +205,11 @@ sketchGuitar = sketch(on = XY) {
   coincident([arcR5.start, arcR4.start])
   coincident([arcR4.end, arcR3.start])
   coincident([arcR3.end, arcR2.start])
-  coincident([arcR2.end, arcR1.start])
-  coincident([arcR1.end, arcL1.start])
+  coincident([arcR2.end, topArc.start])
+
+  // Tangency at the continuous seam arcs for the smoothest shoulder and lower-bout transitions.
+  tangent([topArc, arcL2])
+  tangent([arcR2, topArc])
+  tangent([arcL9, bottomArc])
+  tangent([bottomArc, arcR9])
 }
