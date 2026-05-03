@@ -10,6 +10,9 @@ import sideTopProfileRegion, sideMiddleProfileRegion, sideBackProfileRegion from
 sideProfileBodyWidth = 16in
 sideProfileClipDepth = 10in
 
+soundholeDiameter = 4in
+soundholeRadius = soundholeDiameter / 2
+
 spruceColor = "#d9b86c"
 walnutSideColor = "#4a2615"
 walnutBackColor = "#5a2f1a"
@@ -45,6 +48,22 @@ guitarOutlineClipTop = extrude(
 guitarOutlineClipMiddle = clone(guitarOutlineClipTop)
 guitarOutlineClipBack = clone(guitarOutlineClipTop)
 
+// Soundhole cutter: a 4 in diameter vertical cylinder centered on the master-sketch origin.
+// It is used only in the soundboard subtraction so sides, blocks, linings, and back are untouched.
+soundholeSketch = sketch(on = XY) {
+  soundholeCircle = circle(start = [var 2in, var 0in], center = [var 0in, var 0in])
+  coincident([soundholeCircle.center, ORIGIN])
+  horizontalDistance([soundholeCircle.center, soundholeCircle.start]) == soundholeRadius
+  verticalDistance([soundholeCircle.center, soundholeCircle.start]) == 0in
+}
+soundholeRegion = region(point = [0in, 0in], sketch = soundholeSketch)
+soundholeCutter = extrude(
+  soundholeRegion,
+  length = sideProfileClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+
 // Inner guitar-outline cutter for the side shell. This removes the inside volume and leaves a 0.08 in side wall.
 guitarInnerSideCut = extrude(
   guitarInnerBodyRegion,
@@ -55,13 +74,15 @@ guitarInnerSideCut = extrude(
 
 // Final three separate guitar-shaped bodies: each side-profile prism clipped to the guitar plan outline.
 // legacyMethod is used because the current engine path cannot handle this curved-prism 3D intersection yet.
-export soundboard = intersect(
+soundboardBlank = intersect(
   [
     sideTopProfilePrism,
     guitarOutlineClipTop
   ],
   legacyMethod = true,
 )
+
+export soundboard = subtract(soundboardBlank, tools = [soundholeCutter], legacyMethod = true)
   |> appearance(color = spruceColor, metalness = 0, roughness = 78)
 
 sideMiddleGuitarSolid = intersect(
