@@ -1,6 +1,5 @@
 @settings(defaultLengthUnit = in)
 
-// ZOOKEEPER_SYNC_CHECK_2026_05_03_VISIBILITY_ONLY
 // Presentation assembly: show every solid except the backplate and its back bracing.
 // Geometry source modules are untouched; this entrypoint only controls scene visibility.
 
