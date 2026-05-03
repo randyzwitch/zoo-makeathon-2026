@@ -2,6 +2,7 @@
 
 import guitarBodyRegion, guitarInnerBodyRegion from "guitar_outline.kcl"
 import sideTopProfileRegion, sideMiddleProfileRegion, sideBackProfileRegion from "guitar_side_profile.kcl"
+import rosetteChannelCutter from "guitar_rosette.kcl"
 
 // Heavy acoustic-guitar body solids.
 // The lightweight YZ side-profile sketch/regions live in guitar_side_profile.kcl.
@@ -53,8 +54,14 @@ guitarOutlineClipBack = clone(guitarOutlineClipTop)
 soundholeSketch = sketch(on = XY) {
   soundholeCircle = circle(start = [var 2in, var 0in], center = [var 0in, var 0in])
   coincident([soundholeCircle.center, ORIGIN])
-  horizontalDistance([soundholeCircle.center, soundholeCircle.start]) == soundholeRadius
-  verticalDistance([soundholeCircle.center, soundholeCircle.start]) == 0in
+  horizontalDistance([
+  soundholeCircle.center,
+  soundholeCircle.start
+]) == soundholeRadius
+  verticalDistance([
+  soundholeCircle.center,
+  soundholeCircle.start
+]) == 0in
 }
 soundholeRegion = region(point = [0in, 0in], sketch = soundholeSketch)
 soundholeCutter = extrude(
@@ -82,7 +89,8 @@ soundboardBlank = intersect(
   legacyMethod = true,
 )
 
-export soundboard = subtract(soundboardBlank, tools = [soundholeCutter], legacyMethod = true)
+// The soundhole and rosette channel are cut only from the soundboard blank.
+export soundboard = subtract(soundboardBlank, tools = [soundholeCutter, rosetteChannelCutter], legacyMethod = true)
   |> appearance(color = spruceColor, metalness = 0, roughness = 78)
 
 sideMiddleGuitarSolid = intersect(

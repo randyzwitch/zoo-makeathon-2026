@@ -1,0 +1,188 @@
+@settings(defaultLengthUnit = in)
+
+import guitarCenterlineUpperY, guitarCenterlineLowerY from "guitar_outline.kcl"
+
+// Soundhole rosette assembly.
+// Centered on the master-sketch origin, matching the 4 in diameter soundhole.
+// The soundboard receives a shallow flat-bottom routed channel; the fitted pieces
+// use the same annular plan and follow the soundboard top dome.
+
+
+sideProfileBodyWidth = 16in
+sideProfileClipDepth = 10in
+
+soundholeRadius = 2in
+rosetteSetbackFromSoundhole = 0.125in
+purflingRingWidth = 0.03125in
+mainInlayRingWidth = 0.375in
+rosettePocketBottomZ = 0.025in
+rosettePocketCutterHeight = 0.125in
+rosetteEnvelopeHalfWidth = 3in
+
+rosetteInnerRadius = soundholeRadius + rosetteSetbackFromSoundhole
+rosetteInnerPurflingOuterRadius = rosetteInnerRadius + purflingRingWidth
+rosetteMainInlayOuterRadius = rosetteInnerPurflingOuterRadius + mainInlayRingWidth
+rosetteOuterRadius = rosetteMainInlayOuterRadius + purflingRingWidth
+
+soundboardTopArcRadius = 480in
+soundboardTopArcCenterY = (guitarCenterlineUpperY + guitarCenterlineLowerY) / 2
+soundboardTopArcCenterOffset = guitarCenterlineUpperY - soundboardTopArcCenterY
+soundboardTopArcCenterZ = 0in - sqrt(soundboardTopArcRadius * soundboardTopArcRadius - (soundboardTopArcCenterOffset * soundboardTopArcCenterOffset))
+
+mainInlayColor = "#67c8c1"
+purflingColor = "#16100c"
+
+// Curved-top/flat-bottom envelope for the visible inlay pieces.
+// The envelope only spans the rosette area in Y, avoiding self-intersection near the body ends.
+rosettePieceEnvelopeProfile = sketch(on = YZ) {
+  pocketBottom = line(start = [var -3in, var 0.025in], end = [var 3in, var 0.025in])
+  horizontal(pocketBottom)
+  horizontalDistance([pocketBottom.start, ORIGIN]) == rosetteEnvelopeHalfWidth
+  horizontalDistance([ORIGIN, pocketBottom.end]) == rosetteEnvelopeHalfWidth
+  verticalDistance([ORIGIN, pocketBottom.start]) == rosettePocketBottomZ
+
+  topFace = arc(start = [var 3in, var 0.055in], end = [var -3in, var 0.105in], center = [var -4.43in, var -479.89in])
+  horizontalDistance([topFace.center, ORIGIN]) == 0in - soundboardTopArcCenterY
+  verticalDistance([ORIGIN, topFace.center]) == soundboardTopArcCenterZ
+  radius(topFace) == soundboardTopArcRadius
+
+  leftWall = line(start = [var -3in, var 0.025in], end = [var -3in, var 0.105in])
+  coincident([leftWall.start, pocketBottom.start])
+  coincident([leftWall.end, topFace.end])
+  vertical(leftWall)
+
+  rightWall = line(start = [var 3in, var 0.055in], end = [var 3in, var 0.025in])
+  coincident([rightWall.start, topFace.start])
+  coincident([rightWall.end, pocketBottom.end])
+  vertical(rightWall)
+}
+
+rosettePieceEnvelopeRegion = region(point = [0in, 0.06in], sketch = rosettePieceEnvelopeProfile)
+rosettePieceEnvelope = extrude(
+  rosettePieceEnvelopeRegion,
+  length = sideProfileBodyWidth,
+  symmetric = true,
+  method = NEW,
+)
+rosettePieceEnvelopeForInnerPurfling = clone(rosettePieceEnvelope)
+rosettePieceEnvelopeForMainInlay = clone(rosettePieceEnvelope)
+rosettePieceEnvelopeForOuterPurfling = clone(rosettePieceEnvelope)
+hiddenRosettePieceEnvelope = hide(rosettePieceEnvelope)
+
+// One continuous annular pocket: inner edge starts 1/8 in outside the soundhole.
+// This is intentionally a simple routed channel cutter so the soundboard subtraction remains robust.
+rosetteChannelPlan = sketch(on = offsetPlane(XY, offset = rosettePocketBottomZ)) {
+  channelInner = circle(start = [var 2.125in, var 0in], center = [var 0in, var 0in])
+  coincident([channelInner.center, ORIGIN])
+  horizontalDistance([
+  channelInner.center,
+  channelInner.start
+]) == rosetteInnerRadius
+  verticalDistance([
+  channelInner.center,
+  channelInner.start
+]) == 0in
+
+  channelOuter = circle(start = [var 2.5625in, var 0in], center = [var 0in, var 0in])
+  coincident([channelOuter.center, ORIGIN])
+  horizontalDistance([
+  channelOuter.center,
+  channelOuter.start
+]) == rosetteOuterRadius
+  verticalDistance([
+  channelOuter.center,
+  channelOuter.start
+]) == 0in
+}
+rosetteChannelPlanRegion = region(point = [2.25in, 0in], sketch = rosetteChannelPlan)
+
+export rosetteChannelCutter = extrude(rosetteChannelPlanRegion, length = rosettePocketCutterHeight, method = NEW)
+hiddenRosetteChannelCutter = hide(rosetteChannelCutter)
+
+// Separate fitted rosette parts. These share the same curved-top/flat-bottom envelope.
+rosettePartsPlan = sketch(on = offsetPlane(XY, offset = rosettePocketBottomZ)) {
+  channelInner = circle(start = [var 2.125in, var 0in], center = [var 0in, var 0in])
+  coincident([channelInner.center, ORIGIN])
+  horizontalDistance([
+  channelInner.center,
+  channelInner.start
+]) == rosetteInnerRadius
+  verticalDistance([
+  channelInner.center,
+  channelInner.start
+]) == 0in
+
+  innerPurflingOuter = circle(start = [var 2.15625in, var 0in], center = [var 0in, var 0in])
+  coincident([innerPurflingOuter.center, ORIGIN])
+  horizontalDistance([
+  innerPurflingOuter.center,
+  innerPurflingOuter.start
+]) == rosetteInnerPurflingOuterRadius
+  verticalDistance([
+  innerPurflingOuter.center,
+  innerPurflingOuter.start
+]) == 0in
+
+  mainInlayOuter = circle(start = [var 2.53125in, var 0in], center = [var 0in, var 0in])
+  coincident([mainInlayOuter.center, ORIGIN])
+  horizontalDistance([
+  mainInlayOuter.center,
+  mainInlayOuter.start
+]) == rosetteMainInlayOuterRadius
+  verticalDistance([
+  mainInlayOuter.center,
+  mainInlayOuter.start
+]) == 0in
+
+  channelOuter = circle(start = [var 2.5625in, var 0in], center = [var 0in, var 0in])
+  coincident([channelOuter.center, ORIGIN])
+  horizontalDistance([
+  channelOuter.center,
+  channelOuter.start
+]) == rosetteOuterRadius
+  verticalDistance([
+  channelOuter.center,
+  channelOuter.start
+]) == 0in
+}
+
+innerPurflingPlanRegion = region(point = [2.14in, 0in], sketch = rosettePartsPlan)
+mainInlayPlanRegion = region(point = [2.35in, 0in], sketch = rosettePartsPlan)
+outerPurflingPlanRegion = region(point = [2.55in, 0in], sketch = rosettePartsPlan)
+
+innerPurflingPlanPrism = extrude(innerPurflingPlanRegion, length = rosettePocketCutterHeight, method = NEW)
+mainInlayPlanPrism = extrude(mainInlayPlanRegion, length = rosettePocketCutterHeight, method = NEW)
+outerPurflingPlanPrism = extrude(outerPurflingPlanRegion, length = rosettePocketCutterHeight, method = NEW)
+
+export rosetteInnerPurfling = intersect(
+  [
+    innerPurflingPlanPrism,
+    rosettePieceEnvelopeForInnerPurfling
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = purflingColor, metalness = 0, roughness = 42)
+
+export rosetteMainInlay = intersect(
+  [
+    mainInlayPlanPrism,
+    rosettePieceEnvelopeForMainInlay
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = mainInlayColor, metalness = 8, roughness = 28)
+
+export rosetteOuterPurfling = intersect(
+  [
+    outerPurflingPlanPrism,
+    rosettePieceEnvelopeForOuterPurfling
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = purflingColor, metalness = 0, roughness = 42)
+
+hiddenRosetteSketchDrawings = hide([
+  rosettePieceEnvelopeProfile,
+  rosetteChannelPlan,
+  rosettePartsPlan
+])

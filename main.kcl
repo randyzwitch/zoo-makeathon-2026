@@ -7,6 +7,7 @@
 import sketchGuitar, sketchGuitarInner from "guitar_outline.kcl"
 import bodySideProfile from "guitar_side_profile.kcl"
 import soundboard, guitarsides, backplate from "guitar_body_solids.kcl"
+import rosetteInnerPurfling, rosetteMainInlay, rosetteOuterPurfling from "guitar_rosette.kcl"
 import neckBlock, tailBlock, neckBlockPlan, tailBlockPlan from "guitar_blocks.kcl"
 import sketchGuitarLiningInner, topLiningProfile, backLiningProfile from "guitar_kerfed_linings.kcl"
 import topKerfedLining, backKerfedLining from "guitar_kerfed_lining_solids.kcl"
@@ -33,11 +34,12 @@ hiddenBackplate = hide(backplate)
 
 // Visible solids only.
 visibleSoundboard = soundboard
+visibleRosetteInnerPurfling = rosetteInnerPurfling
+visibleRosetteMainInlay = rosetteMainInlay
+visibleRosetteOuterPurfling = rosetteOuterPurfling
 visibleGuitarSides = guitarsides
 visibleNeckBlock = neckBlock
 visibleTailBlock = tailBlock
 visibleTopKerfedLining = topKerfedLining
 visibleBackKerfedLining = backKerfedLining
 visibleSideBlocks = sideBlocks
-
-
