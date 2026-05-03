@@ -2,7 +2,7 @@
 
 // Back-bracing working assembly.
 // Shows the radiused backplate, lower kerfing, end blocks, center seam brace,
-// transverse back braces, and side braces/side blocks. Soundboard/top-side
+// scalloped transverse back braces, and side braces/side blocks. Soundboard/top-side
 // details are omitted so the back bracing remains easy to inspect.
 
 import sketchGuitar, sketchGuitarInner from "guitar_outline.kcl"
