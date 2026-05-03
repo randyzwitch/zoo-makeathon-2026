@@ -1,23 +1,38 @@
 @settings(defaultLengthUnit = in)
 
-// Kerfing / side-block working assembly.
-// Soundboard and backplate are imported but hidden so the interior work remains visible.
-// Heavy body solids and kerfed-lining solids are kept in dedicated *_solids modules;
-// sketch/profile reuse stays in lighter modules to reduce dependency recalculation.
+// Kerfing / side-block/back-bracing working assembly.
+// Uses sides-only and backplate-only body modules so the soundboard stays out of
+// the working scene while the radiused backplate can be checked against bracing.
 
-import soundboard, guitarsides, backplate from "guitar_body_solids.kcl"
-import neckBlock, tailBlock from "guitar_blocks.kcl"
+import sketchGuitar, sketchGuitarInner from "guitar_outline.kcl"
+import bodySideProfile from "guitar_side_profile.kcl"
+import guitarsides from "guitar_sides_solid.kcl"
+import backplate from "guitar_backplate_solid.kcl"
+import neckBlock, tailBlock, neckBlockPlan, tailBlockPlan from "guitar_blocks.kcl"
+import sketchGuitarLiningInner, topLiningProfile, backLiningProfile from "guitar_kerfed_linings.kcl"
 import topKerfedLining, backKerfedLining from "guitar_kerfed_lining_solids.kcl"
-import sideBlocks from "guitar_side_blocks.kcl"
+import sideBlocks, sideBlockHeightProfile, sideBlockGapProfiles from "guitar_side_blocks.kcl"
+import backCenterGlueSeamBrace, backCenterGlueSeamBraceProfile from "guitar_back_bracing.kcl"
 
-// Hidden plates for context/edit addressability without obscuring the interior.
-hiddenSoundboard = hide(soundboard)
-hiddenBackplate = hide(backplate)
+// Hide all visible sketch/drawing references so only solid working geometry remains in view.
+hiddenGuitarOutlineDrawing = hide(sketchGuitar)
+hiddenGuitarInnerOutlineDrawing = hide(sketchGuitarInner)
+hiddenBodySideProfileDrawing = hide(bodySideProfile)
+hiddenNeckBlockPlanDrawing = hide(neckBlockPlan)
+hiddenTailBlockPlanDrawing = hide(tailBlockPlan)
+hiddenKerfingInnerOutlineDrawing = hide(sketchGuitarLiningInner)
+hiddenTopLiningProfileDrawing = hide(topLiningProfile)
+hiddenBackLiningProfileDrawing = hide(backLiningProfile)
+hiddenSideBlockHeightProfileDrawing = hide(sideBlockHeightProfile)
+hiddenSideBlockGapProfileDrawing = hide(sideBlockGapProfiles)
+hiddenBackCenterGlueSeamBraceProfileDrawing = hide(backCenterGlueSeamBraceProfile)
 
 // Visible working bodies.
 visibleGuitarSides = guitarsides
+visibleBackplate = backplate
 visibleNeckBlock = neckBlock
 visibleTailBlock = tailBlock
 visibleTopKerfedLining = topKerfedLining
 visibleBackKerfedLining = backKerfedLining
 visibleSideBlocks = sideBlocks
+visibleBackCenterGlueSeamBrace = backCenterGlueSeamBrace

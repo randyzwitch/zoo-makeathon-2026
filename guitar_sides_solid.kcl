@@ -1,0 +1,48 @@
+@settings(defaultLengthUnit = in)
+
+import sketchGuitar, sketchGuitarInner from "guitar_outline.kcl"
+import bodySideProfile from "guitar_side_profile.kcl"
+
+// Sides-only working solid for interior/brace editing.
+// This avoids generating/displaying the soundboard and backplate in main.kcl.
+
+
+sideProfileBodyWidth = 16in
+sideProfileClipDepth = 10in
+walnutSideColor = "#4a2615"
+
+sideMiddleProfileRegion = region(point = [0in, -2in], sketch = bodySideProfile)
+guitarBodyRegion = region(point = [0in, -4in], sketch = sketchGuitar)
+guitarInnerBodyRegion = region(point = [0in, -4in], sketch = sketchGuitarInner)
+
+sideMiddleProfilePrism = extrude(
+  sideMiddleProfileRegion,
+  length = sideProfileBodyWidth,
+  symmetric = true,
+  method = NEW,
+)
+
+guitarOutlineClipMiddle = extrude(
+  guitarBodyRegion,
+  length = sideProfileClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+
+guitarInnerSideCut = extrude(
+  guitarInnerBodyRegion,
+  length = sideProfileClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+
+sideMiddleGuitarSolid = intersect(
+  [
+    sideMiddleProfilePrism,
+    guitarOutlineClipMiddle
+  ],
+  legacyMethod = true,
+)
+
+export guitarsides = subtract(sideMiddleGuitarSolid, tools = [guitarInnerSideCut], legacyMethod = true)
+  |> appearance(color = walnutSideColor, metalness = 0, roughness = 72)

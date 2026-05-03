@@ -1,0 +1,38 @@
+@settings(defaultLengthUnit = in)
+
+import sketchGuitar from "guitar_outline.kcl"
+import bodySideProfile from "guitar_side_profile.kcl"
+
+// Backplate-only solid for bracing confirmation.
+// Keeps the soundboard out of the working scene while showing the radiused backplate.
+
+
+sideProfileBodyWidth = 16in
+sideProfileClipDepth = 10in
+walnutBackColor = "#5a2f1a"
+
+sideBackProfileRegion = region(point = [0in, -3.96in], sketch = bodySideProfile)
+guitarBodyRegion = region(point = [0in, -4in], sketch = sketchGuitar)
+
+sideBackProfilePrism = extrude(
+  sideBackProfileRegion,
+  length = sideProfileBodyWidth,
+  symmetric = true,
+  method = NEW,
+)
+
+guitarOutlineClipBack = extrude(
+  guitarBodyRegion,
+  length = sideProfileClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+
+export backplate = intersect(
+  [
+    sideBackProfilePrism,
+    guitarOutlineClipBack
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = walnutBackColor, metalness = 0, roughness = 74)

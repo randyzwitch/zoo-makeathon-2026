@@ -1,0 +1,66 @@
+@settings(defaultLengthUnit = in)
+
+// Backplate bracing, step 1: center glue-seam brace only.
+// This brace covers the centerline glue seam and runs between the neck and tail blocks.
+// Its bottom glue face is concentric with the inside face of the radiused backplate.
+
+backArcRadius = 28ft
+sideProfileArcOffset = 0.125in
+backBraceGlueRadius = backArcRadius - sideProfileArcOffset
+
+centerSeamBraceWidth = 1.0in
+centerSeamBraceHeight = 0.125in
+centerSeamBraceTopRadius = backBraceGlueRadius - centerSeamBraceHeight
+
+// Block-facing stations, matching the existing block inner faces.
+centerSeamBraceTailY = -13.95in
+centerSeamBraceNeckY = 4.55in
+
+// Same YZ back-arc center used by the body side profile.
+backBraceArcCenterY = -12.66in
+backBraceArcCenterZ = 331.74in
+
+backBraceWoodColor = "#d8bd7a"
+
+export backCenterGlueSeamBraceProfile = sketch(on = YZ) {
+  // Glue face: follows the inside backplate arc from tail-block face to neck-block face.
+  glueFace = arc(start = [var -13.95in, var -4.13in], end = [var 4.55in, var -3.69in], center = [var -12.66in, var 331.74in])
+
+  // Top face: same short-arc direction as the glue face, offset toward the guitar interior.
+  topFace = arc(start = [var -13.95in, var -4.01in], end = [var 4.55in, var -3.57in], center = [var -12.66in, var 331.74in])
+
+  neckEnd = line(start = [var 4.55in, var -3.69in], end = [var 4.55in, var -3.57in])
+  tailEnd = line(start = [var -13.95in, var -4.01in], end = [var -13.95in, var -4.13in])
+
+  coincident([glueFace.end, neckEnd.start])
+  coincident([neckEnd.end, topFace.end])
+  coincident([topFace.start, tailEnd.start])
+  coincident([tailEnd.end, glueFace.start])
+
+  coincident([topFace.center, glueFace.center])
+
+  vertical(neckEnd)
+  vertical(tailEnd)
+
+  horizontalDistance([glueFace.center, ORIGIN]) == 0in - backBraceArcCenterY
+  verticalDistance([ORIGIN, glueFace.center]) == backBraceArcCenterZ
+
+  horizontalDistance([glueFace.start, ORIGIN]) == 0in - centerSeamBraceTailY
+  horizontalDistance([ORIGIN, glueFace.end]) == centerSeamBraceNeckY
+
+  radius(glueFace) == backBraceGlueRadius
+  distance([glueFace.end, glueFace.center]) == backBraceGlueRadius
+
+  radius(topFace) == centerSeamBraceTopRadius
+  distance([topFace.end, topFace.center]) == centerSeamBraceTopRadius
+}
+
+backCenterGlueSeamBraceRegion = region(point = [0in, -3.83in], sketch = backCenterGlueSeamBraceProfile)
+
+export backCenterGlueSeamBrace = extrude(
+  backCenterGlueSeamBraceRegion,
+  length = centerSeamBraceWidth,
+  symmetric = true,
+  method = NEW,
+)
+  |> appearance(color = backBraceWoodColor, metalness = 0, roughness = 78)
