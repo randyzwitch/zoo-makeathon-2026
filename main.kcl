@@ -1,42 +1,43 @@
 @settings(defaultLengthUnit = in)
 
-// Back-bracing working assembly.
-// Shows the radiused backplate, lower kerfing, end blocks, center seam brace,
-// scalloped transverse back braces, and side braces/side blocks. Soundboard/top-side
-// details are omitted so the back bracing remains easy to inspect.
+// ZOOKEEPER_SYNC_CHECK_2026_05_03_VISIBILITY_ONLY
+// Presentation assembly: show every solid except the backplate and its back bracing.
+// Geometry source modules are untouched; this entrypoint only controls scene visibility.
 
 import sketchGuitar, sketchGuitarInner from "guitar_outline.kcl"
 import bodySideProfile from "guitar_side_profile.kcl"
-import guitarsides from "guitar_sides_solid.kcl"
-import backplate from "guitar_backplate_solid.kcl"
+import soundboard, guitarsides, backplate from "guitar_body_solids.kcl"
 import neckBlock, tailBlock, neckBlockPlan, tailBlockPlan from "guitar_blocks.kcl"
-import sketchGuitarLiningInner, backLiningProfile from "guitar_kerfed_linings.kcl"
-import backKerfedLining from "guitar_kerfed_lining_solids.kcl"
-import backCenterGlueSeamBrace, backCenterGlueSeamBraceProfile from "guitar_back_bracing.kcl"
-import backTransverseBrace1, backTransverseBrace2, backTransverseBrace3, backTransverseBrace4 from "guitar_back_transverse_bracing.kcl"
+import sketchGuitarLiningInner, topLiningProfile, backLiningProfile from "guitar_kerfed_linings.kcl"
+import topKerfedLining, backKerfedLining from "guitar_kerfed_lining_solids.kcl"
 import sideBlocks, sideBlockHeightProfile, sideBlockGapProfiles from "guitar_side_blocks.kcl"
 
-// Hide all sketch/drawing references so only solid working geometry remains in view.
-hiddenGuitarOutlineDrawing = hide(sketchGuitar)
-hiddenGuitarInnerOutlineDrawing = hide(sketchGuitarInner)
-hiddenBodySideProfileDrawing = hide(bodySideProfile)
-hiddenNeckBlockPlanDrawing = hide(neckBlockPlan)
-hiddenTailBlockPlanDrawing = hide(tailBlockPlan)
-hiddenKerfingInnerOutlineDrawing = hide(sketchGuitarLiningInner)
-hiddenBackLiningProfileDrawing = hide(backLiningProfile)
-hiddenBackCenterGlueSeamBraceProfileDrawing = hide(backCenterGlueSeamBraceProfile)
-hiddenSideBlockHeightProfileDrawing = hide(sideBlockHeightProfile)
-hiddenSideBlockGapProfileDrawing = hide(sideBlockGapProfiles)
+// Hide every imported construction sketch/drawing helper.
+// These remain usable by the solid modules but should not render in this presentation view.
+hiddenSketchDrawings = hide([
+  sketchGuitar,
+  sketchGuitarInner,
+  bodySideProfile,
+  neckBlockPlan,
+  tailBlockPlan,
+  sketchGuitarLiningInner,
+  topLiningProfile,
+  backLiningProfile,
+  sideBlockHeightProfile,
+  sideBlockGapProfiles
+])
 
-// Visible working bodies.
+// Hide the one solid explicitly excluded from this view.
+// Back-bracing modules are intentionally not imported.
+hiddenBackplate = hide(backplate)
+
+// Visible solids only.
+visibleSoundboard = soundboard
 visibleGuitarSides = guitarsides
-visibleBackplate = backplate
 visibleNeckBlock = neckBlock
 visibleTailBlock = tailBlock
+visibleTopKerfedLining = topKerfedLining
 visibleBackKerfedLining = backKerfedLining
-visibleBackCenterGlueSeamBrace = backCenterGlueSeamBrace
-visibleBackTransverseBrace1 = backTransverseBrace1
-visibleBackTransverseBrace2 = backTransverseBrace2
-visibleBackTransverseBrace3 = backTransverseBrace3
-visibleBackTransverseBrace4 = backTransverseBrace4
 visibleSideBlocks = sideBlocks
+
+
