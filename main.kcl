@@ -1,30 +1,20 @@
 @settings(defaultLengthUnit = in)
 
-import sketchGuitar from "guitar_outline.kcl"
-import bodySideProfile, soundboard, guitarsides, backplate from "guitar_side_profile.kcl"
+// Kerfing / side-block working assembly.
+// Soundboard and backplate are imported but hidden so the interior work remains visible.
+// Heavy body solids and kerfed-lining solids are kept in dedicated *_solids modules;
+// sketch/profile reuse stays in lighter modules to reduce dependency recalculation.
+
+import soundboard, guitarsides, backplate from "guitar_body_solids.kcl"
 import neckBlock, tailBlock from "guitar_blocks.kcl"
-import topKerfedLining, backKerfedLining from "guitar_kerfed_linings.kcl"
+import topKerfedLining, backKerfedLining from "guitar_kerfed_lining_solids.kcl"
 import sideBlocks from "guitar_side_blocks.kcl"
 
-// Working assembly/reference file.
-// - The finalized guitar body outline lives in guitar_outline.kcl.
-// - The completed YZ side profile and its three guitar-outline-clipped bodies live in guitar_side_profile.kcl.
-// - Tail and neck blocks live in guitar_blocks.kcl.
-// - Solid top/back linings live in guitar_kerfed_linings.kcl.
-// - Side-block rungs live in guitar_side_blocks.kcl.
-
-// Keep imported sketches edit-addressable from main.kcl, but hidden so the current body work is clear.
-guitarOutline = sketchGuitar
-guitarSideProfile = bodySideProfile
-hiddenGuitarOutline = hide(guitarOutline)
-hiddenSideProfile = hide(guitarSideProfile)
-
-// Keep soundboard and backplate imported/edit-addressable, but hidden while we work on the sides/interior.
+// Hidden plates for context/edit addressability without obscuring the interior.
 hiddenSoundboard = hide(soundboard)
 hiddenBackplate = hide(backplate)
 
-// Explicit visible assembly bodies.
-// Assigning the imported side-block body here makes it show as a first-class visible body in the main file.
+// Visible working bodies.
 visibleGuitarSides = guitarsides
 visibleNeckBlock = neckBlock
 visibleTailBlock = tailBlock

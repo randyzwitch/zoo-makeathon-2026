@@ -1,0 +1,85 @@
+@settings(defaultLengthUnit = in)
+
+import guitarBodyRegion, guitarInnerBodyRegion from "guitar_outline.kcl"
+import sideTopProfileRegion, sideMiddleProfileRegion, sideBackProfileRegion from "guitar_side_profile.kcl"
+
+// Heavy acoustic-guitar body solids.
+// The lightweight YZ side-profile sketch/regions live in guitar_side_profile.kcl.
+
+
+sideProfileBodyWidth = 16in
+sideProfileClipDepth = 10in
+
+spruceColor = "#d9b86c"
+walnutSideColor = "#4a2615"
+walnutBackColor = "#5a2f1a"
+
+// Raw separate symmetric extrusions. On YZ, extrusion is along X, so symmetric 16 in gives X = -8 in to +8 in.
+sideTopProfilePrism = extrude(
+  sideTopProfileRegion,
+  length = sideProfileBodyWidth,
+  symmetric = true,
+  method = NEW,
+)
+sideMiddleProfilePrism = extrude(
+  sideMiddleProfileRegion,
+  length = sideProfileBodyWidth,
+  symmetric = true,
+  method = NEW,
+)
+sideBackProfilePrism = extrude(
+  sideBackProfileRegion,
+  length = sideProfileBodyWidth,
+  symmetric = true,
+  method = NEW,
+)
+
+// Full-depth clipping solid from the finished guitar outline. On XY, symmetric extrusion is along Z.
+// Clone before CSG operations consume the clip bodies.
+guitarOutlineClipTop = extrude(
+  guitarBodyRegion,
+  length = sideProfileClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+guitarOutlineClipMiddle = clone(guitarOutlineClipTop)
+guitarOutlineClipBack = clone(guitarOutlineClipTop)
+
+// Inner guitar-outline cutter for the side shell. This removes the inside volume and leaves a 0.08 in side wall.
+guitarInnerSideCut = extrude(
+  guitarInnerBodyRegion,
+  length = sideProfileClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+
+// Final three separate guitar-shaped bodies: each side-profile prism clipped to the guitar plan outline.
+// legacyMethod is used because the current engine path cannot handle this curved-prism 3D intersection yet.
+export soundboard = intersect(
+  [
+    sideTopProfilePrism,
+    guitarOutlineClipTop
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = spruceColor, metalness = 0, roughness = 78)
+
+sideMiddleGuitarSolid = intersect(
+  [
+    sideMiddleProfilePrism,
+    guitarOutlineClipMiddle
+  ],
+  legacyMethod = true,
+)
+
+export guitarsides = subtract(sideMiddleGuitarSolid, tools = [guitarInnerSideCut], legacyMethod = true)
+  |> appearance(color = walnutSideColor, metalness = 0, roughness = 72)
+
+export backplate = intersect(
+  [
+    sideBackProfilePrism,
+    guitarOutlineClipBack
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = walnutBackColor, metalness = 0, roughness = 74)

@@ -1,0 +1,63 @@
+@settings(defaultLengthUnit = in)
+
+import sketchGuitarInner from "guitar_outline.kcl"
+import guitarLiningInnerRegion, topLiningProfileRegion, backLiningProfileRegion from "guitar_kerfed_linings.kcl"
+
+// Heavy kerfed-lining solids.
+// The reusable lining inner outline and YZ profile sketches live in guitar_kerfed_linings.kcl.
+
+
+liningBodyWidth = 16in
+liningClipDepth = 10in
+liningWoodColor = "#caa06a"
+
+liningOuterBodyRegion = region(point = [0in, -4in], sketch = sketchGuitarInner)
+
+liningPlanOuterSolid = extrude(
+  liningOuterBodyRegion,
+  length = liningClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+
+liningPlanInnerSolid = extrude(
+  guitarLiningInnerRegion,
+  length = liningClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+
+liningPlanBandForTop = subtract(liningPlanOuterSolid, tools = [liningPlanInnerSolid], legacyMethod = true)
+liningPlanBandForBack = clone(liningPlanBandForTop)
+
+topLiningDepthEnvelope = extrude(
+  topLiningProfileRegion,
+  length = liningBodyWidth,
+  symmetric = true,
+  method = NEW,
+)
+
+backLiningDepthEnvelope = extrude(
+  backLiningProfileRegion,
+  length = liningBodyWidth,
+  symmetric = true,
+  method = NEW,
+)
+
+export topKerfedLining = intersect(
+  [
+    liningPlanBandForTop,
+    topLiningDepthEnvelope
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = liningWoodColor, metalness = 0, roughness = 82)
+
+export backKerfedLining = intersect(
+  [
+    liningPlanBandForBack,
+    backLiningDepthEnvelope
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = liningWoodColor, metalness = 0, roughness = 82)

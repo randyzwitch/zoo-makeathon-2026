@@ -1,22 +1,19 @@
 @settings(defaultLengthUnit = in)
 
-import guitarCenterlineUpperY, guitarCenterlineLowerY, sketchGuitarInner from "guitar_outline.kcl"
+import guitarCenterlineUpperY, guitarCenterlineLowerY from "guitar_outline.kcl"
+
+// Lightweight kerfed-lining sketch/profile module.
+// Heavy lining solids are built in guitar_kerfed_lining_solids.kcl so side-block
+// work can reuse the lining inner outline without forcing lining CSG to recalculate.
 
 // Traditional kerfed linings based on StewMac-style rough dimensions:
 // 7/32 in radial width x 9/16 in vertical height.
-// The linings are separate light-wood bodies that sit just inside the 0.08 in side shell,
-// one just below the soundboard edge and one just above the backplate edge.
-
-
 kerfedLiningRadialWidth = 0.21875in
 kerfedLiningHeight = 0.5625in
 liningSideWallOffset = 0.08in
 liningInnerOffsetFromOuter = liningSideWallOffset + kerfedLiningRadialWidth
-liningBodyWidth = 16in
-liningClipDepth = 10in
 
 sideProfileArcOffset = 0.125in
-liningWoodColor = "#caa06a"
 
 // Duplicated arc math from guitar_outline.kcl so this module can create one more
 // inward-offset outline for the inside edge of the kerfed lining.
@@ -250,7 +247,6 @@ export sketchGuitarLiningInner = sketch(on = XY) {
 }
 
 export guitarLiningInnerRegion = region(point = sketchGuitarLiningInner.insideLining)
-liningOuterBodyRegion = region(point = [0in, -4in], sketch = sketchGuitarInner)
 
 export topLiningProfile = sketch(on = YZ) {
   topOuterEdge = line(start = [var -14.63in, var -0.13in], end = [var 5.76in, var -0.13in])
@@ -274,7 +270,7 @@ export topLiningProfile = sketch(on = YZ) {
   distance([topNeckWall.start, topNeckWall.end]) == kerfedLiningHeight
 }
 
-topLiningProfileRegion = region(point = [0in, -0.4in], sketch = topLiningProfile)
+export topLiningProfileRegion = region(point = [0in, -0.4in], sketch = topLiningProfile)
 
 export backLiningProfile = sketch(on = YZ) {
   backOuterEdge = line(start = [var -14.63in, var -4.13in], end = [var 5.76in, var -3.63in])
@@ -299,53 +295,4 @@ export backLiningProfile = sketch(on = YZ) {
   distance([backNeckWall.start, backNeckWall.end]) == kerfedLiningHeight
 }
 
-backLiningProfileRegion = region(point = [0in, -3.6in], sketch = backLiningProfile)
-
-liningPlanOuterSolid = extrude(
-  liningOuterBodyRegion,
-  length = liningClipDepth,
-  symmetric = true,
-  method = NEW,
-)
-
-liningPlanInnerSolid = extrude(
-  guitarLiningInnerRegion,
-  length = liningClipDepth,
-  symmetric = true,
-  method = NEW,
-)
-
-liningPlanBandForTop = subtract(liningPlanOuterSolid, tools = [liningPlanInnerSolid], legacyMethod = true)
-liningPlanBandForBack = clone(liningPlanBandForTop)
-
-topLiningDepthEnvelope = extrude(
-  topLiningProfileRegion,
-  length = liningBodyWidth,
-  symmetric = true,
-  method = NEW,
-)
-
-backLiningDepthEnvelope = extrude(
-  backLiningProfileRegion,
-  length = liningBodyWidth,
-  symmetric = true,
-  method = NEW,
-)
-
-export topKerfedLining = intersect(
-  [
-    liningPlanBandForTop,
-    topLiningDepthEnvelope
-  ],
-  legacyMethod = true,
-)
-  |> appearance(color = liningWoodColor, metalness = 0, roughness = 82)
-
-export backKerfedLining = intersect(
-  [
-    liningPlanBandForBack,
-    backLiningDepthEnvelope
-  ],
-  legacyMethod = true,
-)
-  |> appearance(color = liningWoodColor, metalness = 0, roughness = 82)
+export backLiningProfileRegion = region(point = [0in, -3.6in], sketch = backLiningProfile)
