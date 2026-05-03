@@ -1,0 +1,253 @@
+@settings(defaultLengthUnit = in)
+
+import sketchGuitarLiningInner from "guitar_kerfed_linings.kcl"
+
+// Four transverse back braces.
+// Each brace starts as an intentionally over-wide blank, then is clipped in plan
+// to the inner kerfing outline. This makes every brace run fully to the kerfing
+// without ever protruding beyond the guitar sides.
+// Each brace also has a radiused glue face matching the inside backplate radius
+// and a saddle clearance over the continuous center glue-seam brace.
+
+
+backArcRadius = 28ft
+sideProfileArcOffset = 0.125in
+backBraceGlueRadius = backArcRadius - sideProfileArcOffset
+
+backBraceArcCenterY = -12.66in
+backBraceArcCenterZ = 331.74in
+
+centerSeamBraceTailY = -13.95in
+centerSeamBraceNeckY = 4.55in
+
+backTransverseBraceWoodColor = "#d6b66f"
+backTransverseBraceWidth = 0.42in
+backTransverseBraceMaxHeight = 0.60in
+backTransverseBraceTopRadius = backBraceGlueRadius - backTransverseBraceMaxHeight
+
+// Over-wide stock span. Final brace ends are not controlled by this value;
+// they are clipped by the inner kerfing region below.
+backTransverseBraceStockSpan = 18in
+backBracePlanClipDepth = 10in
+
+backBrace1YStart = 2.99in
+backBrace1YEnd = 3.41in
+
+backBrace2YStart = -1.61in
+backBrace2YEnd = -1.19in
+
+backBrace3YStart = -6.01in
+backBrace3YEnd = -5.59in
+
+backBrace4YStart = -10.41in
+backBrace4YEnd = -9.99in
+
+centerSeamBraceClearanceWidth = 1.08in
+centerSeamBraceClearanceHeight = 0.16in
+centerSeamBraceClearanceOvercut = 0.03in
+centerSeamBraceClearanceGlueRadius = backBraceGlueRadius + centerSeamBraceClearanceOvercut
+centerSeamBraceClearanceTopRadius = backBraceGlueRadius - centerSeamBraceClearanceHeight
+
+centerSeamBraceClearanceProfile = sketch(on = YZ) {
+  clearanceGlueFace = arc(start = [var -13.95in, var -4.16in], end = [var 4.55in, var -3.72in], center = [var -12.66in, var 331.74in])
+  clearanceTopFace = arc(start = [var -13.95in, var -3.97in], end = [var 4.55in, var -3.53in], center = [var -12.66in, var 331.74in])
+  clearanceNeckEnd = line(start = [var 4.55in, var -3.72in], end = [var 4.55in, var -3.53in])
+  clearanceTailEnd = line(start = [var -13.95in, var -3.97in], end = [var -13.95in, var -4.16in])
+
+  coincident([
+    clearanceGlueFace.end,
+    clearanceNeckEnd.start
+  ])
+  coincident([
+    clearanceNeckEnd.end,
+    clearanceTopFace.end
+  ])
+  coincident([
+    clearanceTopFace.start,
+    clearanceTailEnd.start
+  ])
+  coincident([
+    clearanceTailEnd.end,
+    clearanceGlueFace.start
+  ])
+  coincident([
+    clearanceTopFace.center,
+    clearanceGlueFace.center
+  ])
+
+  vertical(clearanceNeckEnd)
+  vertical(clearanceTailEnd)
+
+  horizontalDistance([clearanceGlueFace.center, ORIGIN]) == 0in - backBraceArcCenterY
+  verticalDistance([ORIGIN, clearanceGlueFace.center]) == backBraceArcCenterZ
+  horizontalDistance([clearanceGlueFace.start, ORIGIN]) == 0in - centerSeamBraceTailY
+  horizontalDistance([ORIGIN, clearanceGlueFace.end]) == centerSeamBraceNeckY
+
+  radius(clearanceGlueFace) == centerSeamBraceClearanceGlueRadius
+  distance([
+  clearanceGlueFace.end,
+  clearanceGlueFace.center
+]) == centerSeamBraceClearanceGlueRadius
+
+  radius(clearanceTopFace) == centerSeamBraceClearanceTopRadius
+  distance([
+  clearanceTopFace.end,
+  clearanceTopFace.center
+]) == centerSeamBraceClearanceTopRadius
+}
+
+centerSeamBraceClearanceRegion = region(point = [0in, -3.84in], sketch = centerSeamBraceClearanceProfile)
+centerSeamBraceClearance = extrude(
+  centerSeamBraceClearanceRegion,
+  length = centerSeamBraceClearanceWidth,
+  symmetric = true,
+  method = NEW,
+)
+centerClearanceForBrace1 = clone(centerSeamBraceClearance)
+centerClearanceForBrace2 = clone(centerSeamBraceClearance)
+centerClearanceForBrace3 = clone(centerSeamBraceClearance)
+centerClearanceForBrace4 = clone(centerSeamBraceClearance)
+
+// Fresh local region from the kerfing-inner sketch. Regions are single-use in
+// practice, so don't reuse the exported one from the lining module.
+backBraceInnerKerfingRegion = region(point = [0in, -4in], sketch = sketchGuitarLiningInner)
+backBraceInnerKerfingClip = extrude(
+  backBraceInnerKerfingRegion,
+  length = backBracePlanClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+backBraceInnerKerfingClip1 = clone(backBraceInnerKerfingClip)
+backBraceInnerKerfingClip2 = clone(backBraceInnerKerfingClip)
+backBraceInnerKerfingClip3 = clone(backBraceInnerKerfingClip)
+backBraceInnerKerfingClip4 = clone(backBraceInnerKerfingClip)
+
+backTransverseBraceHeightProfiles = sketch(on = YZ) {
+  b1GlueFace = arc(start = [var 2.99in, var -3.77in], end = [var 3.41in, var -3.75in], center = [var -12.66in, var 331.74in])
+  b1TopFace = arc(start = [var 2.99in, var -3.17in], end = [var 3.41in, var -3.15in], center = [var -12.66in, var 331.74in])
+  b1RightEnd = line(start = [var 3.41in, var -3.75in], end = [var 3.41in, var -3.15in])
+  b1LeftEnd = line(start = [var 2.99in, var -3.17in], end = [var 2.99in, var -3.77in])
+  coincident([b1GlueFace.end, b1RightEnd.start])
+  coincident([b1RightEnd.end, b1TopFace.end])
+  coincident([b1TopFace.start, b1LeftEnd.start])
+  coincident([b1LeftEnd.end, b1GlueFace.start])
+  coincident([b1TopFace.center, b1GlueFace.center])
+  vertical(b1RightEnd)
+  vertical(b1LeftEnd)
+  horizontalDistance([b1GlueFace.center, ORIGIN]) == 0in - backBraceArcCenterY
+  verticalDistance([ORIGIN, b1GlueFace.center]) == backBraceArcCenterZ
+  horizontalDistance([ORIGIN, b1GlueFace.start]) == backBrace1YStart
+  horizontalDistance([ORIGIN, b1GlueFace.end]) == backBrace1YEnd
+  radius(b1GlueFace) == backBraceGlueRadius
+  distance([b1GlueFace.end, b1GlueFace.center]) == backBraceGlueRadius
+  radius(b1TopFace) == backTransverseBraceTopRadius
+  distance([b1TopFace.end, b1TopFace.center]) == backTransverseBraceTopRadius
+
+  b2GlueFace = arc(start = [var -1.61in, var -3.95in], end = [var -1.19in, var -3.94in], center = [var -12.66in, var 331.74in])
+  b2TopFace = arc(start = [var -1.61in, var -3.35in], end = [var -1.19in, var -3.34in], center = [var -12.66in, var 331.74in])
+  b2RightEnd = line(start = [var -1.19in, var -3.94in], end = [var -1.19in, var -3.34in])
+  b2LeftEnd = line(start = [var -1.61in, var -3.35in], end = [var -1.61in, var -3.95in])
+  coincident([b2GlueFace.end, b2RightEnd.start])
+  coincident([b2RightEnd.end, b2TopFace.end])
+  coincident([b2TopFace.start, b2LeftEnd.start])
+  coincident([b2LeftEnd.end, b2GlueFace.start])
+  coincident([b2TopFace.center, b2GlueFace.center])
+  vertical(b2RightEnd)
+  vertical(b2LeftEnd)
+  horizontalDistance([b2GlueFace.center, ORIGIN]) == 0in - backBraceArcCenterY
+  verticalDistance([ORIGIN, b2GlueFace.center]) == backBraceArcCenterZ
+  horizontalDistance([b2GlueFace.start, ORIGIN]) == 0in - backBrace2YStart
+  horizontalDistance([b2GlueFace.end, ORIGIN]) == 0in - backBrace2YEnd
+  radius(b2GlueFace) == backBraceGlueRadius
+  distance([b2GlueFace.end, b2GlueFace.center]) == backBraceGlueRadius
+  radius(b2TopFace) == backTransverseBraceTopRadius
+  distance([b2TopFace.end, b2TopFace.center]) == backTransverseBraceTopRadius
+
+  b3GlueFace = arc(start = [var -6.01in, var -4.07in], end = [var -5.59in, var -4.06in], center = [var -12.66in, var 331.74in])
+  b3TopFace = arc(start = [var -6.01in, var -3.47in], end = [var -5.59in, var -3.46in], center = [var -12.66in, var 331.74in])
+  b3RightEnd = line(start = [var -5.59in, var -4.06in], end = [var -5.59in, var -3.46in])
+  b3LeftEnd = line(start = [var -6.01in, var -3.47in], end = [var -6.01in, var -4.07in])
+  coincident([b3GlueFace.end, b3RightEnd.start])
+  coincident([b3RightEnd.end, b3TopFace.end])
+  coincident([b3TopFace.start, b3LeftEnd.start])
+  coincident([b3LeftEnd.end, b3GlueFace.start])
+  coincident([b3TopFace.center, b3GlueFace.center])
+  vertical(b3RightEnd)
+  vertical(b3LeftEnd)
+  horizontalDistance([b3GlueFace.center, ORIGIN]) == 0in - backBraceArcCenterY
+  verticalDistance([ORIGIN, b3GlueFace.center]) == backBraceArcCenterZ
+  horizontalDistance([b3GlueFace.start, ORIGIN]) == 0in - backBrace3YStart
+  horizontalDistance([b3GlueFace.end, ORIGIN]) == 0in - backBrace3YEnd
+  radius(b3GlueFace) == backBraceGlueRadius
+  distance([b3GlueFace.end, b3GlueFace.center]) == backBraceGlueRadius
+  radius(b3TopFace) == backTransverseBraceTopRadius
+  distance([b3TopFace.end, b3TopFace.center]) == backTransverseBraceTopRadius
+
+  b4GlueFace = arc(start = [var -10.41in, var -4.13in], end = [var -9.99in, var -4.12in], center = [var -12.66in, var 331.74in])
+  b4TopFace = arc(start = [var -10.41in, var -3.53in], end = [var -9.99in, var -3.52in], center = [var -12.66in, var 331.74in])
+  b4RightEnd = line(start = [var -9.99in, var -4.12in], end = [var -9.99in, var -3.52in])
+  b4LeftEnd = line(start = [var -10.41in, var -3.53in], end = [var -10.41in, var -4.13in])
+  coincident([b4GlueFace.end, b4RightEnd.start])
+  coincident([b4RightEnd.end, b4TopFace.end])
+  coincident([b4TopFace.start, b4LeftEnd.start])
+  coincident([b4LeftEnd.end, b4GlueFace.start])
+  coincident([b4TopFace.center, b4GlueFace.center])
+  vertical(b4RightEnd)
+  vertical(b4LeftEnd)
+  horizontalDistance([b4GlueFace.center, ORIGIN]) == 0in - backBraceArcCenterY
+  verticalDistance([ORIGIN, b4GlueFace.center]) == backBraceArcCenterZ
+  horizontalDistance([b4GlueFace.start, ORIGIN]) == 0in - backBrace4YStart
+  horizontalDistance([b4GlueFace.end, ORIGIN]) == 0in - backBrace4YEnd
+  radius(b4GlueFace) == backBraceGlueRadius
+  distance([b4GlueFace.end, b4GlueFace.center]) == backBraceGlueRadius
+  radius(b4TopFace) == backTransverseBraceTopRadius
+  distance([b4TopFace.end, b4TopFace.center]) == backTransverseBraceTopRadius
+}
+
+b1HeightRegion = region(point = [3.2in, -3.45in], sketch = backTransverseBraceHeightProfiles)
+b2HeightRegion = region(point = [-1.4in, -3.63in], sketch = backTransverseBraceHeightProfiles)
+b3HeightRegion = region(point = [-5.8in, -3.75in], sketch = backTransverseBraceHeightProfiles)
+b4HeightRegion = region(point = [-10.2in, -3.81in], sketch = backTransverseBraceHeightProfiles)
+
+b1RawBrace = extrude(
+  b1HeightRegion,
+  length = backTransverseBraceStockSpan,
+  symmetric = true,
+  method = NEW,
+)
+b2RawBrace = extrude(
+  b2HeightRegion,
+  length = backTransverseBraceStockSpan,
+  symmetric = true,
+  method = NEW,
+)
+b3RawBrace = extrude(
+  b3HeightRegion,
+  length = backTransverseBraceStockSpan,
+  symmetric = true,
+  method = NEW,
+)
+b4RawBrace = extrude(
+  b4HeightRegion,
+  length = backTransverseBraceStockSpan,
+  symmetric = true,
+  method = NEW,
+)
+
+b1KerfingClippedBrace = intersect([b1RawBrace, backBraceInnerKerfingClip1], legacyMethod = true)
+b2KerfingClippedBrace = intersect([b2RawBrace, backBraceInnerKerfingClip2], legacyMethod = true)
+b3KerfingClippedBrace = intersect([b3RawBrace, backBraceInnerKerfingClip3], legacyMethod = true)
+b4KerfingClippedBrace = intersect([b4RawBrace, backBraceInnerKerfingClip4], legacyMethod = true)
+
+export backTransverseBrace1 = subtract(b1KerfingClippedBrace, tools = [centerClearanceForBrace1], legacyMethod = true)
+  |> appearance(color = backTransverseBraceWoodColor, metalness = 0, roughness = 78)
+export backTransverseBrace2 = subtract(b2KerfingClippedBrace, tools = [centerClearanceForBrace2], legacyMethod = true)
+  |> appearance(color = backTransverseBraceWoodColor, metalness = 0, roughness = 78)
+export backTransverseBrace3 = subtract(b3KerfingClippedBrace, tools = [centerClearanceForBrace3], legacyMethod = true)
+  |> appearance(color = backTransverseBraceWoodColor, metalness = 0, roughness = 78)
+export backTransverseBrace4 = subtract(b4KerfingClippedBrace, tools = [centerClearanceForBrace4], legacyMethod = true)
+  |> appearance(color = backTransverseBraceWoodColor, metalness = 0, roughness = 78)
+
+hiddenCenterSeamBraceClearanceProfile = hide(centerSeamBraceClearanceProfile)
+hiddenBackTransverseBraceHeightProfiles = hide(backTransverseBraceHeightProfiles)
+hiddenBackBraceInnerKerfingClip = hide(backBraceInnerKerfingClip)
