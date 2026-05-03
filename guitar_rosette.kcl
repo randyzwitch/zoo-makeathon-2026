@@ -13,7 +13,7 @@ sideProfileClipDepth = 10in
 
 soundholeRadius = 2in
 rosetteSetbackFromSoundhole = 0.125in
-purflingLineWidth = 0.015625in
+purflingLineWidth = 0.046875in // 3/64 in; each B/W/B stack is 9/64 in wide.
 mainInlayRingWidth = 0.375in
 mainInlaySegmentAngle = 30deg
 rosettePocketBottomZ = 0.025in
@@ -85,7 +85,7 @@ rosetteChannelPlan = sketch(on = offsetPlane(XY, offset = rosettePocketBottomZ))
   channelInner.start
 ]) == 0in
 
-  channelOuter = circle(start = [var 2.59375in, var 0in], center = [var 0in, var 0in])
+  channelOuter = circle(start = [var 2.78125in, var 0in], center = [var 0in, var 0in])
   coincident([channelOuter.center, ORIGIN])
   horizontalDistance([
   channelOuter.center,
@@ -96,7 +96,7 @@ rosetteChannelPlan = sketch(on = offsetPlane(XY, offset = rosettePocketBottomZ))
   channelOuter.start
 ]) == 0in
 }
-rosetteChannelPlanRegion = region(point = [2.35in, 0in], sketch = rosetteChannelPlan)
+rosetteChannelPlanRegion = region(point = [2.45in, 0in], sketch = rosetteChannelPlan)
 
 export rosetteChannelCutter = extrude(rosetteChannelPlanRegion, length = rosettePocketCutterHeight, method = NEW)
 hiddenRosetteChannelCutter = hide(rosetteChannelCutter)
@@ -114,7 +114,7 @@ rosettePurflingPlan = sketch(on = offsetPlane(XY, offset = rosettePocketBottomZ)
   channelInner.start
 ]) == 0in
 
-  innerDark1Outer = circle(start = [var 2.140625in, var 0in], center = [var 0in, var 0in])
+  innerDark1Outer = circle(start = [var 2.171875in, var 0in], center = [var 0in, var 0in])
   coincident([innerDark1Outer.center, ORIGIN])
   horizontalDistance([
   innerDark1Outer.center,
@@ -125,7 +125,7 @@ rosettePurflingPlan = sketch(on = offsetPlane(XY, offset = rosettePocketBottomZ)
   innerDark1Outer.start
 ]) == 0in
 
-  innerLightOuter = circle(start = [var 2.15625in, var 0in], center = [var 0in, var 0in])
+  innerLightOuter = circle(start = [var 2.21875in, var 0in], center = [var 0in, var 0in])
   coincident([innerLightOuter.center, ORIGIN])
   horizontalDistance([
   innerLightOuter.center,
@@ -136,7 +136,7 @@ rosettePurflingPlan = sketch(on = offsetPlane(XY, offset = rosettePocketBottomZ)
   innerLightOuter.start
 ]) == 0in
 
-  mainInlayInner = circle(start = [var 2.171875in, var 0in], center = [var 0in, var 0in])
+  mainInlayInner = circle(start = [var 2.265625in, var 0in], center = [var 0in, var 0in])
   coincident([mainInlayInner.center, ORIGIN])
   horizontalDistance([
   mainInlayInner.center,
@@ -147,7 +147,7 @@ rosettePurflingPlan = sketch(on = offsetPlane(XY, offset = rosettePocketBottomZ)
   mainInlayInner.start
 ]) == 0in
 
-  mainInlayOuter = circle(start = [var 2.546875in, var 0in], center = [var 0in, var 0in])
+  mainInlayOuter = circle(start = [var 2.640625in, var 0in], center = [var 0in, var 0in])
   coincident([mainInlayOuter.center, ORIGIN])
   horizontalDistance([
   mainInlayOuter.center,
@@ -158,7 +158,7 @@ rosettePurflingPlan = sketch(on = offsetPlane(XY, offset = rosettePocketBottomZ)
   mainInlayOuter.start
 ]) == 0in
 
-  outerDark1Outer = circle(start = [var 2.5625in, var 0in], center = [var 0in, var 0in])
+  outerDark1Outer = circle(start = [var 2.6875in, var 0in], center = [var 0in, var 0in])
   coincident([outerDark1Outer.center, ORIGIN])
   horizontalDistance([
   outerDark1Outer.center,
@@ -169,7 +169,7 @@ rosettePurflingPlan = sketch(on = offsetPlane(XY, offset = rosettePocketBottomZ)
   outerDark1Outer.start
 ]) == 0in
 
-  outerLightOuter = circle(start = [var 2.578125in, var 0in], center = [var 0in, var 0in])
+  outerLightOuter = circle(start = [var 2.734375in, var 0in], center = [var 0in, var 0in])
   coincident([outerLightOuter.center, ORIGIN])
   horizontalDistance([
   outerLightOuter.center,
@@ -180,7 +180,7 @@ rosettePurflingPlan = sketch(on = offsetPlane(XY, offset = rosettePocketBottomZ)
   outerLightOuter.start
 ]) == 0in
 
-  channelOuter = circle(start = [var 2.59375in, var 0in], center = [var 0in, var 0in])
+  channelOuter = circle(start = [var 2.78125in, var 0in], center = [var 0in, var 0in])
   coincident([channelOuter.center, ORIGIN])
   horizontalDistance([
   channelOuter.center,
@@ -192,12 +192,12 @@ rosettePurflingPlan = sketch(on = offsetPlane(XY, offset = rosettePocketBottomZ)
 ]) == 0in
 }
 
-innerPurflingDark1PlanRegion = region(point = [2.1328in, 0in], sketch = rosettePurflingPlan)
-innerPurflingLightPlanRegion = region(point = [2.1484in, 0in], sketch = rosettePurflingPlan)
-innerPurflingDark2PlanRegion = region(point = [2.1641in, 0in], sketch = rosettePurflingPlan)
-outerPurflingDark1PlanRegion = region(point = [2.5547in, 0in], sketch = rosettePurflingPlan)
-outerPurflingLightPlanRegion = region(point = [2.5703in, 0in], sketch = rosettePurflingPlan)
-outerPurflingDark2PlanRegion = region(point = [2.5859in, 0in], sketch = rosettePurflingPlan)
+innerPurflingDark1PlanRegion = region(point = [2.148438in, 0in], sketch = rosettePurflingPlan)
+innerPurflingLightPlanRegion = region(point = [2.195313in, 0in], sketch = rosettePurflingPlan)
+innerPurflingDark2PlanRegion = region(point = [2.242188in, 0in], sketch = rosettePurflingPlan)
+outerPurflingDark1PlanRegion = region(point = [2.664063in, 0in], sketch = rosettePurflingPlan)
+outerPurflingLightPlanRegion = region(point = [2.710938in, 0in], sketch = rosettePurflingPlan)
+outerPurflingDark2PlanRegion = region(point = [2.757813in, 0in], sketch = rosettePurflingPlan)
 
 innerPurflingDark1PlanPrism = extrude(innerPurflingDark1PlanRegion, length = rosettePocketCutterHeight, method = NEW)
 innerPurflingLightPlanPrism = extrude(innerPurflingLightPlanRegion, length = rosettePocketCutterHeight, method = NEW)
@@ -272,11 +272,11 @@ export rosetteOuterPurfling = flatten([
 // That keeps all 12 segment tops matched to the routed channel instead of
 // rotating the dome surface with the segment.
 mainInlaySegmentSeedPlan = sketch(on = offsetPlane(XY, offset = rosettePocketBottomZ)) {
-  innerArc = arc(start = [var 2.171875in, var 0in], end = [var 1.880895in, var 1.085938in], center = [var 0in, var 0in])
-  outerArc = arc(start = [var 2.546875in, var 0in], end = [var 2.205658in, var 1.273438in], center = [var 0in, var 0in])
+  innerArc = arc(start = [var 2.265625in, var 0in], end = [var 1.962089in, var 1.132813in], center = [var 0in, var 0in])
+  outerArc = arc(start = [var 2.640625in, var 0in], end = [var 2.286848in, var 1.320313in], center = [var 0in, var 0in])
 
-  radialStart = line(start = [var 2.171875in, var 0in], end = [var 2.546875in, var 0in])
-  radialEnd = line(start = [var 1.880895in, var 1.085938in], end = [var 2.205658in, var 1.273438in])
+  radialStart = line(start = [var 2.265625in, var 0in], end = [var 2.640625in, var 0in])
+  radialEnd = line(start = [var 1.962089in, var 1.132813in], end = [var 2.286848in, var 1.320313in])
 
   coincident([innerArc.center, ORIGIN])
   coincident([outerArc.center, innerArc.center])
@@ -292,7 +292,7 @@ mainInlaySegmentSeedPlan = sketch(on = offsetPlane(XY, offset = rosettePocketBot
   horizontal(radialStart)
   angle([radialStart, radialEnd]) == mainInlaySegmentAngle
 }
-mainInlaySegmentSeedPlanRegion = region(point = [2.28in, 0.61in], sketch = mainInlaySegmentSeedPlan)
+mainInlaySegmentSeedPlanRegion = region(point = [2.37in, 0.635in], sketch = mainInlaySegmentSeedPlan)
 mainInlaySegmentSeedPlanPrism = extrude(mainInlaySegmentSeedPlanRegion, length = rosettePocketCutterHeight, method = NEW)
 
 mainInlayShell0Plan = clone(mainInlaySegmentSeedPlanPrism)
