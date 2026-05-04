@@ -1,5 +1,7 @@
 @settings(defaultLengthUnit = in)
 
+import bridgePin1X, bridgePin2X, bridgePin3X, bridgePin4X, bridgePin5X, bridgePin6X, bridgePinCounterboreDepth, bridgePinCounterboreRadius, bridgePinCounterboreStartZ, bridgePinHoleRadius, bridgePinHoleY, bridgePinThroughBottomZ, bridgePinThroughLength from "guitar_bridge_pin_holes.kcl"
+
 // Standard StewMac-style acoustic guitar bridge for the bridge-work assembly.
 // Placement rule:
 // - the soundboard front edge on the centerline is the 14th fret location
@@ -7,31 +9,29 @@
 // front edge of soundboard - remaining scale length after fret 14
 // - scale length is 24.75 in
 
+
 bridgeWoodColor = "#24100d"
+saddleBoneColor = "#f4ead2"
 
-// Derived from the current guitar_outline.kcl centerline/top arc at the soundboard's front edge.
-// Kept local so this bridge module does not import and render the full body outline by itself.
 soundboardFrontCenterY = 5.764093in
-
 bridgeScaleLength = 24.75in
 bridgeJoinFret = 14
 bridgeFret14ToSaddle = bridgeScaleLength * pow(2, exp = 0 - (bridgeJoinFret / 12))
 bridgeSaddleClosestNutY = soundboardFrontCenterY - bridgeFret14ToSaddle
 
-// StewMac standard bridge dimensions.
 bridgeLength = 6.0in
 bridgeHalfLength = bridgeLength / 2
 bridgeMaxDepth = 1.420in
 bridgeEndDepth = 0.720in
 bridgeThickness = 0.375in
 
-// Squared-off standard-bridge footprint controls.
 bridgeShoulderX = 2.350in
 bridgeBellyHalfLength = 1.650in
 bridgeWingFlatLength = bridgeHalfLength - bridgeShoulderX
 
-// The spec drawing locates the slanted saddle slot by its distance from the front/nut-side edge.
-// The treble-side slot edge is the closest part of the slot to the nut.
+bridgeTopEdgeDrop = 0.085in
+bridgeTopEnvelopeRunout = 0.060in
+
 bridgeSaddleTrebleFrontOffset = 0.220in
 bridgeSaddleBassFrontOffset = 0.355in
 bridgeSaddleSlotWidth = 3 / 32 * 1in
@@ -47,24 +47,27 @@ bridgeSaddleTrebleFrontY = bridgeFrontY - bridgeSaddleTrebleFrontOffset
 bridgeSaddleBassRearY = bridgeSaddleBassFrontY - bridgeSaddleSlotWidth
 bridgeSaddleTrebleRearY = bridgeSaddleTrebleFrontY - bridgeSaddleSlotWidth
 
-// Flat top datum. This is the approximate soundboard crown height at the bridge center.
 bridgeBaseZ = 0.106in
 bridgeTopZ = bridgeBaseZ + bridgeThickness
 bridgeCutMargin = 0.030in
+bridgeTopEdgeZ = bridgeTopZ - bridgeTopEdgeDrop
+bridgeTopEnvelopeFrontY = bridgeFrontY + bridgeTopEnvelopeRunout
+bridgeTopEnvelopeRearY = bridgeRearY - bridgeTopEnvelopeRunout
+bridgeTopEnvelopeCenterY = -5.750779in
+bridgeTopCrownRadius = 3.530147in
+bridgeTopCrownCenterZ = -3.049147in
+bridgeTopEnvelopeWidth = bridgeLength + 0.500in
 
-// Bridge pin-hole layout.
-bridgeStringSpread = 2.125in
-bridgePinSpacing = bridgeStringSpread / 5
-bridgePin1X = 0in - (bridgeStringSpread / 2)
-bridgePin2X = 0in - (bridgePinSpacing * 1.5)
-bridgePin3X = 0in - (bridgePinSpacing / 2)
-bridgePin4X = bridgePinSpacing / 2
-bridgePin5X = bridgePinSpacing * 1.5
-bridgePin6X = bridgeStringSpread / 2
-bridgePinHoleRadius = 0.105in
-bridgePinCounterboreRadius = 0.170in
-bridgePinCounterboreDepth = 0.080in
-bridgePinHoleY = bridgeFrontY - 0.705in
+saddleEndInset = 0.050in
+saddleHalfLength = bridgeSaddleSlotHalfLength - saddleEndInset
+saddleWidth = 0.080in
+saddleFrontEndYInset = 0.002323in
+saddleBassFrontY = bridgeSaddleBassFrontY + saddleFrontEndYInset
+saddleTrebleFrontY = bridgeSaddleTrebleFrontY - saddleFrontEndYInset
+saddleBassRearY = saddleBassFrontY - saddleWidth
+saddleTrebleRearY = saddleTrebleFrontY - saddleWidth
+saddleBottomZ = bridgeTopZ - bridgeSaddleSlotPocketDepth + 0.010in
+saddleHeight = bridgeSaddleSlotPocketDepth + 0.170in
 
 bridgeFootprintPlan = sketch(on = offsetPlane(XY, offset = bridgeBaseZ)) {
   frontEdge = line(start = [var -3.0in, var -5.040779in], end = [var 3.0in, var -5.040779in])
@@ -115,7 +118,7 @@ bridgeFootprintPlan = sketch(on = offsetPlane(XY, offset = bridgeBaseZ)) {
 }
 
 bridgeFootprintRegion = region(point = [0in, -5.70in], sketch = bridgeFootprintPlan)
-bridgeBlank = extrude(bridgeFootprintRegion, length = bridgeThickness, method = NEW)
+bridgePlanPrism = extrude(bridgeFootprintRegion, length = bridgeThickness + bridgeCutMargin, method = NEW)
 
 saddleSlotPlan = sketch(on = offsetPlane(XY, offset = bridgeTopZ - bridgeSaddleSlotPocketDepth)) {
   slotFrontEdge = line(start = [var -1.453125in, var -5.395779in], end = [var 1.453125in, var -5.260779in])
@@ -138,7 +141,6 @@ saddleSlotPlan = sketch(on = offsetPlane(XY, offset = bridgeTopZ - bridgeSaddleS
   verticalDistance([ORIGIN, slotFrontEdge.end]) == bridgeSaddleTrebleFrontY
   verticalDistance([ORIGIN, slotRearEdge.end]) == bridgeSaddleBassRearY
   verticalDistance([ORIGIN, slotRearEdge.start]) == bridgeSaddleTrebleRearY
-  distance([slotFrontEdge.start, slotFrontEdge.end]) == bridgeSaddleSlotLength
   distance([slotTrebleEnd.start, slotTrebleEnd.end]) == bridgeSaddleSlotWidth
   distance([slotBassEnd.start, slotBassEnd.end]) == bridgeSaddleSlotWidth
 }
@@ -146,7 +148,7 @@ saddleSlotPlan = sketch(on = offsetPlane(XY, offset = bridgeTopZ - bridgeSaddleS
 saddleSlotRegion = region(point = [0in, -5.37in], sketch = saddleSlotPlan)
 saddleSlotCutter = extrude(saddleSlotRegion, length = bridgeSaddleSlotPocketDepth + bridgeCutMargin, method = NEW)
 
-pinHoleSeedPlan = sketch(on = offsetPlane(XY, offset = bridgeBaseZ - bridgeCutMargin)) {
+pinHoleSeedPlan = sketch(on = offsetPlane(XY, offset = bridgePinThroughBottomZ)) {
   pinHole = circle(start = [var 0.105in, var 0in], center = [var 0in, var 0in])
   coincident([pinHole.center, ORIGIN])
   horizontalDistance([pinHole.center, pinHole.start]) == bridgePinHoleRadius
@@ -154,7 +156,7 @@ pinHoleSeedPlan = sketch(on = offsetPlane(XY, offset = bridgeBaseZ - bridgeCutMa
 }
 
 pinHoleSeedRegion = region(point = [0in, 0in], sketch = pinHoleSeedPlan)
-pinHoleSeed = extrude(pinHoleSeedRegion, length = bridgeThickness + bridgeCutMargin * 2, method = NEW)
+pinHoleSeed = extrude(pinHoleSeedRegion, length = bridgePinThroughLength, method = NEW)
 
 pinHole1Cutter = clone(pinHoleSeed)
   |> translate(x = bridgePin1X, y = bridgePinHoleY, global = true)
@@ -169,7 +171,7 @@ pinHole5Cutter = clone(pinHoleSeed)
 pinHole6Cutter = clone(pinHoleSeed)
   |> translate(x = bridgePin6X, y = bridgePinHoleY, global = true)
 
-pinHoleCutters = flatten([
+bridgePinHoleCutters = flatten([
   pinHole1Cutter,
   pinHole2Cutter,
   pinHole3Cutter,
@@ -178,7 +180,7 @@ pinHoleCutters = flatten([
   pinHole6Cutter
 ])
 
-pinCounterboreSeedPlan = sketch(on = offsetPlane(XY, offset = bridgeTopZ - bridgePinCounterboreDepth)) {
+pinCounterboreSeedPlan = sketch(on = offsetPlane(XY, offset = bridgePinCounterboreStartZ)) {
   counterbore = circle(start = [var 0.170in, var 0in], center = [var 0in, var 0in])
   coincident([counterbore.center, ORIGIN])
   horizontalDistance([counterbore.center, counterbore.start]) == bridgePinCounterboreRadius
@@ -201,7 +203,7 @@ counterbore5Cutter = clone(pinCounterboreSeed)
 counterbore6Cutter = clone(pinCounterboreSeed)
   |> translate(x = bridgePin6X, y = bridgePinHoleY, global = true)
 
-pinCounterboreCutters = flatten([
+bridgePinCounterboreCutters = flatten([
   counterbore1Cutter,
   counterbore2Cutter,
   counterbore3Cutter,
@@ -212,25 +214,100 @@ pinCounterboreCutters = flatten([
 
 bridgeCutters = flatten([
   saddleSlotCutter,
-  pinHoleCutters,
-  pinCounterboreCutters
+  bridgePinHoleCutters,
+  bridgePinCounterboreCutters
 ])
 
-export bridge = subtract(bridgeBlank, tools = bridgeCutters, legacyMethod = true)
+bridgeCutPrism = subtract(bridgePlanPrism, tools = bridgeCutters, legacyMethod = true)
+
+bridgeTopEnvelopeProfile = sketch(on = YZ) {
+  bottomEdge = line(start = [var -6.520779in, var 0.106in], end = [var -4.980779in, var 0.106in])
+  frontWall = line(start = [var -4.980779in, var 0.106in], end = [var -4.980779in, var 0.396in])
+  topCrown = arc(start = [var -4.980779in, var 0.396in], end = [var -6.520779in, var 0.396in], center = [var -5.750779in, var -3.049147in])
+  rearWall = line(start = [var -6.520779in, var 0.396in], end = [var -6.520779in, var 0.106in])
+
+  coincident([bottomEdge.end, frontWall.start])
+  coincident([frontWall.end, topCrown.start])
+  coincident([topCrown.end, rearWall.start])
+  coincident([rearWall.end, bottomEdge.start])
+
+  horizontal(bottomEdge)
+  vertical(frontWall)
+  vertical(rearWall)
+
+  horizontalDistance([bottomEdge.start, ORIGIN]) == 0in - bridgeTopEnvelopeRearY
+  horizontalDistance([frontWall.start, ORIGIN]) == 0in - bridgeTopEnvelopeFrontY
+  verticalDistance([ORIGIN, bottomEdge.start]) == bridgeBaseZ
+  verticalDistance([ORIGIN, frontWall.end]) == bridgeTopEdgeZ
+  verticalDistance([ORIGIN, rearWall.start]) == bridgeTopEdgeZ
+
+  horizontalDistance([topCrown.center, ORIGIN]) == 0in - bridgeTopEnvelopeCenterY
+  verticalDistance([ORIGIN, topCrown.center]) == bridgeTopCrownCenterZ
+  radius(topCrown) == bridgeTopCrownRadius
+}
+
+bridgeTopEnvelopeRegion = region(point = [-5.75in, 0.25in], sketch = bridgeTopEnvelopeProfile)
+bridgeTopEnvelope = extrude(
+  bridgeTopEnvelopeRegion,
+  length = bridgeTopEnvelopeWidth,
+  symmetric = true,
+  method = NEW,
+)
+
+export bridge = intersect([bridgeCutPrism, bridgeTopEnvelope], legacyMethod = true)
   |> appearance(color = bridgeWoodColor, metalness = 0, roughness = 58)
 
-hiddenBridgeWorkBodies = hide([
-  bridgeBlank,
-  saddleSlotCutter,
-  pinHoleSeed,
-  pinHoleCutters,
-  pinCounterboreSeed,
-  pinCounterboreCutters
-])
+saddlePlan = sketch(on = offsetPlane(XY, offset = saddleBottomZ)) {
+  saddleFrontEdge = line(start = [var -1.403125in, var -5.393456in], end = [var 1.403125in, var -5.263102in])
+  saddleTrebleEnd = line(start = [var 1.403125in, var -5.263102in], end = [var 1.403125in, var -5.343102in])
+  saddleRearEdge = line(start = [var 1.403125in, var -5.343102in], end = [var -1.403125in, var -5.473456in])
+  saddleBassEnd = line(start = [var -1.403125in, var -5.473456in], end = [var -1.403125in, var -5.393456in])
+
+  coincident([
+    saddleFrontEdge.end,
+    saddleTrebleEnd.start
+  ])
+  coincident([
+    saddleTrebleEnd.end,
+    saddleRearEdge.start
+  ])
+  coincident([
+    saddleRearEdge.end,
+    saddleBassEnd.start
+  ])
+  coincident([
+    saddleBassEnd.end,
+    saddleFrontEdge.start
+  ])
+
+  vertical(saddleTrebleEnd)
+  vertical(saddleBassEnd)
+  parallel(saddleFrontEdge, saddleRearEdge)
+
+  horizontalDistance([saddleFrontEdge.start, ORIGIN]) == saddleHalfLength
+  horizontalDistance([ORIGIN, saddleFrontEdge.end]) == saddleHalfLength
+  verticalDistance([ORIGIN, saddleFrontEdge.start]) == saddleBassFrontY
+  verticalDistance([ORIGIN, saddleFrontEdge.end]) == saddleTrebleFrontY
+  verticalDistance([ORIGIN, saddleRearEdge.end]) == saddleBassRearY
+  verticalDistance([ORIGIN, saddleRearEdge.start]) == saddleTrebleRearY
+  distance([
+  saddleTrebleEnd.start,
+  saddleTrebleEnd.end
+]) == saddleWidth
+  distance([saddleBassEnd.start, saddleBassEnd.end]) == saddleWidth
+}
+
+saddleRegion = region(point = [0in, -5.37in], sketch = saddlePlan)
+saddleBlank = extrude(saddleRegion, length = saddleHeight, method = NEW)
+
+export saddle = saddleBlank
+  |> appearance(color = saddleBoneColor, metalness = 0, roughness = 34)
 
 hiddenBridgeSketches = hide([
   bridgeFootprintPlan,
   saddleSlotPlan,
   pinHoleSeedPlan,
-  pinCounterboreSeedPlan
+  pinCounterboreSeedPlan,
+  bridgeTopEnvelopeProfile,
+  saddlePlan
 ])

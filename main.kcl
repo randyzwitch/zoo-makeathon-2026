@@ -2,16 +2,18 @@
 
 // Lightweight bridge-work assembly.
 // Shows only the soundboard, rosette, bracing/patches attached to the soundboard,
-// and the external bridge so bridge modeling iterations render faster.
+// and the external bridge/saddle so bridge modeling iterations render faster.
 // Geometry source modules are untouched.
 
+import sketchGuitar, sketchGuitarInner from "guitar_outline.kcl"
+import bodySideProfile from "guitar_side_profile.kcl"
 import soundboard from "guitar_soundboard_solid.kcl"
 import rosetteInnerPurfling, rosetteMainInlay, rosetteOuterPurfling from "guitar_rosette.kcl"
 import soundboardBracing from "guitar_soundboard_bracing.kcl"
 import soundboardTopSideBraces from "guitar_soundboard_top_side_braces.kcl"
 import bridgePlate from "guitar_bridge_plate.kcl"
 import soundholeReinforcement from "guitar_soundhole_reinforcement.kcl"
-import bridge from "guitar_bridge.kcl"
+import bridge, saddle from "guitar_bridge.kcl"
 
 // Visible working set for adding the external bridge.
 visibleSoundboard = soundboard
@@ -23,3 +25,10 @@ visibleSoundboardTopSideBraces = soundboardTopSideBraces
 visibleBridgePlate = bridgePlate
 visibleSoundholeReinforcement = soundholeReinforcement
 visibleBridge = bridge
+visibleSaddle = saddle
+
+hiddenPresentationSketches = hide([
+  sketchGuitar,
+  sketchGuitarInner,
+  bodySideProfile
+])

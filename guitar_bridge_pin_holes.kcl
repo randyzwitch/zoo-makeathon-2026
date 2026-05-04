@@ -1,0 +1,36 @@
+@settings(defaultLengthUnit = in)
+
+// Shared bridge-pin hole layout values.
+// Each part builds its own local cutters from these dimensions so booleans do
+// not consume a cutter solid needed by another module.
+
+soundboardFrontCenterY = 5.764093in
+bridgeScaleLength = 24.75in
+bridgeJoinFret = 14
+bridgeFret14ToSaddle = bridgeScaleLength * pow(2, exp = 0 - (bridgeJoinFret / 12))
+bridgeSaddleClosestNutY = soundboardFrontCenterY - bridgeFret14ToSaddle
+bridgeSaddleTrebleFrontOffset = 0.220in
+bridgeFrontY = bridgeSaddleClosestNutY + bridgeSaddleTrebleFrontOffset
+
+bridgeBaseZ = 0.106in
+bridgeThickness = 0.375in
+bridgeTopZ = bridgeBaseZ + bridgeThickness
+
+export bridgePinThroughBottomZ = -0.260in
+export bridgePinThroughTopClearance = 0.125in
+export bridgePinThroughLength = bridgeTopZ - bridgePinThroughBottomZ + bridgePinThroughTopClearance
+
+export bridgeStringSpread = 2.125in
+bridgePinSpacing = bridgeStringSpread / 5
+export bridgePin1X = 0in - (bridgeStringSpread / 2)
+export bridgePin2X = 0in - (bridgePinSpacing * 1.5)
+export bridgePin3X = 0in - (bridgePinSpacing / 2)
+export bridgePin4X = bridgePinSpacing / 2
+export bridgePin5X = bridgePinSpacing * 1.5
+export bridgePin6X = bridgeStringSpread / 2
+export bridgePinHoleRadius = 0.105in
+export bridgePinHoleY = bridgeFrontY - 0.705in
+
+export bridgePinCounterboreRadius = 0.170in
+export bridgePinCounterboreDepth = 0.080in
+export bridgePinCounterboreStartZ = bridgeTopZ - bridgePinCounterboreDepth
