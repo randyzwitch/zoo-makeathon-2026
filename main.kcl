@@ -12,6 +12,7 @@ import sketchGuitarLiningInner, topLiningProfile, backLiningProfile from "guitar
 import topKerfedLining, backKerfedLining from "guitar_kerfed_lining_solids.kcl"
 import sideBlocks, sideBlockHeightProfile, sideBlockGapProfiles from "guitar_side_blocks.kcl"
 import soundboardBracing from "guitar_soundboard_bracing.kcl"
+import soundboardTopSideBraces from "guitar_soundboard_top_side_braces.kcl"
 import bridgePlate from "guitar_bridge_plate.kcl"
 import soundholeReinforcement from "guitar_soundhole_reinforcement.kcl"
 
@@ -37,6 +38,7 @@ hiddenBackplate = hide(backplate)
 // Visible solids only.
 visibleSoundboard = soundboard
 visibleSoundboardBracing = soundboardBracing
+visibleSoundboardTopSideBraces = soundboardTopSideBraces
 visibleBridgePlate = bridgePlate
 visibleSoundholeReinforcement = soundholeReinforcement
 visibleRosetteInnerPurfling = rosetteInnerPurfling
