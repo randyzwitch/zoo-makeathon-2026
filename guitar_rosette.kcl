@@ -16,7 +16,7 @@ rosetteSetbackFromSoundhole = 0.125in
 purflingLineWidth = 0.046875in // 3/64 in; each B/W/B stack is 9/64 in wide.
 mainInlayRingWidth = 0.375in
 mainInlaySegmentAngle = 30deg
-rosettePocketBottomZ = 0.025in
+rosettePocketBottomZ = 0.04in
 rosettePocketCutterHeight = 0.125in
 rosetteEnvelopeHalfWidth = 3in
 
