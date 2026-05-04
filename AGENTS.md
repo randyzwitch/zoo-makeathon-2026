@@ -10,6 +10,7 @@ While this is a custom design, if you are looking for design inspiration, the de
 - This design is in inches. Under no circumstances you should try to change that. If you encounter metric somewhere, convert it to inches.
 - Guitars are organic shapes built from curves and arcs, with the occasional straight line. There is never a time where I want you to approximate a solution for a curved object using chords or lines. Stop immediately instead of presenting that type of solution.
 - If I present a DXF, STEP or other reference image, USE IT! Don't guess at what I might want, the reference shows you exactly what I want.
+- If I give you a reference image and it seems like items might be parallel or perpendicular, try to model it that way. It's likely that I would do that in real life, I wouldn't likely choose 89.6 degrees instead of a perfect right angle.
 
 ## Zookeeper / AI assistant workflow expectations
 
