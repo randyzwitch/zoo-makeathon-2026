@@ -1,0 +1,83 @@
+@settings(defaultLengthUnit = in)
+
+// Soundboard-only solid for bridge-work presentation views.
+// This intentionally avoids building the sides and backplate from guitar_body_solids.kcl.
+
+import sketchGuitar, sketchGuitarInner, guitarBodyRegion from "guitar_outline.kcl"
+import bodySideProfile, sideTopProfileRegion from "guitar_side_profile.kcl"
+import rosetteChannelCutter from "guitar_rosette.kcl"
+
+sideProfileBodyWidth = 16in
+sideProfileClipDepth = 10in
+
+soundholeDiameter = 4in
+soundholeRadius = soundholeDiameter / 2
+
+spruceColor = "#d9b86c"
+
+// Raw top-plate extrusion. On YZ, extrusion is along X, so symmetric 16 in gives X = -8 in to +8 in.
+sideTopProfilePrism = extrude(
+  sideTopProfileRegion,
+  length = sideProfileBodyWidth,
+  symmetric = true,
+  method = NEW,
+)
+
+// Full-depth clipping solid from the finished guitar outline. On XY, symmetric extrusion is along Z.
+guitarOutlineClipTop = extrude(
+  guitarBodyRegion,
+  length = sideProfileClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+
+// Soundhole cutter: a 4 in diameter vertical cylinder centered on the master-sketch origin.
+soundholeSketch = sketch(on = XY) {
+  soundholeCircle = circle(start = [var 2in, var 0in], center = [var 0in, var 0in])
+  coincident([soundholeCircle.center, ORIGIN])
+  horizontalDistance([
+    soundholeCircle.center,
+    soundholeCircle.start
+  ]) == soundholeRadius
+  verticalDistance([
+    soundholeCircle.center,
+    soundholeCircle.start
+  ]) == 0in
+}
+
+soundholeRegion = region(point = [0in, 0in], sketch = soundholeSketch)
+soundholeCutter = extrude(
+  soundholeRegion,
+  length = sideProfileClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+
+soundboardBlank = intersect(
+  [
+    sideTopProfilePrism,
+    guitarOutlineClipTop
+  ],
+  legacyMethod = true,
+)
+
+// The soundhole and rosette channel are cut only from this lightweight soundboard blank.
+export soundboard = subtract(soundboardBlank, tools = [soundholeCutter, rosetteChannelCutter], legacyMethod = true)
+  |> appearance(color = spruceColor, metalness = 0, roughness = 78)
+
+hiddenSoundboardOnlyWorkBodies = hide([
+  sideTopProfilePrism,
+  guitarOutlineClipTop,
+  soundholeCutter,
+  soundboardBlank
+])
+
+hiddenSoundboardOnlySketches = hide([
+  sketchGuitar,
+  sketchGuitarInner,
+  bodySideProfile,
+  soundholeSketch,
+  guitarBodyRegion,
+  sideTopProfileRegion,
+  soundholeRegion
+])

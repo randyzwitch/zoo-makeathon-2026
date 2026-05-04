@@ -1,52 +1,22 @@
 @settings(defaultLengthUnit = in)
 
-// Presentation assembly: show every solid except the backplate and its back bracing.
-// Geometry source modules are untouched; this entrypoint only controls scene visibility.
+// Lightweight bridge-work assembly.
+// Shows only the soundboard, rosette, and bracing/patches attached to the soundboard
+// so bridge modeling iterations render faster. Geometry source modules are untouched.
 
-import sketchGuitar, sketchGuitarInner from "guitar_outline.kcl"
-import bodySideProfile from "guitar_side_profile.kcl"
-import soundboard, guitarsides, backplate from "guitar_body_solids.kcl"
+import soundboard from "guitar_soundboard_solid.kcl"
 import rosetteInnerPurfling, rosetteMainInlay, rosetteOuterPurfling from "guitar_rosette.kcl"
-import neckBlock, tailBlock, neckBlockPlan, tailBlockPlan from "guitar_blocks.kcl"
-import sketchGuitarLiningInner, topLiningProfile, backLiningProfile from "guitar_kerfed_linings.kcl"
-import topKerfedLining, backKerfedLining from "guitar_kerfed_lining_solids.kcl"
-import sideBlocks, sideBlockHeightProfile, sideBlockGapProfiles from "guitar_side_blocks.kcl"
 import soundboardBracing from "guitar_soundboard_bracing.kcl"
 import soundboardTopSideBraces from "guitar_soundboard_top_side_braces.kcl"
 import bridgePlate from "guitar_bridge_plate.kcl"
 import soundholeReinforcement from "guitar_soundhole_reinforcement.kcl"
 
-// Hide every imported construction sketch/drawing helper.
-// These remain usable by the solid modules but should not render in this presentation view.
-hiddenSketchDrawings = hide([
-  sketchGuitar,
-  sketchGuitarInner,
-  bodySideProfile,
-  neckBlockPlan,
-  tailBlockPlan,
-  sketchGuitarLiningInner,
-  topLiningProfile,
-  backLiningProfile,
-  sideBlockHeightProfile,
-  sideBlockGapProfiles
-])
-
-// Hide the one solid explicitly excluded from this view.
-// Back-bracing modules are intentionally not imported.
-hiddenBackplate = hide(backplate)
-
-// Visible solids only.
+// Visible working set for adding the external bridge.
 visibleSoundboard = soundboard
+visibleRosetteInnerPurfling = rosetteInnerPurfling
+visibleRosetteMainInlay = rosetteMainInlay
+visibleRosetteOuterPurfling = rosetteOuterPurfling
 visibleSoundboardBracing = soundboardBracing
 visibleSoundboardTopSideBraces = soundboardTopSideBraces
 visibleBridgePlate = bridgePlate
 visibleSoundholeReinforcement = soundholeReinforcement
-visibleRosetteInnerPurfling = rosetteInnerPurfling
-visibleRosetteMainInlay = rosetteMainInlay
-visibleRosetteOuterPurfling = rosetteOuterPurfling
-visibleGuitarSides = guitarsides
-visibleNeckBlock = neckBlock
-visibleTailBlock = tailBlock
-visibleTopKerfedLining = topKerfedLining
-visibleBackKerfedLining = backKerfedLining
-visibleSideBlocks = sideBlocks
