@@ -25,6 +25,16 @@ xBraceScallopDrop = xBraceFullHeight - xBraceEndHeight
 xBraceScallopRadius = 10.0in
 xBraceFlatLength = 10.45in
 
+// Half-lap allowance at the X intersection. The cutters are aligned to the
+// opposite brace's plan angle so the visible slot follows the actual crossing
+// brace footprint rather than being square to the receiving brace.
+xBraceLapClearance = 0.035in
+xBraceLapCutterLength = 1.15in
+xBraceLapCutterWidth = xBraceWidth + xBraceLapClearance
+xBraceLapCutterHeight = xBraceFullHeight / 2 + xBraceLapClearance
+xBraceLapGlueSideCenterZ = soundboardBraceGlueZ - (xBraceFullHeight / 4)
+xBraceLapFreeSideCenterZ = soundboardBraceGlueZ - (xBraceFullHeight * 3 / 4)
+
 xBraceProfile = sketch(on = YZ) {
   glueFace = line(start = [var -9.5in, var -0.065in], end = [var 6.55in, var -0.065in])
   upperEnd = line(start = [var 6.55in, var -0.065in], end = [var 6.55in, var -0.245in])
@@ -79,14 +89,60 @@ xBraceSeed = extrude(
   method = NEW,
 )
 
-export soundboardXBraceBass = clone(xBraceSeed)
+// Small rectangular vertical cutter used for the complementary X-brace half laps.
+xBraceLapCutterPlan = sketch(on = XY) {
+  leftEdge = line(start = [var -0.2075in, var -0.575in], end = [var -0.2075in, var 0.575in])
+  upperEdge = line(start = [var -0.2075in, var 0.575in], end = [var 0.2075in, var 0.575in])
+  rightEdge = line(start = [var 0.2075in, var 0.575in], end = [var 0.2075in, var -0.575in])
+  lowerEdge = line(start = [var 0.2075in, var -0.575in], end = [var -0.2075in, var -0.575in])
+
+  coincident([leftEdge.end, upperEdge.start])
+  coincident([upperEdge.end, rightEdge.start])
+  coincident([rightEdge.end, lowerEdge.start])
+  coincident([lowerEdge.end, leftEdge.start])
+
+  vertical(leftEdge)
+  horizontal(upperEdge)
+  vertical(rightEdge)
+  horizontal(lowerEdge)
+
+  horizontalDistance([leftEdge.start, ORIGIN]) == xBraceLapCutterWidth / 2
+  verticalDistance([leftEdge.start, ORIGIN]) == xBraceLapCutterLength / 2
+  distance([upperEdge.start, upperEdge.end]) == xBraceLapCutterWidth
+  distance([leftEdge.start, leftEdge.end]) == xBraceLapCutterLength
+}
+
+xBraceLapCutterRegion = region(point = [0in, 0in], sketch = xBraceLapCutterPlan)
+xBraceLapCutterSeed = extrude(
+  xBraceLapCutterRegion,
+  length = xBraceLapCutterHeight,
+  symmetric = true,
+  method = NEW,
+)
+
+xBraceBassPlaced = clone(xBraceSeed)
   |> rotate(axis = Z, angle = xBraceHalfAngle, global = true)
   |> translate(y = xBraceCrossY, global = true)
-  |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
 
-export soundboardXBraceTreble = clone(xBraceSeed)
+xBraceTreblePlaced = clone(xBraceSeed)
   |> rotate(axis = Z, angle = 0deg - xBraceHalfAngle, global = true)
   |> translate(y = xBraceCrossY, global = true)
+
+// Bass brace is relieved from the glue-face side; treble brace is relieved from
+// the visible/free-face side. Together they occupy complementary half-depths at
+// the crossing, creating a true interlocking half-lap instead of an overlap.
+xBraceBassGlueSideLapCutter = clone(xBraceLapCutterSeed)
+  |> rotate(axis = Z, angle = 0deg - xBraceHalfAngle, global = true)
+  |> translate(y = xBraceCrossY, z = xBraceLapGlueSideCenterZ, global = true)
+
+xBraceTrebleFreeSideLapCutter = clone(xBraceLapCutterSeed)
+  |> rotate(axis = Z, angle = xBraceHalfAngle, global = true)
+  |> translate(y = xBraceCrossY, z = xBraceLapFreeSideCenterZ, global = true)
+
+export soundboardXBraceBass = subtract(xBraceBassPlaced, tools = [xBraceBassGlueSideLapCutter], legacyMethod = true)
+  |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
+
+export soundboardXBraceTreble = subtract(xBraceTreblePlaced, tools = [xBraceTrebleFreeSideLapCutter], legacyMethod = true)
   |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
 
 // Upper transverse brace, above the soundhole/rosette, full-width to the upper bout kerfing.
@@ -210,12 +266,18 @@ export soundboardBracing = flatten([
 
 hiddenBraceSeeds = hide([
   xBraceSeed,
+  xBraceLapCutterSeed,
+  xBraceBassPlaced,
+  xBraceTreblePlaced,
+  xBraceBassGlueSideLapCutter,
+  xBraceTrebleFreeSideLapCutter,
   upperTransverseSeed,
   popsicleBraceSeed
 ])
 
 hiddenBraceSketches = hide([
   xBraceProfile,
+  xBraceLapCutterPlan,
   upperTransverseProfile,
   popsicleBraceProfile
 ])
