@@ -259,31 +259,34 @@ export soundboardPopsicleBrace = clone(popsicleBraceSeed)
   |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 80)
 
 // Tone bars below the bridge plate, in the lower-bout bay between the X brace
-// and the tail block. They are mirrored to the treble-side lower X-brace leg
-// from the user's reference: the inside ends touch the X brace, then both bars
-// run parallel down-left toward the lower bout.
+// and the tail block. The angle and X-brace-side endpoints are preserved, while
+// the lower-bout ends are lengthened until they meet the top kerfed lining.
 toneBarAngle = 110deg
 toneBarWidth = 0.34in
-toneBarHalfLength = 3.75in
+toneBarUpperHalfLength = 5.74in
+toneBarLowerHalfLength = 6.21in
 toneBarEndHeight = 0.16in
 toneBarFullHeight = 0.50in
 toneBarScallopLength = 2.05in
 toneBarScallopDrop = toneBarFullHeight - toneBarEndHeight
 toneBarScallopRadius = 6.350in
-toneBarFlatLength = toneBarHalfLength * 2 - (toneBarScallopLength * 2)
+toneBarUpperFlatLength = toneBarUpperHalfLength * 2 - (toneBarScallopLength * 2)
+toneBarLowerFlatLength = toneBarLowerHalfLength * 2 - (toneBarScallopLength * 2)
 
-toneBarUpperCenterX = -0.12in
-toneBarUpperCenterY = -7.60in
-toneBarLowerCenterX = 1.28in
-toneBarLowerCenterY = -8.62in
+// Centers are shifted down-left along the 110-degree brace axis so the original
+// upper/right ends remain fixed at the X-brace-side location.
+toneBarUpperCenterX = -1.99in
+toneBarUpperCenterY = -8.28in
+toneBarLowerCenterX = -1.03in
+toneBarLowerCenterY = -9.46in
 
-toneBarProfile = sketch(on = YZ) {
-  glueFace = line(start = [var -3.75in, var -0.065in], end = [var 3.75in, var -0.065in])
-  upperEnd = line(start = [var 3.75in, var -0.065in], end = [var 3.75in, var -0.225in])
-  upperScallop = arc(start = [var 3.75in, var -0.225in], end = [var 1.70in, var -0.565in], center = [var 3.75in, var -6.575in])
-  centerCrown = line(start = [var 1.70in, var -0.565in], end = [var -1.70in, var -0.565in])
-  lowerScallop = arc(start = [var -1.70in, var -0.565in], end = [var -3.75in, var -0.225in], center = [var -3.75in, var -6.575in])
-  lowerEnd = line(start = [var -3.75in, var -0.225in], end = [var -3.75in, var -0.065in])
+toneBarUpperProfile = sketch(on = YZ) {
+  glueFace = line(start = [var -5.74in, var -0.065in], end = [var 5.74in, var -0.065in])
+  upperEnd = line(start = [var 5.74in, var -0.065in], end = [var 5.74in, var -0.225in])
+  upperScallop = arc(start = [var 5.74in, var -0.225in], end = [var 3.69in, var -0.565in], center = [var 5.74in, var -6.575in])
+  centerCrown = line(start = [var 3.69in, var -0.565in], end = [var -3.69in, var -0.565in])
+  lowerScallop = arc(start = [var -3.69in, var -0.565in], end = [var -5.74in, var -0.225in], center = [var -5.74in, var -6.575in])
+  lowerEnd = line(start = [var -5.74in, var -0.225in], end = [var -5.74in, var -0.065in])
 
   coincident([glueFace.end, upperEnd.start])
   coincident([upperEnd.end, upperScallop.start])
@@ -297,12 +300,12 @@ toneBarProfile = sketch(on = YZ) {
   horizontal(centerCrown)
   vertical(lowerEnd)
 
-  horizontalDistance([glueFace.start, ORIGIN]) == toneBarHalfLength
+  horizontalDistance([glueFace.start, ORIGIN]) == toneBarUpperHalfLength
   verticalDistance([ORIGIN, glueFace.start]) == soundboardBraceGlueZ
-  distance([glueFace.start, glueFace.end]) == toneBarHalfLength * 2
+  distance([glueFace.start, glueFace.end]) == toneBarUpperHalfLength * 2
   distance([upperEnd.start, upperEnd.end]) == toneBarEndHeight
   distance([lowerEnd.start, lowerEnd.end]) == toneBarEndHeight
-  distance([centerCrown.start, centerCrown.end]) == toneBarFlatLength
+  distance([centerCrown.start, centerCrown.end]) == toneBarUpperFlatLength
 
   horizontalDistance([upperScallop.end, upperScallop.start]) == toneBarScallopLength
   verticalDistance([upperScallop.end, upperScallop.start]) == toneBarScallopDrop
@@ -323,20 +326,74 @@ toneBarProfile = sketch(on = YZ) {
   radius(lowerScallop) == toneBarScallopRadius
 }
 
-toneBarRegion = region(point = [0in, -0.34in], sketch = toneBarProfile)
-toneBarSeed = extrude(
-  toneBarRegion,
+toneBarUpperRegion = region(point = [0in, -0.34in], sketch = toneBarUpperProfile)
+toneBarUpperSeed = extrude(
+  toneBarUpperRegion,
   length = toneBarWidth,
   symmetric = true,
   method = NEW,
 )
 
-export soundboardUpperToneBar = clone(toneBarSeed)
+toneBarLowerProfile = sketch(on = YZ) {
+  glueFace = line(start = [var -6.21in, var -0.065in], end = [var 6.21in, var -0.065in])
+  upperEnd = line(start = [var 6.21in, var -0.065in], end = [var 6.21in, var -0.225in])
+  upperScallop = arc(start = [var 6.21in, var -0.225in], end = [var 4.16in, var -0.565in], center = [var 6.21in, var -6.575in])
+  centerCrown = line(start = [var 4.16in, var -0.565in], end = [var -4.16in, var -0.565in])
+  lowerScallop = arc(start = [var -4.16in, var -0.565in], end = [var -6.21in, var -0.225in], center = [var -6.21in, var -6.575in])
+  lowerEnd = line(start = [var -6.21in, var -0.225in], end = [var -6.21in, var -0.065in])
+
+  coincident([glueFace.end, upperEnd.start])
+  coincident([upperEnd.end, upperScallop.start])
+  coincident([upperScallop.end, centerCrown.start])
+  coincident([centerCrown.end, lowerScallop.start])
+  coincident([lowerScallop.end, lowerEnd.start])
+  coincident([lowerEnd.end, glueFace.start])
+
+  horizontal(glueFace)
+  vertical(upperEnd)
+  horizontal(centerCrown)
+  vertical(lowerEnd)
+
+  horizontalDistance([glueFace.start, ORIGIN]) == toneBarLowerHalfLength
+  verticalDistance([ORIGIN, glueFace.start]) == soundboardBraceGlueZ
+  distance([glueFace.start, glueFace.end]) == toneBarLowerHalfLength * 2
+  distance([upperEnd.start, upperEnd.end]) == toneBarEndHeight
+  distance([lowerEnd.start, lowerEnd.end]) == toneBarEndHeight
+  distance([centerCrown.start, centerCrown.end]) == toneBarLowerFlatLength
+
+  horizontalDistance([upperScallop.end, upperScallop.start]) == toneBarScallopLength
+  verticalDistance([upperScallop.end, upperScallop.start]) == toneBarScallopDrop
+  horizontalDistance([
+  upperScallop.start,
+  upperScallop.center
+]) == 0in
+  verticalDistance([
+  upperScallop.center,
+  upperScallop.start
+]) == toneBarScallopRadius
+  radius(upperScallop) == toneBarScallopRadius
+
+  horizontalDistance([lowerScallop.end, lowerScallop.start]) == toneBarScallopLength
+  verticalDistance([lowerScallop.start, lowerScallop.end]) == toneBarScallopDrop
+  horizontalDistance([lowerScallop.end, lowerScallop.center]) == 0in
+  verticalDistance([lowerScallop.center, lowerScallop.end]) == toneBarScallopRadius
+  radius(lowerScallop) == toneBarScallopRadius
+}
+
+toneBarLowerRegion = region(point = [0in, -0.34in], sketch = toneBarLowerProfile)
+toneBarLowerSeed = extrude(
+  toneBarLowerRegion,
+  length = toneBarWidth,
+  symmetric = true,
+  method = NEW,
+)
+
+export soundboardUpperToneBar = clone(toneBarUpperSeed)
   |> rotate(axis = Z, angle = toneBarAngle, global = true)
   |> translate(x = toneBarUpperCenterX, y = toneBarUpperCenterY, global = true)
   |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
 
-export soundboardLowerToneBar = clone(toneBarSeed)
+export soundboardLowerToneBar = clone(toneBarLowerSeed)
   |> rotate(axis = Z, angle = toneBarAngle, global = true)
   |> translate(x = toneBarLowerCenterX, y = toneBarLowerCenterY, global = true)
   |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
@@ -363,7 +420,8 @@ hiddenBraceSeeds = hide([
   xBraceTrebleFreeSideLapCutter,
   upperTransverseSeed,
   popsicleBraceSeed,
-  toneBarSeed
+  toneBarUpperSeed,
+  toneBarLowerSeed
 ])
 
 hiddenBraceSketches = hide([
@@ -371,5 +429,6 @@ hiddenBraceSketches = hide([
   xBraceLapCutterPlan,
   upperTransverseProfile,
   popsicleBraceProfile,
-  toneBarProfile
+  toneBarUpperProfile,
+  toneBarLowerProfile
 ])
