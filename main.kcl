@@ -1,0 +1,44 @@
+@settings(defaultLengthUnit = in)
+
+// Acoustic Guitar Body Outline
+// All coordinates in inches. Origin = waist center.
+// Left side (negative X) and right side (positive X)
+
+sketchGuitar = sketch(on = XY) {
+  centerline = line(start = [var 0in, var 9.21in], end = [var 0in, var -17.61in], construction = true)
+  vertical(centerline)
+  horizontalDistance([centerline.start, ORIGIN]) == 0in
+verticalDistance([ORIGIN, centerline.start]) == 8.99in
+verticalDistance([centerline.end, centerline.start]) == 26.82in
+  
+  // --- LEFT SIDE ---
+
+  pt1 = point(at = [0.0in, 5.7500in])
+  pt2 = point(at = [-3.5138in, 5.6133in])
+  pt3 = point(at = [-5.1056in, 4.9263in])
+  pt4 = point(at = [-5.7827in, 3.0430in])
+  pt5 = point(at = [-5.4668in, 0.3435in])
+  pt6 = point(at = [-5.8302in, -2.6941in])
+  pt7 = point(at = [-7.2244in, -5.6934in])
+  pt8 = point(at = [-7.4232in, -11.1187in])
+  pt9 = point(at = [-4.6353in, -13.8463in])
+  pt10 = point(at = [-0.5668in, -14.6169in])
+  pt11 = point(at = [0.0in, -14.6250in])
+
+  arcL1 = arc(start = [0.0in, 5.7500in], end = [-3.5138in, 5.6133in], center = [-0.7961in, -19.0252in])
+  arcL2 = arc(start = [-3.5138in, 5.6133in], end = [-5.1056in, 4.9263in], center = [-3.2789in, 2.8815in])
+  arcL3 = arc(start = [-5.1056in, 4.9263in], end = [-5.7827in, 3.0430in], center = [-2.9807in, 3.0990in])
+  arcL4 = arc(start = [-5.7827in, 3.0430in], end = [-5.4668in, 0.3435in], center = [6.2875in, 3.0874in])
+
+  arcL5 = arc(start = [-5.8302in, -2.6941in], end = [-5.4668in, 0.3435in], center = [-10.2500in, -0.6248in])
+
+  arcL6 = arc(start = [-7.2244in, -5.6934in], end = [-5.8302in, -2.6941in], center = [-187.2286in, 79.8025in])
+
+  arcL7 = arc(start = [-7.2244in, -5.6934in], end = [-7.4232in, -11.1187in], center = [-0.7220in, -8.6480in])
+
+  arcL8 = arc(start = [-7.4232in, -11.1187in], end = [-4.6353in, -13.8463in], center = [-2.8465in, -9.2293in])
+
+  arcL9 = arc(start = [-4.6353in, -13.8463in], end = [-0.5668in, -14.6169in], center = [-0.5795in, -3.5586in])
+
+  arcL10 = arc(start = [-0.5668in, -14.6169in], end = [0.0in, -14.6250in], center = [-0.0052in, 4.7675in])
+}
