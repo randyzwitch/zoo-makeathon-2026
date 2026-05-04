@@ -11,6 +11,7 @@ import neckBlock, tailBlock, neckBlockPlan, tailBlockPlan from "guitar_blocks.kc
 import sketchGuitarLiningInner, topLiningProfile, backLiningProfile from "guitar_kerfed_linings.kcl"
 import topKerfedLining, backKerfedLining from "guitar_kerfed_lining_solids.kcl"
 import sideBlocks, sideBlockHeightProfile, sideBlockGapProfiles from "guitar_side_blocks.kcl"
+import soundboardBracing from "guitar_soundboard_bracing.kcl"
 
 // Hide every imported construction sketch/drawing helper.
 // These remain usable by the solid modules but should not render in this presentation view.
@@ -33,6 +34,7 @@ hiddenBackplate = hide(backplate)
 
 // Visible solids only.
 visibleSoundboard = soundboard
+visibleSoundboardBracing = soundboardBracing
 visibleRosetteInnerPurfling = rosetteInnerPurfling
 visibleRosetteMainInlay = rosetteMainInlay
 visibleRosetteOuterPurfling = rosetteOuterPurfling
