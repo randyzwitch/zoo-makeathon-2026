@@ -3,8 +3,15 @@
 // Four small top-side/finger braces: two per side.
 // Each side's upper and lower brace shares the same plan angle so the pair
 // reads parallel in plan, matching the reference bracing layout.
-// The upper pair is pulled closer to the lower pair to better match the
-// reference spacing, while keeping the existing plan angle unchanged.
+// The pair has been moved 1 in toward the neck end while preserving the
+// existing brace angle. The X-brace-side ends remain registered to the X brace;
+// the rim-side runs have been lengthened to finish just inboard of the top
+// kerfed lining.
+// Each raw brace has a slight X-brace-side overlap, then is trimmed by an
+// X-brace-footprint cutter so the visible end terminates at the near edge of
+// the X brace instead of passing through it.
+// Outer/rim-side runs stop inside the guitar sides and can approach, but not
+// pierce/show through, the kerfing.
 // Free-face shaping remains concave scalloped only, never convex.
 
 soundboardBraceWoodColor = "#d6b66f"
@@ -14,29 +21,39 @@ topSideBraceWidth = 0.24in
 topSideBraceEndHeight = 0.08in
 topSideBraceFullHeight = 0.30in
 
-// Upper pair: same section profile as before, with a modest inner-end length
-// increase so the braces read closer to the X-brace zone after being moved.
-topSideBraceUpperOuterRun = 1.85in
-topSideBraceUpperInnerRun = 2.75in
+// Upper pair: moved neckward, still terminating against the X brace. The
+// positive local end is the X-brace end; the negative local end is the rim side.
+topSideBraceUpperOuterRun = 2.50in
+topSideBraceUpperInnerRun = 1.86in
 topSideBraceUpperLength = topSideBraceUpperOuterRun + topSideBraceUpperInnerRun
-topSideBraceUpperScallopLength = 1.05in
+topSideBraceUpperScallopLength = 0.75in
 topSideBraceUpperFlatLength = topSideBraceUpperLength - (topSideBraceUpperScallopLength * 2)
 
-// Lower pair: shorter, lower, and set into the lower X-brace-side bays.
-topSideBraceLowerLength = 2.55in
-topSideBraceLowerHalfLength = 1.275in
-topSideBraceLowerScallopLength = 0.75in
+// Lower pair: moved neckward in parallel with the upper pair. It remains shorter
+// because the X brace is closer to the side in this lower position.
+topSideBraceLowerOuterRun = 1.75in
+topSideBraceLowerInnerRun = 1.10in
+topSideBraceLowerLength = topSideBraceLowerOuterRun + topSideBraceLowerInnerRun
+topSideBraceLowerScallopLength = 0.40in
 topSideBraceLowerFlatLength = topSideBraceLowerLength - (topSideBraceLowerScallopLength * 2)
 
 topSideBracePlanAngle = 125deg
 
+// Local copy of the main X-brace plan footprint for trim cutters only.
+// Keep these in sync with guitar_soundboard_bracing.kcl if the X brace moves.
+topSideBraceXTrimAngle = 54deg
+topSideBraceXTrimCenterY = -3.85in
+topSideBraceXTrimHalfWidth = 0.19in
+topSideBraceXTrimHalfLength = 9.75in
+topSideBraceXTrimHeight = 1.0in
+
 topSideBraceUpperProfile = sketch(on = YZ) {
-  glueFace = line(start = [var -1.85in, var -0.065in], end = [var 2.75in, var -0.065in])
-  positiveEnd = line(start = [var 2.75in, var -0.065in], end = [var 2.75in, var -0.145in])
-  positiveTaper = line(start = [var 2.75in, var -0.145in], end = [var 1.70in, var -0.365in])
-  centerCrown = line(start = [var 1.70in, var -0.365in], end = [var -0.80in, var -0.365in])
-  negativeTaper = line(start = [var -0.80in, var -0.365in], end = [var -1.85in, var -0.145in])
-  negativeEnd = line(start = [var -1.85in, var -0.145in], end = [var -1.85in, var -0.065in])
+  glueFace = line(start = [var -2.50in, var -0.065in], end = [var 1.86in, var -0.065in])
+  positiveEnd = line(start = [var 1.86in, var -0.065in], end = [var 1.86in, var -0.145in])
+  positiveTaper = line(start = [var 1.86in, var -0.145in], end = [var 1.11in, var -0.365in])
+  centerCrown = line(start = [var 1.11in, var -0.365in], end = [var -1.75in, var -0.365in])
+  negativeTaper = line(start = [var -1.75in, var -0.365in], end = [var -2.50in, var -0.145in])
+  negativeEnd = line(start = [var -2.50in, var -0.145in], end = [var -2.50in, var -0.065in])
 
   coincident([glueFace.end, positiveEnd.start])
   coincident([positiveEnd.end, positiveTaper.start])
@@ -70,12 +87,12 @@ topSideBraceUpperSeed = extrude(
 )
 
 topSideBraceLowerProfile = sketch(on = YZ) {
-  glueFace = line(start = [var -1.275in, var -0.065in], end = [var 1.275in, var -0.065in])
-  positiveEnd = line(start = [var 1.275in, var -0.065in], end = [var 1.275in, var -0.145in])
-  positiveTaper = line(start = [var 1.275in, var -0.145in], end = [var 0.525in, var -0.365in])
-  centerCrown = line(start = [var 0.525in, var -0.365in], end = [var -0.525in, var -0.365in])
-  negativeTaper = line(start = [var -0.525in, var -0.365in], end = [var -1.275in, var -0.145in])
-  negativeEnd = line(start = [var -1.275in, var -0.145in], end = [var -1.275in, var -0.065in])
+  glueFace = line(start = [var -1.75in, var -0.065in], end = [var 1.10in, var -0.065in])
+  positiveEnd = line(start = [var 1.10in, var -0.065in], end = [var 1.10in, var -0.145in])
+  positiveTaper = line(start = [var 1.10in, var -0.145in], end = [var 0.70in, var -0.365in])
+  centerCrown = line(start = [var 0.70in, var -0.365in], end = [var -1.35in, var -0.365in])
+  negativeTaper = line(start = [var -1.35in, var -0.365in], end = [var -1.75in, var -0.145in])
+  negativeEnd = line(start = [var -1.75in, var -0.145in], end = [var -1.75in, var -0.065in])
 
   coincident([glueFace.end, positiveEnd.start])
   coincident([positiveEnd.end, positiveTaper.start])
@@ -89,7 +106,7 @@ topSideBraceLowerProfile = sketch(on = YZ) {
   horizontal(centerCrown)
   vertical(negativeEnd)
 
-  horizontalDistance([glueFace.start, ORIGIN]) == topSideBraceLowerHalfLength
+  horizontalDistance([glueFace.start, ORIGIN]) == topSideBraceLowerOuterRun
   verticalDistance([ORIGIN, glueFace.start]) == soundboardBraceGlueZ
   distance([glueFace.start, glueFace.end]) == topSideBraceLowerLength
   distance([positiveEnd.start, positiveEnd.end]) == topSideBraceEndHeight
@@ -100,7 +117,7 @@ topSideBraceLowerProfile = sketch(on = YZ) {
   verticalDistance([centerCrown.start, glueFace.end]) == topSideBraceFullHeight
 }
 
-topSideBraceLowerRegion = region(point = [0in, -0.2in], sketch = topSideBraceLowerProfile)
+topSideBraceLowerRegion = region(point = [0.3in, -0.2in], sketch = topSideBraceLowerProfile)
 topSideBraceLowerSeed = extrude(
   topSideBraceLowerRegion,
   length = topSideBraceWidth,
@@ -108,25 +125,80 @@ topSideBraceLowerSeed = extrude(
   method = NEW,
 )
 
-// Positive local end is the X-brace end of each side brace.
-leftUpperTopSideBrace = clone(topSideBraceUpperSeed)
+topSideBraceXTrimPlan = sketch(on = XY) {
+  leftEdge = line(start = [var -0.19in, var -9.75in], end = [var -0.19in, var 9.75in])
+  upperEdge = line(start = [var -0.19in, var 9.75in], end = [var 0.19in, var 9.75in])
+  rightEdge = line(start = [var 0.19in, var 9.75in], end = [var 0.19in, var -9.75in])
+  lowerEdge = line(start = [var 0.19in, var -9.75in], end = [var -0.19in, var -9.75in])
+
+  coincident([leftEdge.end, upperEdge.start])
+  coincident([upperEdge.end, rightEdge.start])
+  coincident([rightEdge.end, lowerEdge.start])
+  coincident([lowerEdge.end, leftEdge.start])
+
+  vertical(leftEdge)
+  horizontal(upperEdge)
+  vertical(rightEdge)
+  horizontal(lowerEdge)
+
+  horizontalDistance([leftEdge.start, ORIGIN]) == topSideBraceXTrimHalfWidth
+  verticalDistance([leftEdge.start, ORIGIN]) == topSideBraceXTrimHalfLength
+  distance([upperEdge.start, upperEdge.end]) == topSideBraceXTrimHalfWidth * 2
+  distance([leftEdge.start, leftEdge.end]) == topSideBraceXTrimHalfLength * 2
+}
+
+topSideBraceXTrimRegion = region(point = [0in, 0in], sketch = topSideBraceXTrimPlan)
+topSideBraceXTrimSeed = extrude(
+  topSideBraceXTrimRegion,
+  length = topSideBraceXTrimHeight,
+  symmetric = true,
+  method = NEW,
+)
+
+topSideBraceLeftUpperXTrimCutter = clone(topSideBraceXTrimSeed)
+  |> rotate(axis = Z, angle = 0deg - topSideBraceXTrimAngle, global = true)
+  |> translate(y = topSideBraceXTrimCenterY, global = true)
+
+topSideBraceRightUpperXTrimCutter = clone(topSideBraceXTrimSeed)
+  |> rotate(axis = Z, angle = topSideBraceXTrimAngle, global = true)
+  |> translate(y = topSideBraceXTrimCenterY, global = true)
+
+topSideBraceLeftLowerXTrimCutter = clone(topSideBraceXTrimSeed)
+  |> rotate(axis = Z, angle = 0deg - topSideBraceXTrimAngle, global = true)
+  |> translate(y = topSideBraceXTrimCenterY, global = true)
+
+topSideBraceRightLowerXTrimCutter = clone(topSideBraceXTrimSeed)
+  |> rotate(axis = Z, angle = topSideBraceXTrimAngle, global = true)
+  |> translate(y = topSideBraceXTrimCenterY, global = true)
+
+// Positive local end is the X-brace end of each side brace. Raw bodies are
+// slightly long at the X-brace end, then trimmed by the corresponding X cutter.
+leftUpperTopSideBraceRaw = clone(topSideBraceUpperSeed)
   |> rotate(axis = Z, angle = 0deg - topSideBracePlanAngle, global = true)
-  |> translate(x = -3.70in, y = -4.15in, global = true)
+  |> translate(x = -3.546in, y = -4.252in, global = true)
+
+leftUpperTopSideBrace = subtract(leftUpperTopSideBraceRaw, tools = [topSideBraceLeftUpperXTrimCutter], legacyMethod = true)
   |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
 
-rightUpperTopSideBrace = clone(topSideBraceUpperSeed)
+rightUpperTopSideBraceRaw = clone(topSideBraceUpperSeed)
   |> rotate(axis = Z, angle = topSideBracePlanAngle, global = true)
-  |> translate(x = 3.70in, y = -4.15in, global = true)
+  |> translate(x = 3.546in, y = -4.252in, global = true)
+
+rightUpperTopSideBrace = subtract(rightUpperTopSideBraceRaw, tools = [topSideBraceRightUpperXTrimCutter], legacyMethod = true)
   |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
 
-leftLowerTopSideBrace = clone(topSideBraceLowerSeed)
+leftLowerTopSideBraceRaw = clone(topSideBraceLowerSeed)
   |> rotate(axis = Z, angle = 0deg - topSideBracePlanAngle, global = true)
-  |> translate(x = -5.777in, y = -6.542in, global = true)
+  |> translate(x = -5.471in, y = -6.540in, global = true)
+
+leftLowerTopSideBrace = subtract(leftLowerTopSideBraceRaw, tools = [topSideBraceLeftLowerXTrimCutter], legacyMethod = true)
   |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
 
-rightLowerTopSideBrace = clone(topSideBraceLowerSeed)
+rightLowerTopSideBraceRaw = clone(topSideBraceLowerSeed)
   |> rotate(axis = Z, angle = topSideBracePlanAngle, global = true)
-  |> translate(x = 5.777in, y = -6.542in, global = true)
+  |> translate(x = 5.471in, y = -6.540in, global = true)
+
+rightLowerTopSideBrace = subtract(rightLowerTopSideBraceRaw, tools = [topSideBraceRightLowerXTrimCutter], legacyMethod = true)
   |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
 
 export soundboardTopSideBraces = flatten([
@@ -138,10 +210,20 @@ export soundboardTopSideBraces = flatten([
 
 hiddenTopSideBraceSeeds = hide([
   topSideBraceUpperSeed,
-  topSideBraceLowerSeed
+  topSideBraceLowerSeed,
+  topSideBraceXTrimSeed,
+  leftUpperTopSideBraceRaw,
+  rightUpperTopSideBraceRaw,
+  leftLowerTopSideBraceRaw,
+  rightLowerTopSideBraceRaw,
+  topSideBraceLeftUpperXTrimCutter,
+  topSideBraceRightUpperXTrimCutter,
+  topSideBraceLeftLowerXTrimCutter,
+  topSideBraceRightLowerXTrimCutter
 ])
 
 hiddenTopSideBraceSketches = hide([
   topSideBraceUpperProfile,
-  topSideBraceLowerProfile
+  topSideBraceLowerProfile,
+  topSideBraceXTrimPlan
 ])
