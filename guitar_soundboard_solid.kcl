@@ -36,13 +36,13 @@ soundholeSketch = sketch(on = XY) {
   soundholeCircle = circle(start = [var 2in, var 0in], center = [var 0in, var 0in])
   coincident([soundholeCircle.center, ORIGIN])
   horizontalDistance([
-    soundholeCircle.center,
-    soundholeCircle.start
-  ]) == soundholeRadius
+  soundholeCircle.center,
+  soundholeCircle.start
+]) == soundholeRadius
   verticalDistance([
-    soundholeCircle.center,
-    soundholeCircle.start
-  ]) == 0in
+  soundholeCircle.center,
+  soundholeCircle.start
+]) == 0in
 }
 
 soundholeRegion = region(point = [0in, 0in], sketch = soundholeSketch)

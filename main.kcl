@@ -1,8 +1,9 @@
 @settings(defaultLengthUnit = in)
 
 // Lightweight bridge-work assembly.
-// Shows only the soundboard, rosette, and bracing/patches attached to the soundboard
-// so bridge modeling iterations render faster. Geometry source modules are untouched.
+// Shows only the soundboard, rosette, bracing/patches attached to the soundboard,
+// and the external bridge so bridge modeling iterations render faster.
+// Geometry source modules are untouched.
 
 import soundboard from "guitar_soundboard_solid.kcl"
 import rosetteInnerPurfling, rosetteMainInlay, rosetteOuterPurfling from "guitar_rosette.kcl"
@@ -10,6 +11,7 @@ import soundboardBracing from "guitar_soundboard_bracing.kcl"
 import soundboardTopSideBraces from "guitar_soundboard_top_side_braces.kcl"
 import bridgePlate from "guitar_bridge_plate.kcl"
 import soundholeReinforcement from "guitar_soundhole_reinforcement.kcl"
+import bridge from "guitar_bridge.kcl"
 
 // Visible working set for adding the external bridge.
 visibleSoundboard = soundboard
@@ -20,3 +22,4 @@ visibleSoundboardBracing = soundboardBracing
 visibleSoundboardTopSideBraces = soundboardTopSideBraces
 visibleBridgePlate = bridgePlate
 visibleSoundholeReinforcement = soundholeReinforcement
+visibleBridge = bridge
