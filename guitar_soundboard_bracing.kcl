@@ -16,14 +16,14 @@ soundboardBraceGlueZ = -0.065in
 xBraceHalfAngle = 54deg
 xBraceCrossY = -3.85in
 xBraceWidth = 0.38in
-xBraceLowerArmLength = 9.50in
-xBraceUpperArmLength = 6.55in
+xBraceLowerArmLength = 9.485in
+xBraceUpperArmLength = 6.45in
 xBraceEndHeight = 0.18in
 xBraceFullHeight = 0.58in
 xBraceScallopLength = 2.8in
 xBraceScallopDrop = xBraceFullHeight - xBraceEndHeight
 xBraceScallopRadius = 10.0in
-xBraceFlatLength = 10.45in
+xBraceFlatLength = xBraceLowerArmLength + xBraceUpperArmLength - (xBraceScallopLength * 2)
 
 // Half-lap allowance at the X intersection. The cutters are aligned to the
 // opposite brace's plan angle so the visible slot follows the actual crossing
@@ -36,12 +36,12 @@ xBraceLapGlueSideCenterZ = soundboardBraceGlueZ - (xBraceFullHeight / 4)
 xBraceLapFreeSideCenterZ = soundboardBraceGlueZ - (xBraceFullHeight * 3 / 4)
 
 xBraceProfile = sketch(on = YZ) {
-  glueFace = line(start = [var -9.5in, var -0.065in], end = [var 6.55in, var -0.065in])
-  upperEnd = line(start = [var 6.55in, var -0.065in], end = [var 6.55in, var -0.245in])
-  upperScallop = arc(start = [var 6.55in, var -0.245in], end = [var 3.75in, var -0.645in], center = [var 6.55in, var -10.245in])
-  centerCrown = line(start = [var 3.75in, var -0.645in], end = [var -6.7in, var -0.645in])
-  lowerScallop = arc(start = [var -6.7in, var -0.645in], end = [var -9.5in, var -0.245in], center = [var -9.5in, var -10.245in])
-  lowerEnd = line(start = [var -9.5in, var -0.245in], end = [var -9.5in, var -0.065in])
+  glueFace = line(start = [var -9.485in, var -0.065in], end = [var 6.45in, var -0.065in])
+  upperEnd = line(start = [var 6.45in, var -0.065in], end = [var 6.45in, var -0.245in])
+  upperScallop = arc(start = [var 6.45in, var -0.245in], end = [var 3.72in, var -0.645in], center = [var 6.45in, var -10.245in])
+  centerCrown = line(start = [var 3.72in, var -0.645in], end = [var -6.685in, var -0.645in])
+  lowerScallop = arc(start = [var -6.685in, var -0.645in], end = [var -9.485in, var -0.245in], center = [var -9.485in, var -10.245in])
+  lowerEnd = line(start = [var -9.485in, var -0.245in], end = [var -9.485in, var -0.065in])
 
   coincident([glueFace.end, upperEnd.start])
   coincident([upperEnd.end, upperScallop.start])
@@ -148,21 +148,21 @@ export soundboardXBraceTreble = subtract(xBraceTreblePlaced, tools = [xBraceTreb
 // Upper transverse brace, above the soundhole/rosette, full-width to the upper bout kerfing.
 upperTransverseBraceCenterY = 2.98in
 upperTransverseBraceWidth = 0.34in
-upperTransverseBraceHalfLength = 5.75in
+upperTransverseBraceHalfLength = 5.72in
 upperTransverseBraceFlatHalfLength = 2.5in
 upperTransverseBraceEndHeight = 0.12in
 upperTransverseBraceFullHeight = 0.46in
-upperTransverseScallopLength = 3.25in
+upperTransverseScallopLength = upperTransverseBraceHalfLength - upperTransverseBraceFlatHalfLength
 upperTransverseScallopDrop = upperTransverseBraceFullHeight - upperTransverseBraceEndHeight
-upperTransverseScallopRadius = 15.704in
+upperTransverseScallopRadius = 15.418in
 
 upperTransverseProfile = sketch(on = YZ) {
-  glueFace = line(start = [var -5.75in, var -0.065in], end = [var 5.75in, var -0.065in])
-  rightEnd = line(start = [var 5.75in, var -0.065in], end = [var 5.75in, var -0.185in])
-  rightScallop = arc(start = [var 5.75in, var -0.185in], end = [var 2.5in, var -0.525in], center = [var 5.75in, var -15.889in])
+  glueFace = line(start = [var -5.72in, var -0.065in], end = [var 5.72in, var -0.065in])
+  rightEnd = line(start = [var 5.72in, var -0.065in], end = [var 5.72in, var -0.185in])
+  rightScallop = arc(start = [var 5.72in, var -0.185in], end = [var 2.5in, var -0.525in], center = [var 5.72in, var -15.603in])
   centerCrown = line(start = [var 2.5in, var -0.525in], end = [var -2.5in, var -0.525in])
-  leftScallop = arc(start = [var -2.5in, var -0.525in], end = [var -5.75in, var -0.185in], center = [var -5.75in, var -15.889in])
-  leftEnd = line(start = [var -5.75in, var -0.185in], end = [var -5.75in, var -0.065in])
+  leftScallop = arc(start = [var -2.5in, var -0.525in], end = [var -5.72in, var -0.185in], center = [var -5.72in, var -15.603in])
+  leftEnd = line(start = [var -5.72in, var -0.185in], end = [var -5.72in, var -0.065in])
 
   coincident([glueFace.end, rightEnd.start])
   coincident([rightEnd.end, rightScallop.start])
