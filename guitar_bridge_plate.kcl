@@ -1,0 +1,59 @@
+@settings(defaultLengthUnit = in)
+
+// Bridge plate / bridge patch for the underside of the soundboard.
+// The string holes are intentionally omitted for now.
+// Reference intent: centered four-sided trapezoid in the lower X-brace bay,
+// narrower toward the soundhole/X crossing and wider toward the tail block.
+// The shorter parallel edge has been moved 1/4 in closer to the X-brace lap
+// joint along the brace lines. That increases plate area while keeping the
+// tail-side edge fixed and avoiding overlap under the X braces.
+
+bridgePlateMapleColor = "#b98a50"
+bridgePlateGlueZ = -0.065in
+bridgePlateThickness = 0.105in
+bridgePlateBottomZ = bridgePlateGlueZ - bridgePlateThickness
+
+// Matches the soundboard X-brace layout in guitar_soundboard_bracing.kcl.
+bridgePlateXBraceHalfAngle = 54deg
+bridgePlateSideAngle = 90deg - bridgePlateXBraceHalfAngle
+
+bridgePlateTopY = -5.00in
+bridgePlateBottomY = -6.10in
+bridgePlateTopHalfWidth = 1.260in
+bridgePlateBottomHalfWidth = 2.774in
+
+bridgePlatePlan = sketch(on = offsetPlane(XY, offset = bridgePlateBottomZ)) {
+  topEdge = line(start = [var -1.260in, var -5.00in], end = [var 1.260in, var -5.00in])
+  rightEdge = line(start = [var 1.260in, var -5.00in], end = [var 2.774in, var -6.10in])
+  bottomEdge = line(start = [var 2.774in, var -6.10in], end = [var -2.774in, var -6.10in])
+  leftEdge = line(start = [var -2.774in, var -6.10in], end = [var -1.260in, var -5.00in])
+
+  coincident([topEdge.end, rightEdge.start])
+  coincident([rightEdge.end, bottomEdge.start])
+  coincident([bottomEdge.end, leftEdge.start])
+  coincident([leftEdge.end, topEdge.start])
+
+  horizontal(topEdge)
+  horizontal(bottomEdge)
+
+  horizontalDistance([topEdge.start, ORIGIN]) == bridgePlateTopHalfWidth
+  horizontalDistance([ORIGIN, topEdge.end]) == bridgePlateTopHalfWidth
+  verticalDistance([ORIGIN, topEdge.start]) == bridgePlateTopY
+  verticalDistance([ORIGIN, topEdge.end]) == bridgePlateTopY
+
+  horizontalDistance([ORIGIN, bottomEdge.start]) == bridgePlateBottomHalfWidth
+  horizontalDistance([bottomEdge.end, ORIGIN]) == bridgePlateBottomHalfWidth
+  verticalDistance([ORIGIN, bottomEdge.start]) == bridgePlateBottomY
+  verticalDistance([ORIGIN, bottomEdge.end]) == bridgePlateBottomY
+}
+
+bridgePlateRegion = region(point = [0in, -5.55in], sketch = bridgePlatePlan)
+
+export bridgePlate = extrude(
+  bridgePlateRegion,
+  length = bridgePlateThickness,
+  method = NEW,
+)
+  |> appearance(color = bridgePlateMapleColor, metalness = 0, roughness = 82)
+
+hiddenBridgePlatePlan = hide(bridgePlatePlan)
