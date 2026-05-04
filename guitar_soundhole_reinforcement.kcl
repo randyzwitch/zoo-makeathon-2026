@@ -1,0 +1,98 @@
+@settings(defaultLengthUnit = in)
+
+// Soundhole reinforcement plate for the underside of the soundboard.
+// Layout intent:
+// - pentagonal patch fitting between the upper transverse brace and upper X-brace arms
+// - concentric oversized soundhole relief so the patch is not visible from the top
+// - no string holes or decorative top-side features
+
+soundholeReinforcementWoodColor = "#d6b66f"
+soundholeReinforcementGlueZ = -0.065in
+soundholeReinforcementThickness = 0.060in
+soundholeReinforcementBottomZ = soundholeReinforcementGlueZ - soundholeReinforcementThickness
+
+// Existing soundhole is 4 in diameter. This reinforcement relief is 4.75 in
+// diameter, giving a 0.375 in radial setback from the visible soundhole edge.
+soundholeReinforcementHoleRadius = 2.375in
+soundholeReinforcementCutterMargin = 0.020in
+soundholeReinforcementCutterBottomZ = soundholeReinforcementBottomZ - soundholeReinforcementCutterMargin
+soundholeReinforcementCutterHeight = soundholeReinforcementThickness + soundholeReinforcementCutterMargin * 2
+
+// Outer pentagon. The lower V sides are drawn parallel to the X-brace direction
+// but held just inboard so the patch fits the bay instead of overlapping braces.
+soundholeReinforcementTopY = 2.55in
+soundholeReinforcementTopHalfWidth = 3.25in
+soundholeReinforcementShoulderY = -0.35in
+soundholeReinforcementShoulderHalfWidth = 4.267in
+soundholeReinforcementBottomY = -3.45in
+
+soundholeReinforcementPlan = sketch(on = offsetPlane(XY, offset = soundholeReinforcementBottomZ)) {
+  topEdge = line(start = [var -3.25in, var 2.55in], end = [var 3.25in, var 2.55in])
+  upperRightEdge = line(start = [var 3.25in, var 2.55in], end = [var 4.267in, var -0.35in])
+  lowerRightEdge = line(start = [var 4.267in, var -0.35in], end = [var 0in, var -3.45in])
+  lowerLeftEdge = line(start = [var 0in, var -3.45in], end = [var -4.267in, var -0.35in])
+  upperLeftEdge = line(start = [var -4.267in, var -0.35in], end = [var -3.25in, var 2.55in])
+
+  coincident([topEdge.end, upperRightEdge.start])
+  coincident([
+    upperRightEdge.end,
+    lowerRightEdge.start
+  ])
+  coincident([
+    lowerRightEdge.end,
+    lowerLeftEdge.start
+  ])
+  coincident([lowerLeftEdge.end, upperLeftEdge.start])
+  coincident([upperLeftEdge.end, topEdge.start])
+
+  horizontal(topEdge)
+
+  horizontalDistance([topEdge.start, ORIGIN]) == soundholeReinforcementTopHalfWidth
+  horizontalDistance([ORIGIN, topEdge.end]) == soundholeReinforcementTopHalfWidth
+  verticalDistance([ORIGIN, topEdge.start]) == soundholeReinforcementTopY
+  verticalDistance([ORIGIN, topEdge.end]) == soundholeReinforcementTopY
+
+  horizontalDistance([ORIGIN, upperRightEdge.end]) == soundholeReinforcementShoulderHalfWidth
+  verticalDistance([ORIGIN, upperRightEdge.end]) == soundholeReinforcementShoulderY
+  horizontalDistance([upperLeftEdge.start, ORIGIN]) == soundholeReinforcementShoulderHalfWidth
+  verticalDistance([ORIGIN, upperLeftEdge.start]) == soundholeReinforcementShoulderY
+
+  horizontalDistance([ORIGIN, lowerRightEdge.end]) == 0in
+  verticalDistance([ORIGIN, lowerRightEdge.end]) == soundholeReinforcementBottomY
+}
+
+soundholeReinforcementRegion = region(point = [0in, 2.48in], sketch = soundholeReinforcementPlan)
+soundholeReinforcementBlank = extrude(soundholeReinforcementRegion, length = soundholeReinforcementThickness, method = NEW)
+
+soundholeReinforcementHolePlan = sketch(on = offsetPlane(XY, offset = soundholeReinforcementCutterBottomZ)) {
+  oversizedSoundholeRelief = circle(start = [var 2.375in, var 0in], center = [var 0in, var 0in])
+
+  coincident([
+    oversizedSoundholeRelief.center,
+    ORIGIN
+  ])
+  horizontalDistance([
+  oversizedSoundholeRelief.center,
+  oversizedSoundholeRelief.start
+]) == soundholeReinforcementHoleRadius
+  verticalDistance([
+  oversizedSoundholeRelief.center,
+  oversizedSoundholeRelief.start
+]) == 0in
+}
+
+soundholeReinforcementHoleRegion = region(point = [0in, 0in], sketch = soundholeReinforcementHolePlan)
+soundholeReinforcementHoleCutter = extrude(soundholeReinforcementHoleRegion, length = soundholeReinforcementCutterHeight, method = NEW)
+
+export soundholeReinforcement = subtract(soundholeReinforcementBlank, tools = [soundholeReinforcementHoleCutter], legacyMethod = true)
+  |> appearance(color = soundholeReinforcementWoodColor, metalness = 0, roughness = 82)
+
+hiddenSoundholeReinforcementWorkBodies = hide([
+  soundholeReinforcementBlank,
+  soundholeReinforcementHoleCutter
+])
+
+hiddenSoundholeReinforcementSketches = hide([
+  soundholeReinforcementPlan,
+  soundholeReinforcementHolePlan
+])

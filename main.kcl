@@ -13,6 +13,7 @@ import topKerfedLining, backKerfedLining from "guitar_kerfed_lining_solids.kcl"
 import sideBlocks, sideBlockHeightProfile, sideBlockGapProfiles from "guitar_side_blocks.kcl"
 import soundboardBracing from "guitar_soundboard_bracing.kcl"
 import bridgePlate from "guitar_bridge_plate.kcl"
+import soundholeReinforcement from "guitar_soundhole_reinforcement.kcl"
 
 // Hide every imported construction sketch/drawing helper.
 // These remain usable by the solid modules but should not render in this presentation view.
@@ -37,6 +38,7 @@ hiddenBackplate = hide(backplate)
 visibleSoundboard = soundboard
 visibleSoundboardBracing = soundboardBracing
 visibleBridgePlate = bridgePlate
+visibleSoundholeReinforcement = soundholeReinforcement
 visibleRosetteInnerPurfling = rosetteInnerPurfling
 visibleRosetteMainInlay = rosetteMainInlay
 visibleRosetteOuterPurfling = rosetteOuterPurfling

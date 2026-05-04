@@ -17,16 +17,16 @@ bridgePlateBottomZ = bridgePlateGlueZ - bridgePlateThickness
 bridgePlateXBraceHalfAngle = 54deg
 bridgePlateSideAngle = 90deg - bridgePlateXBraceHalfAngle
 
-bridgePlateTopY = -5.00in
+bridgePlateTopY = -5.0in
 bridgePlateBottomY = -6.10in
 bridgePlateTopHalfWidth = 1.260in
 bridgePlateBottomHalfWidth = 2.774in
 
 bridgePlatePlan = sketch(on = offsetPlane(XY, offset = bridgePlateBottomZ)) {
-  topEdge = line(start = [var -1.260in, var -5.00in], end = [var 1.260in, var -5.00in])
-  rightEdge = line(start = [var 1.260in, var -5.00in], end = [var 2.774in, var -6.10in])
+  topEdge = line(start = [var -1.260in, var -5.0in], end = [var 1.260in, var -5.0in])
+  rightEdge = line(start = [var 1.260in, var -5.0in], end = [var 2.774in, var -6.10in])
   bottomEdge = line(start = [var 2.774in, var -6.10in], end = [var -2.774in, var -6.10in])
-  leftEdge = line(start = [var -2.774in, var -6.10in], end = [var -1.260in, var -5.00in])
+  leftEdge = line(start = [var -2.774in, var -6.10in], end = [var -1.260in, var -5.0in])
 
   coincident([topEdge.end, rightEdge.start])
   coincident([rightEdge.end, bottomEdge.start])
@@ -49,11 +49,7 @@ bridgePlatePlan = sketch(on = offsetPlane(XY, offset = bridgePlateBottomZ)) {
 
 bridgePlateRegion = region(point = [0in, -5.55in], sketch = bridgePlatePlan)
 
-export bridgePlate = extrude(
-  bridgePlateRegion,
-  length = bridgePlateThickness,
-  method = NEW,
-)
+export bridgePlate = extrude(bridgePlateRegion, length = bridgePlateThickness, method = NEW)
   |> appearance(color = bridgePlateMapleColor, metalness = 0, roughness = 82)
 
 hiddenBridgePlatePlan = hide(bridgePlatePlan)
