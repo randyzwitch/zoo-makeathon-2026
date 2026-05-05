@@ -19,6 +19,7 @@ import soundboardTopSideBraces from "guitar_soundboard_top_side_braces.kcl"
 import bridgePlate from "guitar_bridge_plate.kcl"
 import soundholeReinforcement from "guitar_soundhole_reinforcement.kcl"
 import bridge, saddle from "guitar_bridge.kcl"
+import bridgePin1, bridgePin2, bridgePin3, bridgePin4, bridgePin5, bridgePin6 from "guitar_bridge_pins.kcl"
 import guitarsides from "guitar_sides_solid.kcl"
 import neckBlock, tailBlock from "guitar_blocks.kcl"
 import sideBlocks, sideBlockHeightProfile, sideBlockGapProfiles from "guitar_side_blocks.kcl"
@@ -43,6 +44,12 @@ visibleBridgePlate = bridgePlate
 visibleSoundholeReinforcement = soundholeReinforcement
 visibleBridge = bridge
 visibleSaddle = saddle
+visibleBridgePin1 = bridgePin1
+visibleBridgePin2 = bridgePin2
+visibleBridgePin3 = bridgePin3
+visibleBridgePin4 = bridgePin4
+visibleBridgePin5 = bridgePin5
+visibleBridgePin6 = bridgePin6
 visibleSides = subtract(
   guitarsides,
   tools = [

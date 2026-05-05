@@ -1,0 +1,80 @@
+@settings(defaultLengthUnit = in)
+
+import bridgePin1X, bridgePin2X, bridgePin3X, bridgePin4X, bridgePin5X, bridgePin6X, bridgePinHoleY, bridgePinCounterboreStartZ from "guitar_bridge_pin_holes.kcl"
+
+// Six simple acoustic bridge pins.
+// Each pin is modeled as a spherical head blending into a tapered post.
+// The head is sized to fit the existing counterbore diameter, and the post is
+// long enough to pass through the bridge plate without altering any holes.
+
+
+bridgePinColor = "#f2ead1"
+bridgePinShoulderGlobalZ = bridgePinCounterboreStartZ + 0.016in
+
+export bridgePinProfile = sketch(on = XZ) {
+  pinAxis = line(start = [var 0in, var 0.277474in], end = [var 0in, var -0.755in])
+  pinTip = line(start = [var 0in, var -0.755in], end = [var 0.055in, var -0.755in])
+  pinTaper = line(start = [var 0.055in, var -0.755in], end = [var 0.095in, var 0in])
+  lowerHead = arc(start = [var 0.095in, var 0in], end = [var 0.155in, var 0.122474in], center = [var 0in, var 0.122474in])
+  upperHead = arc(start = [var 0.155in, var 0.122474in], end = [var 0in, var 0.277474in], center = [var 0in, var 0.122474in])
+
+  coincident([pinAxis.end, pinTip.start])
+  coincident([pinTip.end, pinTaper.start])
+  coincident([pinTaper.end, lowerHead.start])
+  coincident([lowerHead.end, upperHead.start])
+  coincident([upperHead.end, pinAxis.start])
+
+  vertical(pinAxis)
+  horizontal(pinTip)
+}
+
+export bridgePin1 = revolve(region(point = [0.04in, -0.20in], sketch = bridgePinProfile), axis = Y)
+  |> translate(
+       x = bridgePin1X,
+       y = bridgePinHoleY,
+       z = bridgePinShoulderGlobalZ,
+       global = true,
+     )
+  |> appearance(color = bridgePinColor, metalness = 0, roughness = 38)
+export bridgePin2 = revolve(region(point = [0.04in, -0.20in], sketch = bridgePinProfile), axis = Y)
+  |> translate(
+       x = bridgePin2X,
+       y = bridgePinHoleY,
+       z = bridgePinShoulderGlobalZ,
+       global = true,
+     )
+  |> appearance(color = bridgePinColor, metalness = 0, roughness = 38)
+export bridgePin3 = revolve(region(point = [0.04in, -0.20in], sketch = bridgePinProfile), axis = Y)
+  |> translate(
+       x = bridgePin3X,
+       y = bridgePinHoleY,
+       z = bridgePinShoulderGlobalZ,
+       global = true,
+     )
+  |> appearance(color = bridgePinColor, metalness = 0, roughness = 38)
+export bridgePin4 = revolve(region(point = [0.04in, -0.20in], sketch = bridgePinProfile), axis = Y)
+  |> translate(
+       x = bridgePin4X,
+       y = bridgePinHoleY,
+       z = bridgePinShoulderGlobalZ,
+       global = true,
+     )
+  |> appearance(color = bridgePinColor, metalness = 0, roughness = 38)
+export bridgePin5 = revolve(region(point = [0.04in, -0.20in], sketch = bridgePinProfile), axis = Y)
+  |> translate(
+       x = bridgePin5X,
+       y = bridgePinHoleY,
+       z = bridgePinShoulderGlobalZ,
+       global = true,
+     )
+  |> appearance(color = bridgePinColor, metalness = 0, roughness = 38)
+export bridgePin6 = revolve(region(point = [0.04in, -0.20in], sketch = bridgePinProfile), axis = Y)
+  |> translate(
+       x = bridgePin6X,
+       y = bridgePinHoleY,
+       z = bridgePinShoulderGlobalZ,
+       global = true,
+     )
+  |> appearance(color = bridgePinColor, metalness = 0, roughness = 38)
+
+hiddenBridgePinSketches = hide([bridgePinProfile])
