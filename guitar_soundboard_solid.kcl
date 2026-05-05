@@ -2,8 +2,10 @@
 
 // Soundboard-only solid for bridge-work presentation views.
 // This intentionally avoids building the sides and backplate from guitar_body_solids.kcl.
+// Binding update: the spruce plate is clipped to the binding inner edge so the
+// separate binding body protects/covers the soundboard end grain at the rim.
 
-import sketchGuitar, sketchGuitarInner, guitarBodyRegion from "guitar_outline.kcl"
+import sketchGuitar, sketchGuitarInner, guitarBodyRegion, guitarInnerBodyRegion from "guitar_outline.kcl"
 import bodySideProfile, sideTopProfileRegion from "guitar_side_profile.kcl"
 import rosetteChannelCutter from "guitar_rosette.kcl"
 import bridgePin1X, bridgePin2X, bridgePin3X, bridgePin4X, bridgePin5X, bridgePin6X, bridgePinHoleRadius, bridgePinHoleY, bridgePinThroughBottomZ, bridgePinThroughLength from "guitar_bridge_pin_holes.kcl"
@@ -23,8 +25,10 @@ sideTopProfilePrism = extrude(
   method = NEW,
 )
 
+// Use the inward 0.08 in outline for the spruce top. The outer 0.08 in band is
+// now occupied by topBinding, flush with the same domed top surface.
 guitarOutlineClipTop = extrude(
-  guitarBodyRegion,
+  guitarInnerBodyRegion,
   length = sideProfileClipDepth,
   symmetric = true,
   method = NEW,
@@ -116,6 +120,7 @@ hiddenSoundboardOnlySketches = hide([
   soundholeSketch,
   soundboardPinHoleSeedPlan,
   guitarBodyRegion,
+  guitarInnerBodyRegion,
   sideTopProfileRegion,
   soundholeRegion
 ])

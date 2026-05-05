@@ -1,25 +1,18 @@
 @settings(defaultLengthUnit = in)
 
 import sketchGuitar, sketchGuitarInner from "guitar_outline.kcl"
-import sideShellRemainingProfileRegion from "guitar_top_binding_rabbet_profiles.kcl"
+import sideShellRemainingProfilePrism from "guitar_top_binding_rabbet_profiles.kcl"
 
 // Sides-only working solid for interior/brace editing.
-// Binding rabbet: top 3/8 in is stepped down relative to the domed top edge.
+// Binding rabbet: the walnut side shell now begins below the 3/8 in top binding,
+// whose lower edge follows the domed soundboard curve.
 
 
-sideProfileBodyWidth = 16in
 sideProfileClipDepth = 10in
 walnutSideColor = "#4a2615"
 
 guitarBodyRegion = region(point = [0in, -4in], sketch = sketchGuitar)
 guitarInnerBodyRegion = region(point = [0in, -4in], sketch = sketchGuitarInner)
-
-sideMiddleProfilePrism = extrude(
-  sideShellRemainingProfileRegion,
-  length = sideProfileBodyWidth,
-  symmetric = true,
-  method = NEW,
-)
 
 guitarOutlineClipMiddle = extrude(
   guitarBodyRegion,
@@ -37,7 +30,7 @@ guitarInnerSideCut = extrude(
 
 sideMiddleGuitarSolid = intersect(
   [
-    sideMiddleProfilePrism,
+    sideShellRemainingProfilePrism,
     guitarOutlineClipMiddle
   ],
   legacyMethod = true,
@@ -45,3 +38,17 @@ sideMiddleGuitarSolid = intersect(
 
 export guitarsides = subtract(sideMiddleGuitarSolid, tools = [guitarInnerSideCut], legacyMethod = true)
   |> appearance(color = walnutSideColor, metalness = 0, roughness = 72)
+
+hiddenSideWorkBodies = hide([
+  sideShellRemainingProfilePrism,
+  guitarOutlineClipMiddle,
+  guitarInnerSideCut,
+  sideMiddleGuitarSolid
+])
+
+hiddenSideSketches = hide([
+  sketchGuitar,
+  sketchGuitarInner,
+  guitarBodyRegion,
+  guitarInnerBodyRegion
+])

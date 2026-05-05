@@ -2,17 +2,19 @@
 
 import guitarCenterlineUpperY, guitarCenterlineLowerY from "guitar_outline.kcl"
 
-// Binding-only side-profile helper.
-// The binding height is measured as a constant normal offset from the domed soundboard top arc,
-// not as a flat Z shelf. In this YZ sketch, horizontal = guitar-body Y station and vertical = Z.
+// Binding rabbet profile geometry for the top edge.
+// Coordinates are in the YZ side-profile sketch: local X = guitar body Y station,
+// local Y = vertical Z. The binding height follows the domed soundboard arc by
+// using a concentric lower arc, not a flat horizontal shelf.
 
 
-export topBindingHeight = 0.375in
-export topBindingThickness = 0.08in
-
-backArcRadius = 28ft
+bindingHeight = 0.375in
 soundboardArcRadius = 40ft
+backArcRadius = 28ft
 sideProfileArcOffset = 0.125in
+bindingProfileBodyWidth = 16in
+
+export bindingHeightFromTop = bindingHeight
 
 export topBindingRabbetProfile = sketch(on = YZ) {
   upperCenterlineStation = point(at = [var 5.76in, var 0in])
@@ -24,13 +26,27 @@ export topBindingRabbetProfile = sketch(on = YZ) {
   horizontalDistance([lowerCenterlineStation, ORIGIN]) == 0in - guitarCenterlineLowerY
   verticalDistance([ORIGIN, lowerCenterlineStation]) == 0in
 
-  taildef = line(start = [var -14.63in, var 0in], end = [var -14.63in, var -4.13in], construction = true)
-  coincident([taildef.start, lowerCenterlineStation])
-  vertical(taildef)
+  tailDepthReference = line(start = [var -14.63in, var 0in], end = [var -14.63in, var -4.25in], construction = true)
+  coincident([
+    tailDepthReference.start,
+    lowerCenterlineStation
+  ])
+  vertical(tailDepthReference)
+  verticalDistance([
+  tailDepthReference.end,
+  tailDepthReference.start
+]) == 4.25in
 
-  neckdef = line(start = [var 5.76in, var 0in], end = [var 5.76in, var -3.63in], construction = true)
-  coincident([neckdef.start, upperCenterlineStation])
-  vertical(neckdef)
+  neckDepthReference = line(start = [var 5.76in, var 0in], end = [var 5.76in, var -3.75in], construction = true)
+  coincident([
+    neckDepthReference.start,
+    upperCenterlineStation
+  ])
+  vertical(neckDepthReference)
+  verticalDistance([
+  neckDepthReference.end,
+  neckDepthReference.start
+]) == 3.75in
 
   topArc = arc(start = [var 5.76in, var 0in], end = [var -14.63in, var 0in], center = [var -4.43in, var -479.89in])
   coincident([topArc.start, upperCenterlineStation])
@@ -38,50 +54,90 @@ export topBindingRabbetProfile = sketch(on = YZ) {
   horizontalDistance([topArc.center, upperCenterlineStation]) == (guitarCenterlineUpperY - guitarCenterlineLowerY) / 2
   radius(topArc) == soundboardArcRadius
 
-  bindingLowerArc = arc(start = [var 5.76in, var -0.38in], end = [var -14.63in, var -0.38in], center = [var -4.43in, var -479.89in])
-  coincident([bindingLowerArc.center, topArc.center])
-  coincident([bindingLowerArc.start, neckdef])
-  coincident([bindingLowerArc.end, taildef])
-  radius(bindingLowerArc) == soundboardArcRadius - topBindingHeight
-
-  backarcInside = arc(start = [var -14.63in, var -4.13in], end = [var 5.76in, var -3.63in], center = [var -12.66in, var 331.74in])
-  coincident([backarcInside.start, taildef])
-  coincident([backarcInside.end, neckdef])
-  radius(backarcInside) == backArcRadius - sideProfileArcOffset
-
-  bindingNeckWall = line(start = [var 5.76in, var 0in], end = [var 5.76in, var -0.38in])
-  coincident([bindingNeckWall.start, topArc.start])
+  bindingBottomArc = arc(start = [var 5.76in, var -0.38in], end = [var -14.63in, var -0.38in], center = [var -4.43in, var -479.89in])
+  coincident([bindingBottomArc.center, topArc.center])
   coincident([
-    bindingNeckWall.end,
-    bindingLowerArc.start
+    bindingBottomArc.start,
+    neckDepthReference
   ])
-  vertical(bindingNeckWall)
-
-  bindingTailWall = line(start = [var -14.63in, var -0.38in], end = [var -14.63in, var 0in])
   coincident([
-    bindingTailWall.start,
-    bindingLowerArc.end
+    bindingBottomArc.end,
+    tailDepthReference
   ])
-  coincident([bindingTailWall.end, topArc.end])
-  vertical(bindingTailWall)
+  radius(bindingBottomArc) == soundboardArcRadius - bindingHeight
 
-  sideNeckWall = line(start = [var 5.76in, var -0.38in], end = [var 5.76in, var -3.63in])
+  neckBindingWall = line(start = [var 5.76in, var 0in], end = [var 5.76in, var -0.38in])
+  coincident([neckBindingWall.start, topArc.start])
   coincident([
-    sideNeckWall.start,
-    bindingLowerArc.start
+    neckBindingWall.end,
+    bindingBottomArc.start
   ])
-  coincident([sideNeckWall.end, backarcInside.end])
-  vertical(sideNeckWall)
+  vertical(neckBindingWall)
 
-  sideTailWall = line(start = [var -14.63in, var -4.13in], end = [var -14.63in, var -0.38in])
+  tailBindingWall = line(start = [var -14.63in, var 0in], end = [var -14.63in, var -0.38in])
+  coincident([tailBindingWall.start, topArc.end])
   coincident([
-    sideTailWall.start,
-    backarcInside.start
+    tailBindingWall.end,
+    bindingBottomArc.end
   ])
-  coincident([sideTailWall.end, bindingLowerArc.end])
-  vertical(sideTailWall)
+  vertical(tailBindingWall)
+
+  sideBackInsideArc = arc(start = [var -14.63in, var -4.13in], end = [var 5.76in, var -3.63in], center = [var -12.66in, var 331.74in])
+  coincident([
+    sideBackInsideArc.start,
+    tailDepthReference
+  ])
+  coincident([
+    sideBackInsideArc.end,
+    neckDepthReference
+  ])
+  radius(sideBackInsideArc) == backArcRadius - sideProfileArcOffset
+
+  tailRemainingSideWall = line(start = [var -14.63in, var -0.38in], end = [var -14.63in, var -4.13in])
+  coincident([
+    tailRemainingSideWall.start,
+    bindingBottomArc.end
+  ])
+  coincident([
+    tailRemainingSideWall.end,
+    sideBackInsideArc.start
+  ])
+  vertical(tailRemainingSideWall)
+
+  neckRemainingSideWall = line(start = [var 5.76in, var -0.38in], end = [var 5.76in, var -3.63in])
+  coincident([
+    neckRemainingSideWall.start,
+    bindingBottomArc.start
+  ])
+  coincident([
+    neckRemainingSideWall.end,
+    sideBackInsideArc.end
+  ])
+  vertical(neckRemainingSideWall)
 }
 
-// Upper 3/8 in binding band and the remaining walnut side wall below it.
-export topBindingProfileRegion = region(point = [0in, -0.18in], sketch = topBindingRabbetProfile)
-export sideShellRemainingProfileRegion = region(point = [0in, -2in], sketch = topBindingRabbetProfile)
+topBindingProfileRegionLocal = region(point = [0in, -0.15in], sketch = topBindingRabbetProfile)
+sideShellRemainingProfileRegionLocal = region(point = [0in, -2in], sketch = topBindingRabbetProfile)
+
+export topBindingProfileRegion = topBindingProfileRegionLocal
+export sideShellRemainingProfileRegion = sideShellRemainingProfileRegionLocal
+
+export topBindingProfilePrism = extrude(
+  topBindingProfileRegionLocal,
+  length = bindingProfileBodyWidth,
+  symmetric = true,
+  method = NEW,
+)
+
+export sideShellRemainingProfilePrism = extrude(
+  sideShellRemainingProfileRegionLocal,
+  length = bindingProfileBodyWidth,
+  symmetric = true,
+  method = NEW,
+)
+
+hiddenRabbetProfileSketches = hide([
+  topBindingRabbetProfile,
+  topBindingProfileRegionLocal,
+  sideShellRemainingProfileRegionLocal
+])

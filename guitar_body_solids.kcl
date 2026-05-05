@@ -6,6 +6,8 @@ import rosetteChannelCutter from "guitar_rosette.kcl"
 
 // Heavy acoustic-guitar body solids.
 // The lightweight YZ side-profile sketch/regions live in guitar_side_profile.kcl.
+// Binding update: the spruce soundboard is clipped to the binding inner edge,
+// leaving the outer 0.08 in rim band for the separate binding body.
 
 
 sideProfileBodyWidth = 16in
@@ -38,16 +40,21 @@ sideBackProfilePrism = extrude(
   method = NEW,
 )
 
-// Full-depth clipping solid from the finished guitar outline. On XY, symmetric extrusion is along Z.
-// Clone before CSG operations consume the clip bodies.
+// Full-depth clipping solids from plan regions. The top uses the inset binding boundary;
+// sides and back still use the finished outer guitar outline.
 guitarOutlineClipTop = extrude(
+  guitarInnerBodyRegion,
+  length = sideProfileClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+guitarOutlineClipMiddle = extrude(
   guitarBodyRegion,
   length = sideProfileClipDepth,
   symmetric = true,
   method = NEW,
 )
-guitarOutlineClipMiddle = clone(guitarOutlineClipTop)
-guitarOutlineClipBack = clone(guitarOutlineClipTop)
+guitarOutlineClipBack = clone(guitarOutlineClipMiddle)
 
 // Soundhole cutter: a 4 in diameter vertical cylinder centered on the master-sketch origin.
 // It is used only in the soundboard subtraction so sides, blocks, linings, and back are untouched.
@@ -79,7 +86,7 @@ guitarInnerSideCut = extrude(
   method = NEW,
 )
 
-// Final three separate guitar-shaped bodies: each side-profile prism clipped to the guitar plan outline.
+// Final three separate guitar-shaped bodies: each side-profile prism clipped to its plan outline.
 // legacyMethod is used because the current engine path cannot handle this curved-prism 3D intersection yet.
 soundboardBlank = intersect(
   [

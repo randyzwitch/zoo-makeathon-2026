@@ -1,63 +1,55 @@
 @settings(defaultLengthUnit = in)
 
 import sketchGuitar, sketchGuitarInner from "guitar_outline.kcl"
-import topBindingProfileRegion from "guitar_top_binding_rabbet_profiles.kcl"
+import topBindingProfilePrism from "guitar_top_binding_rabbet_profiles.kcl"
 
-// Top binding only: a separate 0.08 in radial side-wall band, 3/8 in tall,
-// following the existing guitar outline in plan and the domed top edge in side profile.
-// CSG order mirrors the existing side-wall build: profile prism ∩ outer plan, then inner-side cut.
+// Top binding as a separate material/body.
+// Plan: outer finished guitar outline to the 0.08 in inward side-wall outline.
+// Profile: domed soundboard top down to a concentric 3/8 in lower rabbet arc.
+// This makes the binding overlap/protect the soundboard end grain.
 
 
-bindingBodyWidth = 16in
 bindingClipDepth = 10in
-bindingColor = "#f2ead3"
+bindingColor = "#f2ead1"
 
-bindingOuterPlanRegion = region(point = [0in, -4in], sketch = sketchGuitar)
-bindingInnerPlanRegion = region(point = [0in, -4in], sketch = sketchGuitarInner)
+bindingOuterBodyRegion = region(point = [0in, -4in], sketch = sketchGuitar)
+bindingInnerBodyRegion = region(point = [0in, -4in], sketch = sketchGuitarInner)
 
-bindingHeightEnvelope = extrude(
-  topBindingProfileRegion,
-  length = bindingBodyWidth,
-  symmetric = true,
-  method = NEW,
-)
-
-bindingOuterPlanClip = extrude(
-  bindingOuterPlanRegion,
+bindingOuterPlanSolid = extrude(
+  bindingOuterBodyRegion,
   length = bindingClipDepth,
   symmetric = true,
   method = NEW,
 )
 
-bindingInnerSideCut = extrude(
-  bindingInnerPlanRegion,
+bindingInnerPlanSolid = extrude(
+  bindingInnerBodyRegion,
   length = bindingClipDepth,
   symmetric = true,
   method = NEW,
 )
 
-bindingOuterGuitarSolid = intersect(
+bindingPlanBand = subtract(bindingOuterPlanSolid, tools = [bindingInnerPlanSolid], legacyMethod = true)
+
+export topBinding = intersect(
   [
-    bindingHeightEnvelope,
-    bindingOuterPlanClip
+    topBindingProfilePrism,
+    bindingPlanBand
   ],
   legacyMethod = true,
 )
-
-export topBinding = subtract(bindingOuterGuitarSolid, tools = [bindingInnerSideCut], legacyMethod = true)
-  |> appearance(color = bindingColor, metalness = 0, roughness = 62)
+  |> appearance(color = bindingColor, metalness = 0, roughness = 64)
 
 hiddenTopBindingWorkBodies = hide([
-  bindingHeightEnvelope,
-  bindingOuterPlanClip,
-  bindingInnerSideCut,
-  bindingOuterGuitarSolid
+  topBindingProfilePrism,
+  bindingOuterPlanSolid,
+  bindingInnerPlanSolid,
+  bindingPlanBand
 ])
 
 hiddenTopBindingSketches = hide([
   sketchGuitar,
   sketchGuitarInner,
-  bindingOuterPlanRegion,
-  bindingInnerPlanRegion,
-  topBindingProfileRegion
+  bindingOuterBodyRegion,
+  bindingInnerBodyRegion
 ])
