@@ -303,6 +303,27 @@ saddleBlank = extrude(saddleRegion, length = saddleHeight, method = NEW)
 export saddle = saddleBlank
   |> appearance(color = saddleBoneColor, metalness = 0, roughness = 34)
 
+hiddenBridgeWorkBodies = hide([
+  bridgePlanPrism,
+  saddleSlotCutter,
+  pinHoleSeed,
+  pinHole1Cutter,
+  pinHole2Cutter,
+  pinHole3Cutter,
+  pinHole4Cutter,
+  pinHole5Cutter,
+  pinHole6Cutter,
+  pinCounterboreSeed,
+  counterbore1Cutter,
+  counterbore2Cutter,
+  counterbore3Cutter,
+  counterbore4Cutter,
+  counterbore5Cutter,
+  counterbore6Cutter,
+  bridgeCutPrism,
+  bridgeTopEnvelope
+])
+
 hiddenBridgeSketches = hide([
   bridgeFootprintPlan,
   saddleSlotPlan,
