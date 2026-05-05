@@ -1,22 +1,21 @@
 @settings(defaultLengthUnit = in)
 
 import sketchGuitar, sketchGuitarInner from "guitar_outline.kcl"
-import bodySideProfile from "guitar_side_profile.kcl"
+import sideShellRemainingProfileRegion from "guitar_top_binding_rabbet_profiles.kcl"
 
 // Sides-only working solid for interior/brace editing.
-// This avoids generating/displaying the soundboard and backplate in main.kcl.
+// Binding rabbet: top 3/8 in is stepped down relative to the domed top edge.
 
 
 sideProfileBodyWidth = 16in
 sideProfileClipDepth = 10in
 walnutSideColor = "#4a2615"
 
-sideMiddleProfileRegion = region(point = [0in, -2in], sketch = bodySideProfile)
 guitarBodyRegion = region(point = [0in, -4in], sketch = sketchGuitar)
 guitarInnerBodyRegion = region(point = [0in, -4in], sketch = sketchGuitarInner)
 
 sideMiddleProfilePrism = extrude(
-  sideMiddleProfileRegion,
+  sideShellRemainingProfileRegion,
   length = sideProfileBodyWidth,
   symmetric = true,
   method = NEW,

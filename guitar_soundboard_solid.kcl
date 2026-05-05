@@ -16,7 +16,6 @@ soundholeRadius = soundholeDiameter / 2
 
 spruceColor = "#d9b86c"
 
-// Raw top-plate extrusion. On YZ, extrusion is along X, so symmetric 16 in gives X = -8 in to +8 in.
 sideTopProfilePrism = extrude(
   sideTopProfileRegion,
   length = sideProfileBodyWidth,
@@ -24,7 +23,6 @@ sideTopProfilePrism = extrude(
   method = NEW,
 )
 
-// Full-depth clipping solid from the finished guitar outline. On XY, symmetric extrusion is along Z.
 guitarOutlineClipTop = extrude(
   guitarBodyRegion,
   length = sideProfileClipDepth,
@@ -32,7 +30,6 @@ guitarOutlineClipTop = extrude(
   method = NEW,
 )
 
-// Soundhole cutter: a 4 in diameter vertical cylinder centered on the master-sketch origin.
 soundholeSketch = sketch(on = XY) {
   soundholeCircle = circle(start = [var 2in, var 0in], center = [var 0in, var 0in])
   coincident([soundholeCircle.center, ORIGIN])
@@ -100,7 +97,6 @@ soundboardCutters = flatten([
   soundboardPinHoleCutters
 ])
 
-// The soundhole, rosette channel, and bridge-pin holes are cut only from this lightweight soundboard blank.
 export soundboard = subtract(soundboardBlank, tools = soundboardCutters, legacyMethod = true)
   |> appearance(color = spruceColor, metalness = 0, roughness = 78)
 

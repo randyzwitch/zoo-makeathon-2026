@@ -2,14 +2,15 @@
 
 // Lightweight bridge-work assembly.
 // Shows only the soundboard, rosette, bracing/patches attached to the soundboard,
-// plus the sides, blocks, top kerfing, and external bridge/saddle.
-// Geometry source modules are untouched.
+// plus the sides, blocks, top kerfing, external bridge/saddle, and top binding.
+// Geometry source modules are untouched except for requested trim/rabbet features.
 
 import sketchGuitar, sketchGuitarInner, guitarBodyRegion, guitarInnerBodyRegion from "guitar_outline.kcl"
 import bodySideProfile, sideTopProfileRegion, sideMiddleProfileRegion, sideBackProfileRegion from "guitar_side_profile.kcl"
 import sketchGuitarLiningInner, guitarLiningInnerRegion, topLiningProfile, topLiningProfileRegion, backLiningProfile, backLiningProfileRegion from "guitar_kerfed_linings.kcl"
 import soundboard from "guitar_soundboard_solid.kcl"
 import rosetteInnerPurfling, rosetteMainInlay, rosetteOuterPurfling from "guitar_rosette.kcl"
+import topBinding from "guitar_top_trim.kcl"
 import soundboardBracing from "guitar_soundboard_bracing.kcl"
 import soundboardTopSideBraces from "guitar_soundboard_top_side_braces.kcl"
 import bridgePlate from "guitar_bridge_plate.kcl"
@@ -24,6 +25,7 @@ visibleSoundboard = soundboard
 visibleRosetteInnerPurfling = rosetteInnerPurfling
 visibleRosetteMainInlay = rosetteMainInlay
 visibleRosetteOuterPurfling = rosetteOuterPurfling
+visibleTopBinding = topBinding
 visibleSoundboardBracing = soundboardBracing
 visibleSoundboardTopSideBraces = soundboardTopSideBraces
 visibleBridgePlate = bridgePlate

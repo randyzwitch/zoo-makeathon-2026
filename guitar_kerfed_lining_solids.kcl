@@ -4,7 +4,7 @@ import sketchGuitarInner from "guitar_outline.kcl"
 import guitarLiningInnerRegion, topLiningProfileRegion, backLiningProfileRegion from "guitar_kerfed_linings.kcl"
 
 // Heavy kerfed-lining solids.
-// The reusable lining inner outline and YZ profile sketches live in guitar_kerfed_linings.kcl.
+// Binding-only update: the 0.08 in binding replaces the side-wall band, so the top kerfed lining remains intact.
 
 
 liningBodyWidth = 16in
