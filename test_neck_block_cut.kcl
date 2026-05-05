@@ -1,0 +1,5 @@
+@settings(defaultLengthUnit = in)
+
+import neckBlock from "guitar_blocks.kcl"
+import neckMortiseCutter from "guitar_neck_dovetail_mortise.kcl"
+cutBlock = subtract(neckBlock, tools = [neckMortiseCutter], legacyMethod = true)

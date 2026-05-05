@@ -12,8 +12,34 @@ import guitarLiningInnerRegion, topLiningProfileRegion, backLiningProfileRegion 
 liningBodyWidth = 16in
 liningClipDepth = 10in
 liningWoodColor = "#caa06a"
+liningMortiseCutDepth = 10in
+liningMortiseTopZ = 0.10in
 
 liningOuterBodyRegion = region(point = [0in, -4in], sketch = sketchGuitarInner)
+
+liningMortiseTopProfile = sketch(on = offsetPlane(XY, offset = liningMortiseTopZ)) {
+  frontEdge = line(start = [var 0.3125in, var 5.92in], end = [var -0.3125in, var 5.92in])
+  leftEdge = line(start = [var -0.3125in, var 5.92in], end = [var -0.50in, var 5.42in])
+  rearEdge = line(start = [var -0.50in, var 5.42in], end = [var 0.50in, var 5.42in])
+  rightEdge = line(start = [var 0.50in, var 5.42in], end = [var 0.3125in, var 5.92in])
+
+  coincident([frontEdge.end, leftEdge.start])
+  coincident([leftEdge.end, rearEdge.start])
+  coincident([rearEdge.end, rightEdge.start])
+  coincident([rightEdge.end, frontEdge.start])
+
+  horizontal(frontEdge)
+  horizontal(rearEdge)
+
+  horizontalDistance([ORIGIN, frontEdge.start]) == 0.3125in
+  verticalDistance([ORIGIN, frontEdge.start]) == 5.92in
+  horizontalDistance([ORIGIN, rearEdge.end]) == 0.50in
+  verticalDistance([ORIGIN, rearEdge.end]) == 5.42in
+  distance([frontEdge.start, frontEdge.end]) == 0.625in
+  distance([rearEdge.start, rearEdge.end]) == 1.0in
+}
+
+liningMortiseTopRegion = region(point = [0in, 5.65in], sketch = liningMortiseTopProfile)
 
 liningPlanOuterSolid = extrude(
   liningOuterBodyRegion,
@@ -32,6 +58,15 @@ liningPlanInnerSolid = extrude(
 liningPlanBandForTop = subtract(liningPlanOuterSolid, tools = [liningPlanInnerSolid], legacyMethod = true)
 liningPlanBandForBack = clone(liningPlanBandForTop)
 
+liningTopMortisePlanCutter = extrude(
+  liningMortiseTopRegion,
+  length = liningMortiseCutDepth,
+  symmetric = true,
+  method = NEW,
+)
+
+linedPlanBandForTopCut = subtract(liningPlanBandForTop, tools = [liningTopMortisePlanCutter], legacyMethod = true)
+
 topLiningDepthEnvelope = extrude(
   topLiningProfileRegion,
   length = liningBodyWidth,
@@ -48,7 +83,7 @@ backLiningDepthEnvelope = extrude(
 
 export topKerfedLining = intersect(
   [
-    liningPlanBandForTop,
+    linedPlanBandForTopCut,
     topLiningDepthEnvelope
   ],
   legacyMethod = true,
@@ -69,6 +104,8 @@ hiddenKerfedLiningWorkBodies = hide([
   liningPlanInnerSolid,
   liningPlanBandForTop,
   liningPlanBandForBack,
+  liningTopMortisePlanCutter,
+  linedPlanBandForTopCut,
   topLiningDepthEnvelope,
   backLiningDepthEnvelope
 ])
@@ -76,6 +113,8 @@ hiddenKerfedLiningWorkBodies = hide([
 hiddenKerfedLiningSketches = hide([
   sketchGuitarInner,
   liningOuterBodyRegion,
+  liningMortiseTopProfile,
+  liningMortiseTopRegion,
   guitarLiningInnerRegion,
   topLiningProfileRegion,
   backLiningProfileRegion

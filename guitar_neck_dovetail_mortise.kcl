@@ -1,0 +1,79 @@
+@settings(defaultLengthUnit = in)
+
+// Router-style tapered dovetail mortise for the neck joint.
+// Modeled as one through-cut operation from the top face downward so the
+// soundboard, neck block, rim, and top kerfed lining are cut simultaneously.
+// The plan opening is template-tapered with the long parallel side toward the
+// soundhole and the short parallel side at the neck/front.
+// The cutter itself is a loft between two trapezoids: a larger one at the
+// soundboard and a smaller one toward the backplate.
+
+mortiseFrontY = 5.92in
+mortiseRearY = 5.42in
+mortiseTopFrontHalfWidth = 0.3125in
+mortiseTopRearHalfWidth = 0.50in
+mortiseBottomFrontHalfWidth = 0.25in
+mortiseBottomRearHalfWidth = 0.4375in
+mortiseTopZ = 0.10in
+mortiseBottomZ = -2.90in
+
+export neckMortiseTopProfile = sketch(on = offsetPlane(XY, offset = mortiseTopZ)) {
+  frontEdge = line(start = [var 0.3125in, var 5.92in], end = [var -0.3125in, var 5.92in])
+  leftEdge = line(start = [var -0.3125in, var 5.92in], end = [var -0.50in, var 5.42in])
+  rearEdge = line(start = [var -0.50in, var 5.42in], end = [var 0.50in, var 5.42in])
+  rightEdge = line(start = [var 0.50in, var 5.42in], end = [var 0.3125in, var 5.92in])
+
+  coincident([frontEdge.end, leftEdge.start])
+  coincident([leftEdge.end, rearEdge.start])
+  coincident([rearEdge.end, rightEdge.start])
+  coincident([rightEdge.end, frontEdge.start])
+
+  horizontal(frontEdge)
+  horizontal(rearEdge)
+
+  horizontalDistance([ORIGIN, frontEdge.start]) == mortiseTopFrontHalfWidth
+  verticalDistance([ORIGIN, frontEdge.start]) == mortiseFrontY
+  horizontalDistance([ORIGIN, rearEdge.end]) == mortiseTopRearHalfWidth
+  verticalDistance([ORIGIN, rearEdge.end]) == mortiseRearY
+  distance([frontEdge.start, frontEdge.end]) == mortiseTopFrontHalfWidth * 2
+  distance([rearEdge.start, rearEdge.end]) == mortiseTopRearHalfWidth * 2
+}
+
+export neckMortiseBottomProfile = sketch(on = offsetPlane(XY, offset = mortiseBottomZ)) {
+  frontEdge = line(start = [var 0.25in, var 5.92in], end = [var -0.25in, var 5.92in])
+  leftEdge = line(start = [var -0.25in, var 5.92in], end = [var -0.4375in, var 5.42in])
+  rearEdge = line(start = [var -0.4375in, var 5.42in], end = [var 0.4375in, var 5.42in])
+  rightEdge = line(start = [var 0.4375in, var 5.42in], end = [var 0.25in, var 5.92in])
+
+  coincident([frontEdge.end, leftEdge.start])
+  coincident([leftEdge.end, rearEdge.start])
+  coincident([rearEdge.end, rightEdge.start])
+  coincident([rightEdge.end, frontEdge.start])
+
+  horizontal(frontEdge)
+  horizontal(rearEdge)
+
+  horizontalDistance([ORIGIN, frontEdge.start]) == mortiseBottomFrontHalfWidth
+  verticalDistance([ORIGIN, frontEdge.start]) == mortiseFrontY
+  horizontalDistance([ORIGIN, rearEdge.end]) == mortiseBottomRearHalfWidth
+  verticalDistance([ORIGIN, rearEdge.end]) == mortiseRearY
+  distance([frontEdge.start, frontEdge.end]) == mortiseBottomFrontHalfWidth * 2
+  distance([rearEdge.start, rearEdge.end]) == mortiseBottomRearHalfWidth * 2
+}
+
+neckMortiseTopRegion = region(point = [0in, 5.65in], sketch = neckMortiseTopProfile)
+neckMortiseBottomRegion = region(point = [0in, 5.65in], sketch = neckMortiseBottomProfile)
+
+export neckMortiseCutter = loft([
+  neckMortiseTopRegion,
+  neckMortiseBottomRegion
+])
+
+hiddenNeckMortiseWorkBodies = hide([neckMortiseCutter])
+
+hiddenNeckMortiseSketches = hide([
+  neckMortiseTopProfile,
+  neckMortiseBottomProfile,
+  neckMortiseTopRegion,
+  neckMortiseBottomRegion
+])
