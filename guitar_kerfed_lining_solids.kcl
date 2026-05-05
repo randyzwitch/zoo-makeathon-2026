@@ -8,6 +8,7 @@ import guitarLiningInnerRegion, topLiningProfileRegion, backLiningProfileRegion 
 // from the binding/rabbet construction. Binding trim bodies must not replace or
 // reshape these lining depth envelopes.
 
+
 liningBodyWidth = 16in
 liningClipDepth = 10in
 liningWoodColor = "#caa06a"

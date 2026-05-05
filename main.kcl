@@ -2,10 +2,10 @@
 
 // Lightweight bridge/body assembly.
 // Shows the soundboard, rosette, primary bracing/patches attached to the soundboard,
-// sides, blocks, external bridge/saddle, backplate, and separate top/back binding
-// bodies. Kerfed linings remain modeled in guitar_kerfed_lining_solids.kcl, but
-// are hidden here so they do not dominate the presentation view above/inside the
-// soundboard.
+// side/finger braces, interior side blocks, blocks, external bridge/saddle,
+// backplate, sides, and separate top/back binding bodies.
+// Kerfed linings remain modeled in guitar_kerfed_lining_solids.kcl but are not
+// forced into this presentation view.
 // Geometry source modules are untouched except for requested trim/rabbet features.
 
 import sketchGuitar, sketchGuitarInner, guitarBodyRegion, guitarInnerBodyRegion from "guitar_outline.kcl"
@@ -17,12 +17,16 @@ import rosetteInnerPurfling, rosetteMainInlay, rosetteOuterPurfling from "guitar
 import topBinding from "guitar_top_trim.kcl"
 import backBinding from "guitar_back_trim.kcl"
 import soundboardBracing from "guitar_soundboard_bracing.kcl"
+import soundboardTopSideBraces from "guitar_soundboard_top_side_braces.kcl"
 import bridgePlate from "guitar_bridge_plate.kcl"
 import soundholeReinforcement from "guitar_soundhole_reinforcement.kcl"
 import bridge, saddle from "guitar_bridge.kcl"
 import guitarsides from "guitar_sides_solid.kcl"
 import neckBlock, tailBlock from "guitar_blocks.kcl"
+import sideBlocks, sideBlockHeightProfile, sideBlockGapProfiles from "guitar_side_blocks.kcl"
 import topKerfedLining, backKerfedLining from "guitar_kerfed_lining_solids.kcl"
+import backCenterGlueSeamBrace, backCenterGlueSeamBraceProfile from "guitar_back_bracing.kcl"
+import backTransverseBrace1, backTransverseBrace2, backTransverseBrace3, backTransverseBrace4 from "guitar_back_transverse_bracing.kcl"
 
 // Visible working set for bridge/body context.
 visibleSoundboard = soundboard
@@ -32,7 +36,9 @@ visibleRosetteMainInlay = rosetteMainInlay
 visibleRosetteOuterPurfling = rosetteOuterPurfling
 visibleTopBinding = topBinding
 visibleBackBinding = backBinding
+visibleBackCenterGlueSeamBrace = backCenterGlueSeamBrace
 visibleSoundboardBracing = soundboardBracing
+visibleSoundboardTopSideBraces = soundboardTopSideBraces
 visibleBridgePlate = bridgePlate
 visibleSoundholeReinforcement = soundholeReinforcement
 visibleBridge = bridge
@@ -40,6 +46,7 @@ visibleSaddle = saddle
 visibleSides = guitarsides
 visibleNeckBlock = neckBlock
 visibleTailBlock = tailBlock
+visibleSideBraces = sideBlocks
 
 hiddenPresentationSketches = hide([
   sketchGuitar,
@@ -55,5 +62,8 @@ hiddenPresentationSketches = hide([
   topLiningProfile,
   topLiningProfileRegion,
   backLiningProfile,
-  backLiningProfileRegion
+  backLiningProfileRegion,
+  sideBlockHeightProfile,
+  sideBlockGapProfiles,
+  backCenterGlueSeamBraceProfile
 ])

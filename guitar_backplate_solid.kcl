@@ -10,10 +10,11 @@ import bodySideProfile from "guitar_side_profile.kcl"
 // Inspection update: the backplate is intentionally very translucent in main views
 // so the interior can be reviewed before the binding feature is finalized.
 
+
 sideProfileBodyWidth = 16in
 sideProfileClipDepth = 10in
 walnutBackColor = "#5a2f1a"
-backplateInspectionOpacity = 8
+backplateInspectionOpacity = 100
 
 sideBackProfileRegion = region(point = [0in, -3.96in], sketch = bodySideProfile)
 
