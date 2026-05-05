@@ -16,8 +16,10 @@ bridgeBaseZ = 0.106in
 bridgeThickness = 0.375in
 bridgeTopZ = bridgeBaseZ + bridgeThickness
 
-export bridgePinThroughBottomZ = -0.260in
-export bridgePinThroughTopClearance = 0.125in
+// Deliberately generous vertical cutter span so the bridge-pin holes pass
+// through the bridge, soundboard, and bridge plate even after plate/radius edits.
+export bridgePinThroughBottomZ = -0.750in
+export bridgePinThroughTopClearance = 0.500in
 export bridgePinThroughLength = bridgeTopZ - bridgePinThroughBottomZ + bridgePinThroughTopClearance
 
 export bridgeStringSpread = 2.125in
