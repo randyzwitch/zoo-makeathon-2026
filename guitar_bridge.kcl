@@ -68,6 +68,7 @@ saddleBassRearY = saddleBassFrontY - saddleWidth
 saddleTrebleRearY = saddleTrebleFrontY - saddleWidth
 saddleBottomZ = bridgeTopZ - bridgeSaddleSlotPocketDepth + 0.010in
 saddleHeight = bridgeSaddleSlotPocketDepth + 0.170in
+saddleTopCrownRadius = 0.039in
 
 bridgeFootprintPlan = sketch(on = offsetPlane(XY, offset = bridgeBaseZ)) {
   frontEdge = line(start = [var -3.0in, var -5.040779in], end = [var 3.0in, var -5.040779in])
@@ -299,8 +300,16 @@ saddlePlan = sketch(on = offsetPlane(XY, offset = saddleBottomZ)) {
 
 saddleRegion = region(point = [0in, -5.37in], sketch = saddlePlan)
 saddleBlank = extrude(saddleRegion, length = saddleHeight, method = NEW)
+saddleCrowned = fillet(
+  saddleBlank,
+  tags = [
+    getOppositeEdge(saddleBlank.sketch.tags.saddleFrontEdge),
+    getOppositeEdge(saddleBlank.sketch.tags.saddleRearEdge)
+  ],
+  radius = saddleTopCrownRadius,
+)
 
-export saddle = saddleBlank
+export saddle = saddleCrowned
   |> appearance(color = saddleBoneColor, metalness = 0, roughness = 34)
 
 hiddenBridgeWorkBodies = hide([
