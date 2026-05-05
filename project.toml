@@ -2,5 +2,11 @@
 id = "097a9679-47d2-451c-9821-2c0c72eb4011"
 
 [settings.app]
+zookeeper_mode = "fast"
 
 [settings.modeling]
+fixed_size_grid = false
+
+[settings.debug]
+show_modeling_machine_state = true
+show_panel = true

@@ -273,6 +273,13 @@ toneBarScallopRadius = 6.350in
 toneBarUpperFlatLength = toneBarUpperHalfLength * 2 - (toneBarScallopLength * 2)
 toneBarLowerFlatLength = toneBarLowerHalfLength * 2 - (toneBarScallopLength * 2)
 
+// Full-height plan-footprint trim cutters for the tone bars. These remove any
+// bar material hidden inside the X-brace footprint, even where the X-brace free
+// face is scalloped lower than the tone bar.
+toneBarXTrimHalfWidth = xBraceWidth / 2
+toneBarXTrimHalfLength = 10.0in
+toneBarXTrimHeight = 1.0in
+
 // Centers are shifted down-left along the 110-degree brace axis so the original
 // upper/right ends remain fixed at the X-brace-side location.
 toneBarUpperCenterX = -1.99in
@@ -388,14 +395,81 @@ toneBarLowerSeed = extrude(
   method = NEW,
 )
 
-export soundboardUpperToneBar = clone(toneBarUpperSeed)
+toneBarXTrimPlan = sketch(on = XY) {
+  leftEdge = line(start = [var -0.19in, var -10.0in], end = [var -0.19in, var 10.0in])
+  upperEdge = line(start = [var -0.19in, var 10.0in], end = [var 0.19in, var 10.0in])
+  rightEdge = line(start = [var 0.19in, var 10.0in], end = [var 0.19in, var -10.0in])
+  lowerEdge = line(start = [var 0.19in, var -10.0in], end = [var -0.19in, var -10.0in])
+
+  coincident([leftEdge.end, upperEdge.start])
+  coincident([upperEdge.end, rightEdge.start])
+  coincident([rightEdge.end, lowerEdge.start])
+  coincident([lowerEdge.end, leftEdge.start])
+
+  vertical(leftEdge)
+  horizontal(upperEdge)
+  vertical(rightEdge)
+  horizontal(lowerEdge)
+
+  horizontalDistance([leftEdge.start, ORIGIN]) == toneBarXTrimHalfWidth
+  verticalDistance([leftEdge.start, ORIGIN]) == toneBarXTrimHalfLength
+  distance([upperEdge.start, upperEdge.end]) == toneBarXTrimHalfWidth * 2
+  distance([leftEdge.start, leftEdge.end]) == toneBarXTrimHalfLength * 2
+}
+
+toneBarXTrimRegion = region(point = [0in, 0in], sketch = toneBarXTrimPlan)
+toneBarXTrimSeed = extrude(
+  toneBarXTrimRegion,
+  length = toneBarXTrimHeight,
+  symmetric = true,
+  method = NEW,
+)
+
+toneBarUpperPlaced = clone(toneBarUpperSeed)
   |> rotate(axis = Z, angle = toneBarAngle, global = true)
   |> translate(x = toneBarUpperCenterX, y = toneBarUpperCenterY, global = true)
-  |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
 
-export soundboardLowerToneBar = clone(toneBarLowerSeed)
+toneBarLowerPlaced = clone(toneBarLowerSeed)
   |> rotate(axis = Z, angle = toneBarAngle, global = true)
   |> translate(x = toneBarLowerCenterX, y = toneBarLowerCenterY, global = true)
+
+toneBarUpperBassTrimTool = clone(toneBarXTrimSeed)
+  |> rotate(axis = Z, angle = xBraceHalfAngle, global = true)
+  |> translate(y = xBraceCrossY, global = true)
+
+toneBarUpperTrebleTrimTool = clone(toneBarXTrimSeed)
+  |> rotate(axis = Z, angle = 0deg - xBraceHalfAngle, global = true)
+  |> translate(y = xBraceCrossY, global = true)
+
+toneBarLowerBassTrimTool = clone(toneBarXTrimSeed)
+  |> rotate(axis = Z, angle = xBraceHalfAngle, global = true)
+  |> translate(y = xBraceCrossY, global = true)
+
+toneBarLowerTrebleTrimTool = clone(toneBarXTrimSeed)
+  |> rotate(axis = Z, angle = 0deg - xBraceHalfAngle, global = true)
+  |> translate(y = xBraceCrossY, global = true)
+
+// Clip the tone bars against full-height X-brace footprint cutters so they die
+// into the near brace faces in plan instead of leaving material buried inside
+// scalloped X-brace volume.
+export soundboardUpperToneBar = subtract(
+  toneBarUpperPlaced,
+  tools = [
+    toneBarUpperBassTrimTool,
+    toneBarUpperTrebleTrimTool
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
+
+export soundboardLowerToneBar = subtract(
+  toneBarLowerPlaced,
+  tools = [
+    toneBarLowerBassTrimTool,
+    toneBarLowerTrebleTrimTool
+  ],
+  legacyMethod = true,
+)
   |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
 
 export soundboardToneBars = flatten([
@@ -421,7 +495,14 @@ hiddenBraceSeeds = hide([
   upperTransverseSeed,
   popsicleBraceSeed,
   toneBarUpperSeed,
-  toneBarLowerSeed
+  toneBarLowerSeed,
+  toneBarXTrimSeed,
+  toneBarUpperPlaced,
+  toneBarLowerPlaced,
+  toneBarUpperBassTrimTool,
+  toneBarUpperTrebleTrimTool,
+  toneBarLowerBassTrimTool,
+  toneBarLowerTrebleTrimTool
 ])
 
 hiddenBraceSketches = hide([
@@ -430,5 +511,6 @@ hiddenBraceSketches = hide([
   upperTransverseProfile,
   popsicleBraceProfile,
   toneBarUpperProfile,
-  toneBarLowerProfile
+  toneBarLowerProfile,
+  toneBarXTrimPlan
 ])
