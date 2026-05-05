@@ -1,18 +1,21 @@
 @settings(defaultLengthUnit = in)
 
-import sketchGuitar from "guitar_outline.kcl"
+import sketchGuitarInner from "guitar_outline.kcl"
 import bodySideProfile from "guitar_side_profile.kcl"
 
 // Backplate-only solid for bracing confirmation.
 // Keeps the soundboard out of the working scene while showing the radiused backplate.
-
+// Binding update: the backplate is clipped to the binding inner edge so the
+// separate backBinding body protects/covers the backplate end grain at the rim.
+// Inspection update: the backplate is intentionally very translucent in main views
+// so the interior can be reviewed before the binding feature is finalized.
 
 sideProfileBodyWidth = 16in
 sideProfileClipDepth = 10in
 walnutBackColor = "#5a2f1a"
+backplateInspectionOpacity = 8
 
 sideBackProfileRegion = region(point = [0in, -3.96in], sketch = bodySideProfile)
-guitarBodyRegion = region(point = [0in, -4in], sketch = sketchGuitar)
 
 sideBackProfilePrism = extrude(
   sideBackProfileRegion,
@@ -21,8 +24,11 @@ sideBackProfilePrism = extrude(
   method = NEW,
 )
 
+// Use a fresh local region from the inward 0.08 in outline for the back plate.
+// The outer 0.08 in band is occupied by backBinding, flush with the same radiused back surface.
+backplateInnerBodyRegion = region(point = [0in, -4in], sketch = sketchGuitarInner)
 guitarOutlineClipBack = extrude(
-  guitarBodyRegion,
+  backplateInnerBodyRegion,
   length = sideProfileClipDepth,
   symmetric = true,
   method = NEW,
@@ -35,4 +41,21 @@ export backplate = intersect(
   ],
   legacyMethod = true,
 )
-  |> appearance(color = walnutBackColor, metalness = 0, roughness = 74)
+  |> appearance(
+       color = walnutBackColor,
+       metalness = 0,
+       roughness = 74,
+       opacity = backplateInspectionOpacity,
+     )
+
+hiddenBackplateWorkBodies = hide([
+  sideBackProfilePrism,
+  guitarOutlineClipBack
+])
+
+hiddenBackplateSketches = hide([
+  sketchGuitarInner,
+  bodySideProfile,
+  sideBackProfileRegion,
+  backplateInnerBodyRegion
+])

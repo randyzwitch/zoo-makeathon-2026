@@ -1,13 +1,16 @@
 @settings(defaultLengthUnit = in)
 
 import guitarBodyRegion, guitarInnerBodyRegion from "guitar_outline.kcl"
-import sideTopProfileRegion, sideMiddleProfileRegion, sideBackProfileRegion from "guitar_side_profile.kcl"
+import sideTopProfileRegion, sideBackProfileRegion from "guitar_side_profile.kcl"
+import sideShellRemainingProfilePrism from "guitar_top_binding_rabbet_profiles.kcl"
 import rosetteChannelCutter from "guitar_rosette.kcl"
 
 // Heavy acoustic-guitar body solids.
 // The lightweight YZ side-profile sketch/regions live in guitar_side_profile.kcl.
-// Binding update: the spruce soundboard is clipped to the binding inner edge,
-// leaving the outer 0.08 in rim band for the separate binding body.
+// Binding update: the spruce soundboard and walnut backplate are clipped to the
+// binding inner edge, leaving the outer 0.08 in rim bands for separate binding
+// bodies. The walnut side shell is also notched away at both top and back binding
+// channels using the shared rabbet side profile.
 
 
 sideProfileBodyWidth = 16in
@@ -27,12 +30,6 @@ sideTopProfilePrism = extrude(
   symmetric = true,
   method = NEW,
 )
-sideMiddleProfilePrism = extrude(
-  sideMiddleProfileRegion,
-  length = sideProfileBodyWidth,
-  symmetric = true,
-  method = NEW,
-)
 sideBackProfilePrism = extrude(
   sideBackProfileRegion,
   length = sideProfileBodyWidth,
@@ -40,8 +37,8 @@ sideBackProfilePrism = extrude(
   method = NEW,
 )
 
-// Full-depth clipping solids from plan regions. The top uses the inset binding boundary;
-// sides and back still use the finished outer guitar outline.
+// Full-depth clipping solids from plan regions. Top and back use the inset
+// binding boundary; sides still use the finished outer guitar outline.
 guitarOutlineClipTop = extrude(
   guitarInnerBodyRegion,
   length = sideProfileClipDepth,
@@ -54,7 +51,7 @@ guitarOutlineClipMiddle = extrude(
   symmetric = true,
   method = NEW,
 )
-guitarOutlineClipBack = clone(guitarOutlineClipMiddle)
+guitarOutlineClipBack = clone(guitarOutlineClipTop)
 
 // Soundhole cutter: a 4 in diameter vertical cylinder centered on the master-sketch origin.
 // It is used only in the soundboard subtraction so sides, blocks, linings, and back are untouched.
@@ -102,7 +99,7 @@ export soundboard = subtract(soundboardBlank, tools = [soundholeCutter, rosetteC
 
 sideMiddleGuitarSolid = intersect(
   [
-    sideMiddleProfilePrism,
+    sideShellRemainingProfilePrism,
     guitarOutlineClipMiddle
   ],
   legacyMethod = true,
@@ -119,3 +116,23 @@ export backplate = intersect(
   legacyMethod = true,
 )
   |> appearance(color = walnutBackColor, metalness = 0, roughness = 74)
+
+hiddenBodyWorkBodies = hide([
+  sideTopProfilePrism,
+  sideBackProfilePrism,
+  sideShellRemainingProfilePrism,
+  guitarOutlineClipTop,
+  guitarOutlineClipMiddle,
+  guitarOutlineClipBack,
+  soundholeCutter,
+  guitarInnerSideCut,
+  soundboardBlank,
+  sideMiddleGuitarSolid
+])
+
+hiddenBodySketches = hide([
+  sideTopProfileRegion,
+  sideBackProfileRegion,
+  soundholeSketch,
+  soundholeRegion
+])

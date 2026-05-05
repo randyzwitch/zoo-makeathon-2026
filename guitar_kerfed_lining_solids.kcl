@@ -4,8 +4,9 @@ import sketchGuitarInner from "guitar_outline.kcl"
 import guitarLiningInnerRegion, topLiningProfileRegion, backLiningProfileRegion from "guitar_kerfed_linings.kcl"
 
 // Heavy kerfed-lining solids.
-// Binding-only update: the 0.08 in binding replaces the side-wall band, so the top kerfed lining remains intact.
-
+// These are the actual modeled top/back lining bands and should stay independent
+// from the binding/rabbet construction. Binding trim bodies must not replace or
+// reshape these lining depth envelopes.
 
 liningBodyWidth = 16in
 liningClipDepth = 10in
@@ -61,3 +62,20 @@ export backKerfedLining = intersect(
   legacyMethod = true,
 )
   |> appearance(color = liningWoodColor, metalness = 0, roughness = 82)
+
+hiddenKerfedLiningWorkBodies = hide([
+  liningPlanOuterSolid,
+  liningPlanInnerSolid,
+  liningPlanBandForTop,
+  liningPlanBandForBack,
+  topLiningDepthEnvelope,
+  backLiningDepthEnvelope
+])
+
+hiddenKerfedLiningSketches = hide([
+  sketchGuitarInner,
+  liningOuterBodyRegion,
+  guitarLiningInnerRegion,
+  topLiningProfileRegion,
+  backLiningProfileRegion
+])

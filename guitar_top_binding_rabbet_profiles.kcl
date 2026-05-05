@@ -2,19 +2,26 @@
 
 import guitarCenterlineUpperY, guitarCenterlineLowerY from "guitar_outline.kcl"
 
-// Binding rabbet profile geometry for the top edge.
+// Binding rabbet profile geometry for the top and back edges.
 // Coordinates are in the YZ side-profile sketch: local X = guitar body Y station,
-// local Y = vertical Z. The binding height follows the domed soundboard arc by
-// using a concentric lower arc, not a flat horizontal shelf.
+// local Y = vertical Z.
+//
+// Top binding: starts at the domed soundboard top and runs downward 3/8 in.
+// Back binding: starts at the radiused back surface and runs upward 3/8 in.
+// Both lower/upper rabbet edges are concentric offsets from their respective
+// plate surfaces so the binding height follows the curved plates instead of a
+// flat Z plane.
 
 
 bindingHeight = 0.375in
 soundboardArcRadius = 40ft
 backArcRadius = 28ft
 sideProfileArcOffset = 0.125in
+kerfedLiningHeight = 0.5625in
 bindingProfileBodyWidth = 16in
 
 export bindingHeightFromTop = bindingHeight
+export bindingHeightFromBack = bindingHeight
 
 export topBindingRabbetProfile = sketch(on = YZ) {
   upperCenterlineStation = point(at = [var 5.76in, var 0in])
@@ -54,73 +61,103 @@ export topBindingRabbetProfile = sketch(on = YZ) {
   horizontalDistance([topArc.center, upperCenterlineStation]) == (guitarCenterlineUpperY - guitarCenterlineLowerY) / 2
   radius(topArc) == soundboardArcRadius
 
-  bindingBottomArc = arc(start = [var 5.76in, var -0.38in], end = [var -14.63in, var -0.38in], center = [var -4.43in, var -479.89in])
-  coincident([bindingBottomArc.center, topArc.center])
+  topBindingBottomArc = arc(start = [var 5.76in, var -0.38in], end = [var -14.63in, var -0.38in], center = [var -4.43in, var -479.89in])
   coincident([
-    bindingBottomArc.start,
+    topBindingBottomArc.center,
+    topArc.center
+  ])
+  coincident([
+    topBindingBottomArc.start,
     neckDepthReference
   ])
   coincident([
-    bindingBottomArc.end,
+    topBindingBottomArc.end,
     tailDepthReference
   ])
-  radius(bindingBottomArc) == soundboardArcRadius - bindingHeight
+  radius(topBindingBottomArc) == soundboardArcRadius - bindingHeight
 
-  neckBindingWall = line(start = [var 5.76in, var 0in], end = [var 5.76in, var -0.38in])
-  coincident([neckBindingWall.start, topArc.start])
+  neckTopBindingWall = line(start = [var 5.76in, var 0in], end = [var 5.76in, var -0.38in])
+  coincident([neckTopBindingWall.start, topArc.start])
   coincident([
-    neckBindingWall.end,
-    bindingBottomArc.start
+    neckTopBindingWall.end,
+    topBindingBottomArc.start
   ])
-  vertical(neckBindingWall)
+  vertical(neckTopBindingWall)
 
-  tailBindingWall = line(start = [var -14.63in, var 0in], end = [var -14.63in, var -0.38in])
-  coincident([tailBindingWall.start, topArc.end])
+  tailTopBindingWall = line(start = [var -14.63in, var 0in], end = [var -14.63in, var -0.38in])
+  coincident([tailTopBindingWall.start, topArc.end])
   coincident([
-    tailBindingWall.end,
-    bindingBottomArc.end
+    tailTopBindingWall.end,
+    topBindingBottomArc.end
   ])
-  vertical(tailBindingWall)
+  vertical(tailTopBindingWall)
 
-  sideBackInsideArc = arc(start = [var -14.63in, var -4.13in], end = [var 5.76in, var -3.63in], center = [var -12.66in, var 331.74in])
+  backArc = arc(start = [var -14.63in, var -4.25in], end = [var 5.76in, var -3.75in], center = [var -12.66in, var 331.74in])
+  coincident([backArc.start, tailDepthReference.end])
+  coincident([backArc.end, neckDepthReference.end])
+  radius(backArc) == backArcRadius
+
+  backBindingTopArc = arc(start = [var -14.63in, var -3.88in], end = [var 5.76in, var -3.38in], center = [var -12.66in, var 331.74in])
   coincident([
-    sideBackInsideArc.start,
+    backBindingTopArc.center,
+    backArc.center
+  ])
+  coincident([
+    backBindingTopArc.start,
     tailDepthReference
   ])
   coincident([
-    sideBackInsideArc.end,
+    backBindingTopArc.end,
     neckDepthReference
   ])
-  radius(sideBackInsideArc) == backArcRadius - sideProfileArcOffset
+  radius(backBindingTopArc) == backArcRadius - bindingHeight
 
-  tailRemainingSideWall = line(start = [var -14.63in, var -0.38in], end = [var -14.63in, var -4.13in])
+  tailRemainingSideWall = line(start = [var -14.63in, var -0.38in], end = [var -14.63in, var -3.88in])
   coincident([
     tailRemainingSideWall.start,
-    bindingBottomArc.end
+    topBindingBottomArc.end
   ])
   coincident([
     tailRemainingSideWall.end,
-    sideBackInsideArc.start
+    backBindingTopArc.start
   ])
   vertical(tailRemainingSideWall)
 
-  neckRemainingSideWall = line(start = [var 5.76in, var -0.38in], end = [var 5.76in, var -3.63in])
+  neckRemainingSideWall = line(start = [var 5.76in, var -0.38in], end = [var 5.76in, var -3.38in])
   coincident([
     neckRemainingSideWall.start,
-    bindingBottomArc.start
+    topBindingBottomArc.start
   ])
   coincident([
     neckRemainingSideWall.end,
-    sideBackInsideArc.end
+    backBindingTopArc.end
   ])
   vertical(neckRemainingSideWall)
+
+  tailBackBindingWall = line(start = [var -14.63in, var -3.88in], end = [var -14.63in, var -4.25in])
+  coincident([
+    tailBackBindingWall.start,
+    backBindingTopArc.start
+  ])
+  coincident([tailBackBindingWall.end, backArc.start])
+  vertical(tailBackBindingWall)
+
+  neckBackBindingWall = line(start = [var 5.76in, var -3.38in], end = [var 5.76in, var -3.75in])
+  coincident([
+    neckBackBindingWall.start,
+    backBindingTopArc.end
+  ])
+  coincident([neckBackBindingWall.end, backArc.end])
+  vertical(neckBackBindingWall)
 }
 
 topBindingProfileRegionLocal = region(point = [0in, -0.15in], sketch = topBindingRabbetProfile)
 sideShellRemainingProfileRegionLocal = region(point = [0in, -2in], sketch = topBindingRabbetProfile)
+backBindingProfileRegionLocal = region(point = [0in, -3.85in], sketch = topBindingRabbetProfile)
 
 export topBindingProfileRegion = topBindingProfileRegionLocal
 export sideShellRemainingProfileRegion = sideShellRemainingProfileRegionLocal
+export backBindingProfileRegion = backBindingProfileRegionLocal
 
 export topBindingProfilePrism = extrude(
   topBindingProfileRegionLocal,
@@ -136,8 +173,91 @@ export sideShellRemainingProfilePrism = extrude(
   method = NEW,
 )
 
+export backBindingProfilePrism = extrude(
+  backBindingProfileRegionLocal,
+  length = bindingProfileBodyWidth,
+  symmetric = true,
+  method = NEW,
+)
+
+// Remaining lower kerfed lining after the back binding channel is routed.
+// The channel removes the back plate thickness plus the lower portion of the
+// back lining up to the same 3/8 in constant offset from the back surface.
+export backKerfedLiningRemainingProfile = sketch(on = YZ) {
+  backBindingChannelUpperArc = arc(start = [var -14.63in, var -3.88in], end = [var 5.76in, var -3.38in], center = [var -12.66in, var 331.74in])
+  backLiningUpperArc = arc(start = [var 5.76in, var -3.06in], end = [var -14.63in, var -3.56in], center = [var -12.66in, var 331.74in])
+  neckKerfWall = line(start = [var 5.76in, var -3.38in], end = [var 5.76in, var -3.06in])
+  tailKerfWall = line(start = [var -14.63in, var -3.56in], end = [var -14.63in, var -3.88in])
+
+  coincident([
+    backBindingChannelUpperArc.end,
+    neckKerfWall.start
+  ])
+  coincident([
+    neckKerfWall.end,
+    backLiningUpperArc.start
+  ])
+  coincident([
+    backLiningUpperArc.end,
+    tailKerfWall.start
+  ])
+  coincident([
+    tailKerfWall.end,
+    backBindingChannelUpperArc.start
+  ])
+
+  coincident([
+    backLiningUpperArc.center,
+    backBindingChannelUpperArc.center
+  ])
+
+  vertical(neckKerfWall)
+  vertical(tailKerfWall)
+
+  horizontalDistance([
+  backBindingChannelUpperArc.center,
+  ORIGIN
+]) == 12.66in
+  verticalDistance([
+  ORIGIN,
+  backBindingChannelUpperArc.center
+]) == 331.74in
+
+  horizontalDistance([
+  backBindingChannelUpperArc.start,
+  ORIGIN
+]) == 0in - guitarCenterlineLowerY
+  horizontalDistance([ORIGIN, backBindingChannelUpperArc.end]) == guitarCenterlineUpperY
+
+  radius(backBindingChannelUpperArc) == backArcRadius - bindingHeight
+  distance([
+  backBindingChannelUpperArc.end,
+  backBindingChannelUpperArc.center
+]) == backArcRadius - bindingHeight
+
+  radius(backLiningUpperArc) == backArcRadius - sideProfileArcOffset - kerfedLiningHeight
+  distance([
+  backLiningUpperArc.start,
+  backLiningUpperArc.center
+]) == backArcRadius - sideProfileArcOffset - kerfedLiningHeight
+}
+
+backKerfedLiningRemainingProfileRegionLocal = region(point = [0in, -3.48in], sketch = backKerfedLiningRemainingProfile)
+
+export backKerfedLiningRemainingProfileRegion = backKerfedLiningRemainingProfileRegionLocal
+
+export backKerfedLiningRemainingProfilePrism = extrude(
+  backKerfedLiningRemainingProfileRegionLocal,
+  length = bindingProfileBodyWidth,
+  symmetric = true,
+  method = NEW,
+)
+
 hiddenRabbetProfileSketches = hide([
   topBindingRabbetProfile,
   topBindingProfileRegionLocal,
-  sideShellRemainingProfileRegionLocal
+  sideShellRemainingProfileRegionLocal,
+  backBindingProfileRegionLocal,
+  backKerfedLiningRemainingProfile,
+  backKerfedLiningRemainingProfileRegionLocal
 ])
