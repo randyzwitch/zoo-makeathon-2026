@@ -26,6 +26,7 @@ import topKerfedLining, backKerfedLining from "guitar_kerfed_lining_solids.kcl"
 import backCenterGlueSeamBrace, backCenterGlueSeamBraceProfile from "guitar_back_bracing.kcl"
 import backTransverseBrace1, backTransverseBrace2, backTransverseBrace3, backTransverseBrace4 from "guitar_back_transverse_bracing.kcl"
 import neckMortiseCutter from "guitar_neck_dovetail_mortise.kcl"
+import soundportCutter from "guitar_soundport.kcl"
 
 // Visible working set for bridge/body context.
 visibleSoundboard = subtract(soundboard, tools = [clone(neckMortiseCutter)], legacyMethod = true)
@@ -42,10 +43,17 @@ visibleBridgePlate = bridgePlate
 visibleSoundholeReinforcement = soundholeReinforcement
 visibleBridge = bridge
 visibleSaddle = saddle
-visibleSides = subtract(guitarsides, tools = [clone(neckMortiseCutter)], legacyMethod = true)
+visibleSides = subtract(
+  guitarsides,
+  tools = [
+    clone(neckMortiseCutter),
+    clone(soundportCutter)
+  ],
+  legacyMethod = true,
+)
 visibleNeckBlock = subtract(neckBlock, tools = [clone(neckMortiseCutter)], legacyMethod = true)
 visibleTailBlock = tailBlock
-visibleSideBraces = sideBlocks
+visibleSideBraces = subtract(sideBlocks, tools = [clone(soundportCutter)], legacyMethod = true)
 visibleTopKerfedLining = subtract(topKerfedLining, tools = [clone(neckMortiseCutter)], legacyMethod = true)
 visibleBackKerfedLining = backKerfedLining
 

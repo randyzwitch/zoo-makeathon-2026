@@ -1,0 +1,64 @@
+@settings(defaultLengthUnit = in)
+
+// Bass-side shoulder soundport.
+// Modeled as a simple oval cut on a tangent-ish plane to the upper-bout bass side,
+// then extruded through only the local side stack.
+
+soundportSeedRadius = 0.5in
+soundportMajorLength = 2.4in
+soundportMinorLength = 1.75in
+soundportCutterLength = 1.50in
+soundportSeedLength = 1.0in
+soundportSeedDiameter = soundportSeedRadius * 2
+
+soundportCutterScaleX = soundportCutterLength / soundportSeedLength
+soundportCutterScaleY = soundportMajorLength / soundportSeedDiameter
+soundportCutterScaleZ = soundportMinorLength / soundportSeedDiameter
+
+// Right-handed guitar: place the soundport on the bass-side upper bout only.
+// Negative X is used for the bass-side shoulder in this project orientation.
+soundportCenterX = -5.60in
+soundportCenterY = 2.95in
+soundportCenterZ = -1.78in
+soundportPlaneYaw = 160deg
+soundportEllipseTilt = 18deg
+
+export soundportSeedProfile = sketch(on = YZ) {
+  soundportCircle = circle(start = [var 0.5in, var 0in], center = [var 0in, var 0in])
+  coincident([soundportCircle.center, ORIGIN])
+  horizontalDistance([
+  soundportCircle.center,
+  soundportCircle.start
+]) == soundportSeedRadius
+  verticalDistance([
+  soundportCircle.center,
+  soundportCircle.start
+]) == 0in
+}
+
+soundportSeedRegion = region(point = [0in, 0in], sketch = soundportSeedProfile)
+
+soundportSeedSolid = extrude(
+  soundportSeedRegion,
+  length = soundportSeedLength,
+  symmetric = true,
+  method = NEW,
+)
+
+export soundportCutter = clone(soundportSeedSolid)
+  |> scale(x = soundportCutterScaleX, y = soundportCutterScaleY, z = soundportCutterScaleZ)
+  |> rotate(axis = X, angle = soundportEllipseTilt)
+  |> rotate(axis = Z, angle = soundportPlaneYaw)
+  |> translate(
+       x = soundportCenterX,
+       y = soundportCenterY,
+       z = soundportCenterZ,
+       global = true,
+     )
+
+hiddenSoundportWorkBodies = hide([soundportSeedSolid, soundportCutter])
+
+hiddenSoundportSketches = hide([
+  soundportSeedProfile,
+  soundportSeedRegion
+])
