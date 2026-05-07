@@ -211,15 +211,7 @@ export soundboardTopSideBraces = flatten([
 hiddenTopSideBraceSeeds = hide([
   topSideBraceUpperSeed,
   topSideBraceLowerSeed,
-  topSideBraceXTrimSeed,
-  leftUpperTopSideBraceRaw,
-  rightUpperTopSideBraceRaw,
-  leftLowerTopSideBraceRaw,
-  rightLowerTopSideBraceRaw,
-  topSideBraceLeftUpperXTrimCutter,
-  topSideBraceRightUpperXTrimCutter,
-  topSideBraceLeftLowerXTrimCutter,
-  topSideBraceRightLowerXTrimCutter
+  topSideBraceXTrimSeed
 ])
 
 hiddenTopSideBraceSketches = hide([

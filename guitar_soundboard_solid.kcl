@@ -105,14 +105,7 @@ soundboardCutters = flatten([
 export soundboard = subtract(soundboardBlank, tools = soundboardCutters, legacyMethod = true)
   |> appearance(color = spruceColor, metalness = 0, roughness = 78)
 
-hiddenSoundboardOnlyWorkBodies = hide(flatten([
-  sideTopProfilePrism,
-  guitarOutlineClipTop,
-  soundholeCutter,
-  soundboardPinHoleSeed,
-  soundboardPinHoleCutters,
-  soundboardBlank
-]))
+hiddenSoundboardOnlyWorkBodies = hide(flatten([soundboardPinHoleSeed]))
 
 hiddenSoundboardOnlySketches = hide([
   sketchGuitar,

@@ -40,13 +40,6 @@ export topBinding = intersect(
 )
   |> appearance(color = bindingColor, metalness = 0, roughness = 64)
 
-hiddenTopBindingWorkBodies = hide([
-  topBindingProfilePrism,
-  bindingOuterPlanSolid,
-  bindingInnerPlanSolid,
-  bindingPlanBand
-])
-
 hiddenTopBindingSketches = hide([
   sketchGuitar,
   sketchGuitarInner,

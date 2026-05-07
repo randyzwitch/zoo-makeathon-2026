@@ -87,11 +87,6 @@ soundholeReinforcementHoleCutter = extrude(soundholeReinforcementHoleRegion, len
 export soundholeReinforcement = subtract(soundholeReinforcementBlank, tools = [soundholeReinforcementHoleCutter], legacyMethod = true)
   |> appearance(color = soundholeReinforcementWoodColor, metalness = 0, roughness = 82)
 
-hiddenSoundholeReinforcementWorkBodies = hide([
-  soundholeReinforcementBlank,
-  soundholeReinforcementHoleCutter
-])
-
 hiddenSoundholeReinforcementSketches = hide([
   soundholeReinforcementPlan,
   soundholeReinforcementHolePlan

@@ -180,17 +180,6 @@ export neckBlock = intersect([neckBlockInCavity, neckDepthEnvelope], legacyMetho
 export tailBlock = intersect([tailBlockInCavity, tailDepthEnvelope], legacyMethod = true)
   |> appearance(color = blockWoodColor, metalness = 0, roughness = 74)
 
-hiddenBlockWorkBodies = hide([
-  neckBlockPlanPrism,
-  tailBlockPlanPrism,
-  innerCavityClipForNeck,
-  innerCavityClipForTail,
-  neckDepthEnvelope,
-  tailDepthEnvelope,
-  neckBlockInCavity,
-  tailBlockInCavity
-])
-
 hiddenBlockSketches = hide([
   neckBlockPlan,
   tailBlockPlan,

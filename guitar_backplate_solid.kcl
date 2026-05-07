@@ -49,11 +49,6 @@ export backplate = intersect(
        opacity = backplateInspectionOpacity,
      )
 
-hiddenBackplateWorkBodies = hide([
-  sideBackProfilePrism,
-  guitarOutlineClipBack
-])
-
 hiddenBackplateSketches = hide([
   sketchGuitarInner,
   bodySideProfile,

@@ -99,17 +99,6 @@ export backKerfedLining = intersect(
 )
   |> appearance(color = liningWoodColor, metalness = 0, roughness = 82)
 
-hiddenKerfedLiningWorkBodies = hide([
-  liningPlanOuterSolid,
-  liningPlanInnerSolid,
-  liningPlanBandForTop,
-  liningPlanBandForBack,
-  liningTopMortisePlanCutter,
-  linedPlanBandForTopCut,
-  topLiningDepthEnvelope,
-  backLiningDepthEnvelope
-])
-
 hiddenKerfedLiningSketches = hide([
   sketchGuitarInner,
   liningOuterBodyRegion,

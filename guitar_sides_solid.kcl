@@ -40,13 +40,6 @@ sideMiddleGuitarSolid = intersect(
 export guitarsides = subtract(sideMiddleGuitarSolid, tools = [guitarInnerSideCut], legacyMethod = true)
   |> appearance(color = walnutSideColor, metalness = 0, roughness = 72)
 
-hiddenSideWorkBodies = hide([
-  sideShellRemainingProfilePrism,
-  guitarOutlineClipMiddle,
-  guitarInnerSideCut,
-  sideMiddleGuitarSolid
-])
-
 hiddenSideSketches = hide([
   sketchGuitar,
   sketchGuitarInner,

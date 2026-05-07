@@ -488,21 +488,11 @@ export soundboardBracing = flatten([
 hiddenBraceSeeds = hide([
   xBraceSeed,
   xBraceLapCutterSeed,
-  xBraceBassPlaced,
-  xBraceTreblePlaced,
-  xBraceBassGlueSideLapCutter,
-  xBraceTrebleFreeSideLapCutter,
   upperTransverseSeed,
   popsicleBraceSeed,
   toneBarUpperSeed,
   toneBarLowerSeed,
-  toneBarXTrimSeed,
-  toneBarUpperPlaced,
-  toneBarLowerPlaced,
-  toneBarUpperBassTrimTool,
-  toneBarUpperTrebleTrimTool,
-  toneBarLowerBassTrimTool,
-  toneBarLowerTrebleTrimTool
+  toneBarXTrimSeed
 ])
 
 hiddenBraceSketches = hide([

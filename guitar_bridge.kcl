@@ -112,7 +112,7 @@ bridgeFootprintPlan = sketch(on = offsetPlane(XY, offset = bridgeBaseZ)) {
   verticalDistance([ORIGIN, leftWingRear.start]) == bridgeWingRearY
 
   horizontalDistance([ORIGIN, rightShoulder.end]) == bridgeBellyHalfLength
-  horizontalDistance([leftShoulder.start, ORIGIN]) == bridgeBellyHalfLength
+  horizontalDistance([leftWingRear.start, ORIGIN]) == bridgeShoulderX
   verticalDistance([ORIGIN, rightShoulder.end]) == bridgeRearY
   verticalDistance([ORIGIN, leftShoulder.start]) == bridgeRearY
   distance([rearEdge.start, rearEdge.end]) == bridgeBellyHalfLength * 2
@@ -312,26 +312,7 @@ saddleCrowned = fillet(
 export saddle = saddleCrowned
   |> appearance(color = saddleBoneColor, metalness = 0, roughness = 34)
 
-hiddenBridgeWorkBodies = hide([
-  bridgePlanPrism,
-  saddleSlotCutter,
-  pinHoleSeed,
-  pinHole1Cutter,
-  pinHole2Cutter,
-  pinHole3Cutter,
-  pinHole4Cutter,
-  pinHole5Cutter,
-  pinHole6Cutter,
-  pinCounterboreSeed,
-  counterbore1Cutter,
-  counterbore2Cutter,
-  counterbore3Cutter,
-  counterbore4Cutter,
-  counterbore5Cutter,
-  counterbore6Cutter,
-  bridgeCutPrism,
-  bridgeTopEnvelope
-])
+hiddenBridgeWorkBodies = hide([pinHoleSeed, pinCounterboreSeed])
 
 hiddenBridgeSketches = hide([
   bridgeFootprintPlan,

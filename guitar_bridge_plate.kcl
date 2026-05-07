@@ -85,11 +85,7 @@ bridgePlatePinHoleCutters = flatten([
 export bridgePlate = subtract(bridgePlateBlank, tools = bridgePlatePinHoleCutters, legacyMethod = true)
   |> appearance(color = bridgePlateMapleColor, metalness = 0, roughness = 82)
 
-hiddenBridgePlateWorkBodies = hide(flatten([
-  bridgePlateBlank,
-  bridgePlatePinHoleSeed,
-  bridgePlatePinHoleCutters
-]))
+hiddenBridgePlateWorkBodies = hide([bridgePlatePinHoleSeed])
 
 hiddenBridgePlateSketches = hide([
   bridgePlatePlan,
