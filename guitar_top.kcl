@@ -1,0 +1,691 @@
+// Guitar top subsystem
+// Soundboard, braces, binding, and reinforcements.
+@settings(defaultLengthUnit = in)
+
+import guitarOuterPlanSolid, guitarInnerPlanSolid from "guitar_outline.kcl"
+import sideTopProfilePrism from "guitar_side_profile.kcl"
+import topBindingProfilePrism from "guitar_top_binding_rabbet_profiles.kcl"
+import guitarLiningInnerPlanSolid from "guitar_kerfed_linings.kcl"
+import bridgePin1X, bridgePin2X, bridgePin3X, bridgePin4X, bridgePin5X, bridgePin6X, bridgePinHoleRadius, bridgePinHoleY, bridgePinThroughBottomZ, bridgePinThroughLength from "guitar_bridge_pin_holes.kcl"
+
+bindingColor = "#f2ead1"
+topSpruceColor = "#d9b86c"
+soundboardBraceWoodColor = "#d6b66f"
+soundboardBraceGlueZ = -0.065in
+bridgePlateMapleColor = "#b98a50"
+soundholeReinforcementWoodColor = "#d6b66f"
+
+mortiseFrontY = 5.92in
+mortiseRearY = 5.42in
+mortiseTopFrontHalfWidth = 0.3125in
+mortiseTopRearHalfWidth = 0.50in
+mortiseBottomFrontHalfWidth = 0.25in
+mortiseBottomRearHalfWidth = 0.4375in
+mortiseTopZ = 0.10in
+mortiseBottomZ = -2.90in
+
+neckMortiseTopProfile = sketch(on = offsetPlane(XY, offset = mortiseTopZ)) {
+  frontEdge = line(start = [var 0.3125in, var 5.92in], end = [var -0.3125in, var 5.92in])
+  leftEdge = line(start = [var -0.3125in, var 5.92in], end = [var -0.50in, var 5.42in])
+  rearEdge = line(start = [var -0.50in, var 5.42in], end = [var 0.50in, var 5.42in])
+  rightEdge = line(start = [var 0.50in, var 5.42in], end = [var 0.3125in, var 5.92in])
+  coincident([frontEdge.end, leftEdge.start])
+  coincident([leftEdge.end, rearEdge.start])
+  coincident([rearEdge.end, rightEdge.start])
+  coincident([rightEdge.end, frontEdge.start])
+  horizontal(frontEdge)
+  horizontal(rearEdge)
+  horizontalDistance([ORIGIN, frontEdge.start]) == mortiseTopFrontHalfWidth
+  verticalDistance([ORIGIN, frontEdge.start]) == mortiseFrontY
+  horizontalDistance([ORIGIN, rearEdge.end]) == mortiseTopRearHalfWidth
+  verticalDistance([ORIGIN, rearEdge.end]) == mortiseRearY
+  distance([frontEdge.start, frontEdge.end]) == mortiseTopFrontHalfWidth * 2
+  distance([rearEdge.start, rearEdge.end]) == mortiseTopRearHalfWidth * 2
+}
+
+neckMortiseBottomProfile = sketch(on = offsetPlane(XY, offset = mortiseBottomZ)) {
+  frontEdge = line(start = [var 0.25in, var 5.92in], end = [var -0.25in, var 5.92in])
+  leftEdge = line(start = [var -0.25in, var 5.92in], end = [var -0.4375in, var 5.42in])
+  rearEdge = line(start = [var -0.4375in, var 5.42in], end = [var 0.4375in, var 5.42in])
+  rightEdge = line(start = [var 0.4375in, var 5.42in], end = [var 0.25in, var 5.92in])
+  coincident([frontEdge.end, leftEdge.start])
+  coincident([leftEdge.end, rearEdge.start])
+  coincident([rearEdge.end, rightEdge.start])
+  coincident([rightEdge.end, frontEdge.start])
+  horizontal(frontEdge)
+  horizontal(rearEdge)
+  horizontalDistance([ORIGIN, frontEdge.start]) == mortiseBottomFrontHalfWidth
+  verticalDistance([ORIGIN, frontEdge.start]) == mortiseFrontY
+  horizontalDistance([ORIGIN, rearEdge.end]) == mortiseBottomRearHalfWidth
+  verticalDistance([ORIGIN, rearEdge.end]) == mortiseRearY
+  distance([frontEdge.start, frontEdge.end]) == mortiseBottomFrontHalfWidth * 2
+  distance([rearEdge.start, rearEdge.end]) == mortiseBottomRearHalfWidth * 2
+}
+
+neckMortiseTopRegion = region(point = [0in, 5.65in], sketch = neckMortiseTopProfile)
+neckMortiseBottomRegion = region(point = [0in, 5.65in], sketch = neckMortiseBottomProfile)
+neckMortiseCutter = loft([
+  neckMortiseTopRegion,
+  neckMortiseBottomRegion
+])
+neckMortiseBindingCutter = extrude(
+  neckMortiseTopRegion,
+  length = 1.0in,
+  symmetric = true,
+  method = NEW,
+)
+
+topSoundholeDiameter = 4in
+topSoundholeRadius = topSoundholeDiameter / 2
+
+soundholeSketch = sketch(on = XY) {
+  soundholeCircle = circle(start = [var 2in, var 0in], center = [var 0in, var 0in])
+  coincident([soundholeCircle.center, ORIGIN])
+  horizontalDistance([
+  soundholeCircle.center,
+  soundholeCircle.start
+]) == topSoundholeRadius
+  verticalDistance([
+  soundholeCircle.center,
+  soundholeCircle.start
+]) == 0in
+}
+
+soundholeRegion = region(point = [0in, 0in], sketch = soundholeSketch)
+
+soundboardPinHolePlan = sketch(on = offsetPlane(XY, offset = bridgePinThroughBottomZ)) {
+  pinHole = circle(start = [var 0.105in, var 0in], center = [var 0in, var 0in])
+  coincident([pinHole.center, ORIGIN])
+  horizontalDistance([pinHole.center, pinHole.start]) == bridgePinHoleRadius
+  verticalDistance([pinHole.center, pinHole.start]) == 0in
+}
+
+soundboardPinHoleRegion = region(point = [0in, 0in], sketch = soundboardPinHolePlan)
+pinHoleSeed = extrude(soundboardPinHoleRegion, length = bridgePinThroughLength, method = NEW)
+
+rosetteInnerPurfling = []
+rosetteMainInlay = []
+rosetteOuterPurfling = []
+
+topSoundboard = subtract(
+  subtract(
+    intersect(
+      [
+        clone(sideTopProfilePrism),
+        clone(guitarInnerPlanSolid)
+      ],
+      legacyMethod = true,
+    ),
+    tools = flatten([
+      extrude(
+        soundholeRegion,
+        length = 10in,
+        symmetric = true,
+        method = NEW,
+      ),
+      clone(pinHoleSeed)
+        |> translate(x = bridgePin1X, y = bridgePinHoleY, global = true),
+      clone(pinHoleSeed)
+        |> translate(x = bridgePin2X, y = bridgePinHoleY, global = true),
+      clone(pinHoleSeed)
+        |> translate(x = bridgePin3X, y = bridgePinHoleY, global = true),
+      clone(pinHoleSeed)
+        |> translate(x = bridgePin4X, y = bridgePinHoleY, global = true),
+      clone(pinHoleSeed)
+        |> translate(x = bridgePin5X, y = bridgePinHoleY, global = true),
+      clone(pinHoleSeed)
+        |> translate(x = bridgePin6X, y = bridgePinHoleY, global = true)
+    ]),
+    legacyMethod = true,
+  ),
+  tools = [clone(neckMortiseCutter)],
+  legacyMethod = true,
+)
+  |> appearance(color = topSpruceColor, metalness = 0, roughness = 78)
+
+topBindingTrimmed = subtract(
+  intersect(
+    [
+      clone(topBindingProfilePrism),
+      subtract(clone(guitarOuterPlanSolid), tools = [clone(guitarInnerPlanSolid)], legacyMethod = true)
+    ],
+    legacyMethod = true,
+  ),
+  tools = [clone(neckMortiseBindingCutter)],
+  legacyMethod = true,
+)
+  |> appearance(color = bindingColor, metalness = 0, roughness = 64)
+
+xBraceHalfAngle = 54deg
+xBraceCrossY = -3.85in
+xBraceWidth = 0.38in
+xBraceLowerArmLength = 9.485in
+xBraceUpperArmLength = 5.65in
+xBraceEndHeight = 0.18in
+xBraceFullHeight = 0.58in
+xBraceFlatLength = 4.0in
+
+xBraceProfile = sketch(on = YZ) {
+  glueFace = line(start = [var -9.485in, var -0.065in], end = [var 5.65in, var -0.065in])
+  upperEnd = line(start = [var 5.65in, var -0.065in], end = [var 5.65in, var -0.245in])
+  crownLeft = line(start = [var 5.65in, var -0.245in], end = [var 2.0in, var -0.645in])
+  crownFlat = line(start = [var 2.0in, var -0.645in], end = [var -2.0in, var -0.645in])
+  crownRight = line(start = [var -2.0in, var -0.645in], end = [var -9.485in, var -0.245in])
+  lowerEnd = line(start = [var -9.485in, var -0.245in], end = [var -9.485in, var -0.065in])
+  coincident([glueFace.end, upperEnd.start])
+  coincident([upperEnd.end, crownLeft.start])
+  coincident([crownLeft.end, crownFlat.start])
+  coincident([crownFlat.end, crownRight.start])
+  coincident([crownRight.end, lowerEnd.start])
+  coincident([lowerEnd.end, glueFace.start])
+  horizontal(glueFace)
+  vertical(upperEnd)
+  horizontal(crownFlat)
+  vertical(lowerEnd)
+  horizontalDistance([glueFace.start, ORIGIN]) == xBraceLowerArmLength
+  verticalDistance([ORIGIN, glueFace.start]) == soundboardBraceGlueZ
+  distance([glueFace.start, glueFace.end]) == xBraceLowerArmLength + xBraceUpperArmLength
+  distance([upperEnd.start, upperEnd.end]) == xBraceEndHeight
+  distance([lowerEnd.start, lowerEnd.end]) == xBraceEndHeight
+  distance([crownFlat.start, crownFlat.end]) == xBraceFlatLength
+  verticalDistance([crownLeft.end, glueFace.end]) == xBraceFullHeight
+}
+
+xBraceRegionBass = region(point = [0in, -0.34in], sketch = xBraceProfile)
+xBraceRegionTreble = region(point = [0in, -0.34in], sketch = xBraceProfile)
+
+upperTransverseBraceCenterY = 2.98in
+upperTransverseBraceWidth = 0.34in
+upperTransverseBraceHalfLength = 5.45in
+upperTransverseBraceEndHeight = 0.12in
+upperTransverseBraceFullHeight = 0.46in
+
+upperTransverseProfile = sketch(on = YZ) {
+  glueFace = line(start = [var -5.45in, var -0.065in], end = [var 5.45in, var -0.065in])
+  rightEnd = line(start = [var 5.45in, var -0.065in], end = [var 5.45in, var -0.185in])
+  topPeak = line(start = [var 5.45in, var -0.185in], end = [var 0in, var -0.525in])
+  leftPeak = line(start = [var 0in, var -0.525in], end = [var -5.45in, var -0.185in])
+  leftEnd = line(start = [var -5.45in, var -0.185in], end = [var -5.45in, var -0.065in])
+  coincident([glueFace.end, rightEnd.start])
+  coincident([rightEnd.end, topPeak.start])
+  coincident([topPeak.end, leftPeak.start])
+  coincident([leftPeak.end, leftEnd.start])
+  coincident([leftEnd.end, glueFace.start])
+  horizontal(glueFace)
+  vertical(rightEnd)
+  vertical(leftEnd)
+  horizontalDistance([glueFace.start, ORIGIN]) == upperTransverseBraceHalfLength
+  verticalDistance([ORIGIN, glueFace.start]) == soundboardBraceGlueZ
+  distance([glueFace.start, glueFace.end]) == upperTransverseBraceHalfLength * 2
+  distance([rightEnd.start, rightEnd.end]) == upperTransverseBraceEndHeight
+  distance([leftEnd.start, leftEnd.end]) == upperTransverseBraceEndHeight
+  verticalDistance([topPeak.end, glueFace.start]) == upperTransverseBraceFullHeight
+}
+
+upperTransverseRegion = region(point = [0in, -0.28in], sketch = upperTransverseProfile)
+
+popsicleBraceHalfLength = 4.9in
+
+popsicleBraceProfile = sketch(on = YZ) {
+  glueFace = line(start = [var -4.9in, var -0.065in], end = [var 4.9in, var -0.065in])
+  rightEnd = line(start = [var 4.9in, var -0.065in], end = [var 4.9in, var -0.19in])
+  freeFace = line(start = [var 4.9in, var -0.19in], end = [var -4.9in, var -0.19in])
+  leftEnd = line(start = [var -4.9in, var -0.19in], end = [var -4.9in, var -0.065in])
+  coincident([glueFace.end, rightEnd.start])
+  coincident([rightEnd.end, freeFace.start])
+  coincident([freeFace.end, leftEnd.start])
+  coincident([leftEnd.end, glueFace.start])
+  horizontal(glueFace)
+  vertical(rightEnd)
+  horizontal(freeFace)
+  vertical(leftEnd)
+  horizontalDistance([glueFace.start, ORIGIN]) == popsicleBraceHalfLength
+  verticalDistance([ORIGIN, glueFace.start]) == soundboardBraceGlueZ
+  distance([glueFace.start, glueFace.end]) == popsicleBraceHalfLength * 2
+  distance([rightEnd.start, rightEnd.end]) == 0.125in
+  distance([leftEnd.start, leftEnd.end]) == 0.125in
+}
+
+popsicleBraceRegion = region(point = [0in, -0.12in], sketch = popsicleBraceProfile)
+
+toneBarUpperHalfLength = 5.35in
+toneBarLowerHalfLength = 5.75in
+
+toneBarUpperProfile = sketch(on = YZ) {
+  glueFace = line(start = [var -5.35in, var -0.065in], end = [var 5.35in, var -0.065in])
+  rightEnd = line(start = [var 5.35in, var -0.065in], end = [var 5.35in, var -0.225in])
+  topPeak = line(start = [var 5.35in, var -0.225in], end = [var 0in, var -0.565in])
+  leftPeak = line(start = [var 0in, var -0.565in], end = [var -5.35in, var -0.225in])
+  leftEnd = line(start = [var -5.35in, var -0.225in], end = [var -5.35in, var -0.065in])
+  coincident([glueFace.end, rightEnd.start])
+  coincident([rightEnd.end, topPeak.start])
+  coincident([topPeak.end, leftPeak.start])
+  coincident([leftPeak.end, leftEnd.start])
+  coincident([leftEnd.end, glueFace.start])
+  horizontal(glueFace)
+  vertical(rightEnd)
+  vertical(leftEnd)
+  horizontalDistance([glueFace.start, ORIGIN]) == toneBarUpperHalfLength
+  verticalDistance([ORIGIN, glueFace.start]) == soundboardBraceGlueZ
+  distance([glueFace.start, glueFace.end]) == toneBarUpperHalfLength * 2
+  distance([rightEnd.start, rightEnd.end]) == 0.16in
+  distance([leftEnd.start, leftEnd.end]) == 0.16in
+  verticalDistance([topPeak.end, glueFace.start]) == 0.50in
+}
+
+toneBarUpperRegion = region(point = [0in, -0.28in], sketch = toneBarUpperProfile)
+
+toneBarLowerProfile = sketch(on = YZ) {
+  glueFace = line(start = [var -5.75in, var -0.065in], end = [var 5.75in, var -0.065in])
+  rightEnd = line(start = [var 5.75in, var -0.065in], end = [var 5.75in, var -0.225in])
+  topPeak = line(start = [var 5.75in, var -0.225in], end = [var 0in, var -0.565in])
+  leftPeak = line(start = [var 0in, var -0.565in], end = [var -5.75in, var -0.225in])
+  leftEnd = line(start = [var -5.75in, var -0.225in], end = [var -5.75in, var -0.065in])
+  coincident([glueFace.end, rightEnd.start])
+  coincident([rightEnd.end, topPeak.start])
+  coincident([topPeak.end, leftPeak.start])
+  coincident([leftPeak.end, leftEnd.start])
+  coincident([leftEnd.end, glueFace.start])
+  horizontal(glueFace)
+  vertical(rightEnd)
+  vertical(leftEnd)
+  horizontalDistance([glueFace.start, ORIGIN]) == toneBarLowerHalfLength
+  verticalDistance([ORIGIN, glueFace.start]) == soundboardBraceGlueZ
+  distance([glueFace.start, glueFace.end]) == toneBarLowerHalfLength * 2
+  distance([rightEnd.start, rightEnd.end]) == 0.16in
+  distance([leftEnd.start, leftEnd.end]) == 0.16in
+  verticalDistance([topPeak.end, glueFace.start]) == 0.50in
+}
+
+toneBarLowerRegion = region(point = [0in, -0.28in], sketch = toneBarLowerProfile)
+
+xBraceBassPlanTrim = intersect(
+  [
+    extrude(
+      xBraceRegionBass,
+      length = xBraceWidth,
+      symmetric = true,
+      method = NEW,
+    )
+      |> rotate(axis = Z, angle = xBraceHalfAngle, global = true)
+      |> translate(y = xBraceCrossY, global = true),
+    clone(guitarInnerPlanSolid)
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
+
+xBraceTreblePlanTrim = intersect(
+  [
+    extrude(
+      xBraceRegionTreble,
+      length = xBraceWidth,
+      symmetric = true,
+      method = NEW,
+    )
+      |> rotate(axis = Z, angle = 0deg - xBraceHalfAngle, global = true)
+      |> translate(y = xBraceCrossY, global = true),
+    clone(guitarInnerPlanSolid)
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
+
+upperTransverseBrace = intersect(
+  [
+    extrude(
+      upperTransverseRegion,
+      length = upperTransverseBraceWidth,
+      symmetric = true,
+      method = NEW,
+    )
+      |> rotate(axis = Z, angle = 90deg, global = true)
+      |> translate(y = upperTransverseBraceCenterY, global = true),
+    clone(guitarInnerPlanSolid)
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
+
+popsicleBrace = intersect(
+  [
+    extrude(
+      popsicleBraceRegion,
+      length = 1.0in,
+      symmetric = true,
+      method = NEW,
+    )
+      |> rotate(axis = Z, angle = 90deg, global = true)
+      |> translate(y = 4.05in, global = true),
+    clone(guitarInnerPlanSolid)
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 80)
+
+toneBarUpper = intersect(
+  [
+    extrude(
+      toneBarUpperRegion,
+      length = 0.34in,
+      symmetric = true,
+      method = NEW,
+    )
+      |> rotate(axis = Z, angle = 110deg, global = true)
+      |> translate(x = -1.99in, y = -8.28in, global = true),
+    clone(guitarInnerPlanSolid)
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
+
+toneBarLower = intersect(
+  [
+    extrude(
+      toneBarLowerRegion,
+      length = 0.34in,
+      symmetric = true,
+      method = NEW,
+    )
+      |> rotate(axis = Z, angle = 110deg, global = true)
+      |> translate(x = -1.03in, y = -9.46in, global = true),
+    clone(guitarInnerPlanSolid)
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
+
+soundboardBracing = flatten([
+  xBraceBassPlanTrim,
+  xBraceTreblePlanTrim,
+  upperTransverseBrace,
+  popsicleBrace,
+  toneBarUpper,
+  toneBarLower
+])
+
+topSideBraceLeftReach = 2.0in
+topSideBraceRightReach = 1.5in
+
+topSideBraceProfile = sketch(on = YZ) {
+  glueFace = line(start = [var -2.0in, var -0.065in], end = [var 1.5in, var -0.065in])
+  rightEnd = line(start = [var 1.5in, var -0.065in], end = [var 1.5in, var -0.145in])
+  topPeak = line(start = [var 1.5in, var -0.145in], end = [var -0.25in, var -0.365in])
+  leftPeak = line(start = [var -0.25in, var -0.365in], end = [var -2.0in, var -0.145in])
+  leftEnd = line(start = [var -2.0in, var -0.145in], end = [var -2.0in, var -0.065in])
+  coincident([glueFace.end, rightEnd.start])
+  coincident([rightEnd.end, topPeak.start])
+  coincident([topPeak.end, leftPeak.start])
+  coincident([leftPeak.end, leftEnd.start])
+  coincident([leftEnd.end, glueFace.start])
+  horizontal(glueFace)
+  vertical(rightEnd)
+  vertical(leftEnd)
+  horizontalDistance([glueFace.start, ORIGIN]) == topSideBraceLeftReach
+  verticalDistance([ORIGIN, glueFace.start]) == soundboardBraceGlueZ
+  distance([glueFace.start, glueFace.end]) == topSideBraceLeftReach + topSideBraceRightReach
+  distance([rightEnd.start, rightEnd.end]) == 0.08in
+  distance([leftEnd.start, leftEnd.end]) == 0.08in
+  verticalDistance([topPeak.end, glueFace.start]) == 0.30in
+}
+
+topSideBraceRegion1 = region(point = [0in, -0.2in], sketch = topSideBraceProfile)
+topSideBraceRegion2 = region(point = [0in, -0.2in], sketch = topSideBraceProfile)
+topSideBraceRegion3 = region(point = [0in, -0.2in], sketch = topSideBraceProfile)
+topSideBraceRegion4 = region(point = [0in, -0.2in], sketch = topSideBraceProfile)
+
+topSideBrace1 = intersect(
+  [
+    extrude(
+      topSideBraceRegion1,
+      length = 0.24in,
+      symmetric = true,
+      method = NEW,
+    )
+      |> rotate(axis = Z, angle = 0deg - 125deg, global = true)
+      |> translate(x = -3.546in, y = -4.252in, global = true),
+    clone(guitarInnerPlanSolid)
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
+
+topSideBrace2 = intersect(
+  [
+    extrude(
+      topSideBraceRegion2,
+      length = 0.24in,
+      symmetric = true,
+      method = NEW,
+    )
+      |> rotate(axis = Z, angle = 125deg, global = true)
+      |> translate(x = 3.546in, y = -4.252in, global = true),
+    clone(guitarInnerPlanSolid)
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
+
+topSideBrace3 = intersect(
+  [
+    extrude(
+      topSideBraceRegion3,
+      length = 0.24in,
+      symmetric = true,
+      method = NEW,
+    )
+      |> rotate(axis = Z, angle = 0deg - 125deg, global = true)
+      |> translate(x = -5.471in, y = -6.540in, global = true),
+    clone(guitarInnerPlanSolid)
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
+
+topSideBrace4 = intersect(
+  [
+    extrude(
+      topSideBraceRegion4,
+      length = 0.24in,
+      symmetric = true,
+      method = NEW,
+    )
+      |> rotate(axis = Z, angle = 125deg, global = true)
+      |> translate(x = 5.471in, y = -6.540in, global = true),
+    clone(guitarInnerPlanSolid)
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
+
+soundboardTopSideBraces = flatten([
+  topSideBrace1,
+  topSideBrace2,
+  topSideBrace3,
+  topSideBrace4
+])
+
+bridgePlateGlueZ = -0.065in
+bridgePlateThickness = 0.105in
+bridgePlateBottomZ = bridgePlateGlueZ - bridgePlateThickness
+bridgePlateTopY = -5.0in
+bridgePlateBottomY = -6.10in
+bridgePlateTopHalfWidth = 1.260in
+bridgePlateBottomHalfWidth = 2.774in
+
+bridgePlatePlan = sketch(on = offsetPlane(XY, offset = bridgePlateBottomZ)) {
+  topEdge = line(start = [var -1.260in, var -5.0in], end = [var 1.260in, var -5.0in])
+  rightEdge = line(start = [var 1.260in, var -5.0in], end = [var 2.774in, var -6.10in])
+  bottomEdge = line(start = [var 2.774in, var -6.10in], end = [var -2.774in, var -6.10in])
+  leftEdge = line(start = [var -2.774in, var -6.10in], end = [var -1.260in, var -5.0in])
+  coincident([topEdge.end, rightEdge.start])
+  coincident([rightEdge.end, bottomEdge.start])
+  coincident([bottomEdge.end, leftEdge.start])
+  coincident([leftEdge.end, topEdge.start])
+  horizontal(topEdge)
+  horizontal(bottomEdge)
+  horizontalDistance([topEdge.start, ORIGIN]) == bridgePlateTopHalfWidth
+  horizontalDistance([ORIGIN, topEdge.end]) == bridgePlateTopHalfWidth
+  verticalDistance([ORIGIN, topEdge.start]) == bridgePlateTopY
+  verticalDistance([ORIGIN, topEdge.end]) == bridgePlateTopY
+  horizontalDistance([ORIGIN, bottomEdge.start]) == bridgePlateBottomHalfWidth
+  horizontalDistance([bottomEdge.end, ORIGIN]) == bridgePlateBottomHalfWidth
+  verticalDistance([ORIGIN, bottomEdge.start]) == bridgePlateBottomY
+  verticalDistance([ORIGIN, bottomEdge.end]) == bridgePlateBottomY
+}
+
+bridgePlateRegion = region(point = [0in, -5.55in], sketch = bridgePlatePlan)
+
+bridgePlate = subtract(
+  extrude(bridgePlateRegion, length = bridgePlateThickness, method = NEW),
+  tools = flatten([
+    clone(pinHoleSeed)
+      |> translate(x = bridgePin1X, y = bridgePinHoleY, global = true),
+    clone(pinHoleSeed)
+      |> translate(x = bridgePin2X, y = bridgePinHoleY, global = true),
+    clone(pinHoleSeed)
+      |> translate(x = bridgePin3X, y = bridgePinHoleY, global = true),
+    clone(pinHoleSeed)
+      |> translate(x = bridgePin4X, y = bridgePinHoleY, global = true),
+    clone(pinHoleSeed)
+      |> translate(x = bridgePin5X, y = bridgePinHoleY, global = true),
+    clone(pinHoleSeed)
+      |> translate(x = bridgePin6X, y = bridgePinHoleY, global = true)
+  ]),
+  legacyMethod = true,
+)
+  |> appearance(color = bridgePlateMapleColor, metalness = 0, roughness = 82)
+
+soundholeReinforcementGlueZ = -0.065in
+soundholeReinforcementThickness = 0.060in
+soundholeReinforcementBottomZ = soundholeReinforcementGlueZ - soundholeReinforcementThickness
+soundholeReinforcementHoleRadius = 2.375in
+soundholeReinforcementCutterMargin = 0.020in
+soundholeReinforcementCutterBottomZ = soundholeReinforcementBottomZ - soundholeReinforcementCutterMargin
+soundholeReinforcementCutterHeight = soundholeReinforcementThickness + soundholeReinforcementCutterMargin * 2
+
+soundholeReinforcementPlan = sketch(on = offsetPlane(XY, offset = soundholeReinforcementBottomZ)) {
+  topEdge = line(start = [var -3.25in, var 2.55in], end = [var 3.25in, var 2.55in])
+  upperRightEdge = line(start = [var 3.25in, var 2.55in], end = [var 4.267in, var -0.35in])
+  lowerRightEdge = line(start = [var 4.267in, var -0.35in], end = [var 0in, var -3.45in])
+  lowerLeftEdge = line(start = [var 0in, var -3.45in], end = [var -4.267in, var -0.35in])
+  upperLeftEdge = line(start = [var -4.267in, var -0.35in], end = [var -3.25in, var 2.55in])
+  coincident([topEdge.end, upperRightEdge.start])
+  coincident([
+    upperRightEdge.end,
+    lowerRightEdge.start
+  ])
+  coincident([
+    lowerRightEdge.end,
+    lowerLeftEdge.start
+  ])
+  coincident([lowerLeftEdge.end, upperLeftEdge.start])
+  coincident([upperLeftEdge.end, topEdge.start])
+  horizontal(topEdge)
+  horizontalDistance([topEdge.start, ORIGIN]) == 3.25in
+  horizontalDistance([ORIGIN, topEdge.end]) == 3.25in
+  verticalDistance([ORIGIN, topEdge.start]) == 2.55in
+  horizontalDistance([ORIGIN, upperRightEdge.end]) == 4.267in
+  verticalDistance([ORIGIN, upperRightEdge.end]) == -0.35in
+  verticalDistance([ORIGIN, lowerRightEdge.end]) == -3.45in
+}
+
+soundholeReinforcementRegion = region(point = [0in, 2.0in], sketch = soundholeReinforcementPlan)
+
+soundholeReinforcementHolePlan = sketch(on = offsetPlane(XY, offset = soundholeReinforcementCutterBottomZ)) {
+  oversizedSoundholeRelief = circle(start = [var 2.375in, var 0in], center = [var 0in, var 0in])
+  coincident([
+    oversizedSoundholeRelief.center,
+    ORIGIN
+  ])
+  horizontalDistance([
+  oversizedSoundholeRelief.center,
+  oversizedSoundholeRelief.start
+]) == soundholeReinforcementHoleRadius
+  verticalDistance([
+  oversizedSoundholeRelief.center,
+  oversizedSoundholeRelief.start
+]) == 0in
+}
+
+soundholeReinforcementHoleRegion = region(point = [0in, 0in], sketch = soundholeReinforcementHolePlan)
+
+soundholeReinforcement = subtract(
+  extrude(soundholeReinforcementRegion, length = soundholeReinforcementThickness, method = NEW),
+  tools = [
+    extrude(soundholeReinforcementHoleRegion, length = soundholeReinforcementCutterHeight, method = NEW)
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = soundholeReinforcementWoodColor, metalness = 0, roughness = 82)
+
+hiddenTopWorkBodies = hide([
+  pinHoleSeed,
+  neckMortiseCutter,
+  neckMortiseBindingCutter
+])
+
+hiddenTopSketches = hide([
+  neckMortiseTopProfile,
+  neckMortiseBottomProfile,
+  neckMortiseTopRegion,
+  neckMortiseBottomRegion,
+  soundholeSketch,
+  soundholeRegion,
+  soundboardPinHolePlan,
+  soundboardPinHoleRegion,
+  xBraceProfile,
+  xBraceRegionBass,
+  xBraceRegionTreble,
+  upperTransverseProfile,
+  upperTransverseRegion,
+  popsicleBraceProfile,
+  popsicleBraceRegion,
+  toneBarUpperProfile,
+  toneBarUpperRegion,
+  toneBarLowerProfile,
+  toneBarLowerRegion,
+  topSideBraceProfile,
+  topSideBraceRegion1,
+  topSideBraceRegion2,
+  topSideBraceRegion3,
+  topSideBraceRegion4,
+  bridgePlatePlan,
+  bridgePlateRegion,
+  soundholeReinforcementPlan,
+  soundholeReinforcementRegion,
+  soundholeReinforcementHolePlan,
+  soundholeReinforcementHoleRegion
+])
+
+hiddenTopSoundboard = hide(topSoundboard)
+hiddenTopBindingTrimmed = hide(topBindingTrimmed)
+hiddenXBraceBassPlanTrim = hide(xBraceBassPlanTrim)
+hiddenXBraceTreblePlanTrim = hide(xBraceTreblePlanTrim)
+hiddenUpperTransverseBrace = hide(upperTransverseBrace)
+hiddenPopsicleBrace = hide(popsicleBrace)
+hiddenToneBarUpper = hide(toneBarUpper)
+hiddenToneBarLower = hide(toneBarLower)
+hiddenTopSideBrace1 = hide(topSideBrace1)
+hiddenTopSideBrace2 = hide(topSideBrace2)
+hiddenTopSideBrace3 = hide(topSideBrace3)
+hiddenTopSideBrace4 = hide(topSideBrace4)
+hiddenBridgePlate = hide(bridgePlate)
+hiddenSoundholeReinforcement = hide(soundholeReinforcement)
+
+export topSoundboardExport = hiddenTopSoundboard
+export topBindingTrimmedExport = hiddenTopBindingTrimmed
+export xBraceBassPlanTrimExport = hiddenXBraceBassPlanTrim
+export xBraceTreblePlanTrimExport = hiddenXBraceTreblePlanTrim
+export upperTransverseBraceExport = hiddenUpperTransverseBrace
+export popsicleBraceExport = hiddenPopsicleBrace
+export toneBarUpperExport = hiddenToneBarUpper
+export toneBarLowerExport = hiddenToneBarLower
+export topSideBrace1Export = hiddenTopSideBrace1
+export topSideBrace2Export = hiddenTopSideBrace2
+export topSideBrace3Export = hiddenTopSideBrace3
+export topSideBrace4Export = hiddenTopSideBrace4
+export bridgePlateExport = hiddenBridgePlate
+export soundholeReinforcementExport = hiddenSoundholeReinforcement
+
+0

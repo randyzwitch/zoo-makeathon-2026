@@ -1,5 +1,0 @@
-@settings(defaultLengthUnit = in)
-
-import soundboard from "guitar_soundboard_solid.kcl"
-import neckMortiseCutter from "guitar_neck_dovetail_mortise.kcl"
-cutTop = subtract(soundboard, tools = [neckMortiseCutter], legacyMethod = true)

@@ -9,14 +9,13 @@
 centerlineX = 0in
 centerlineTopOffset = 8.99in
 centerlineLength = 26.82in
+outlinePlanClipDepth = 10in
 
-// Centerline seam control points used to derive the continuous top/bottom arcs.
 outlineP01X = 0.0in
 outlineP01Y = 5.7500in
 outlineP11X = 0.0in
 outlineP11Y = -14.6250in
 
-// Shared left-side outline vertex coordinates. These are data values, not sketch point entities.
 outlineP02X = -3.5138in
 outlineP02Y = 5.6133in
 outlineP02 = [outlineP02X, outlineP02Y]
@@ -89,7 +88,6 @@ outlineP10R = [
   outlineP10Y
 ]
 
-// Continuous seam arcs. Centers are tuned for tangency into the adjacent outline arcs.
 topArcCenterX = centerlineX
 topArcCenterY = -35.250893in
 topArcCenter = [topArcCenterX, topArcCenterY]
@@ -101,17 +99,10 @@ bottomArcCenter = [bottomArcCenterX, bottomArcCenterY]
 topArcRadius = sqrt((outlineP02X - topArcCenterX) * (outlineP02X - topArcCenterX) + (outlineP02Y - topArcCenterY) * (outlineP02Y - topArcCenterY))
 bottomArcRadius = sqrt((outlineP10X - bottomArcCenterX) * (outlineP10X - bottomArcCenterX) + (outlineP10Y - bottomArcCenterY) * (outlineP10Y - bottomArcCenterY))
 
-// Shared station parameters for the two places where the final outline crosses the centerline.
-// In a YZ side-profile sketch, use these as the local horizontal/Y stations.
 export guitarCenterlineUpperY = topArcCenterY + topArcRadius
 export guitarCenterlineLowerY = bottomArcCenterY - bottomArcRadius
 export guitarCenterlineUpperPoint = [centerlineX, guitarCenterlineUpperY]
 export guitarCenterlineLowerPoint = [centerlineX, guitarCenterlineLowerY]
-
-// --- Projected side-arc centers ---
-// Each guide center is the original authored center. The active center is its nearest point
-// on the perpendicular bisector of that arc's endpoints.
-
 
 arcL2GuideCenterX = -3.2789in
 arcL2GuideCenterY = 2.8815in
@@ -233,7 +224,6 @@ arcL9CenterR = [
   arcL9CenterY
 ]
 
-// Radii for the outer side arcs, used by the inward offset side-shell cutter.
 arcL2Radius = sqrt((outlineP02X - arcL2CenterX) * (outlineP02X - arcL2CenterX) + (outlineP02Y - arcL2CenterY) * (outlineP02Y - arcL2CenterY))
 arcL3Radius = sqrt((outlineP03X - arcL3CenterX) * (outlineP03X - arcL3CenterX) + (outlineP03Y - arcL3CenterY) * (outlineP03Y - arcL3CenterY))
 arcL4Radius = sqrt((outlineP04X - arcL4CenterX) * (outlineP04X - arcL4CenterX) + (outlineP04Y - arcL4CenterY) * (outlineP04Y - arcL4CenterY))
@@ -250,11 +240,9 @@ export sketchGuitar = sketch(on = XY) {
   verticalDistance([ORIGIN, centerline.start]) == centerlineTopOffset
   verticalDistance([centerline.end, centerline.start]) == centerlineLength
 
-  // Interior selector for closed profile/region creation. Keep it away from the perimeter.
   insideBody = point(at = [var 0in, var -4in])
   coincident([insideBody, [0in, -4in]])
 
-  // --- AUTHORED LEFT SIDE ---
   arcL2 = arc(start = outlineP02, end = outlineP03, center = arcL2Center)
   arcL3 = arc(start = outlineP03, end = outlineP04, center = arcL3Center)
   arcL4 = arc(start = outlineP04, end = outlineP05, center = arcL4Center)
@@ -264,12 +252,9 @@ export sketchGuitar = sketch(on = XY) {
   arcL8 = arc(start = outlineP08, end = outlineP09, center = arcL8Center)
   arcL9 = arc(start = outlineP09, end = outlineP10, center = arcL9Center)
 
-  // --- CONTINUOUS CENTERLINE SEAMS ---
   bottomArc = arc(start = outlineP10, end = outlineP10R, center = bottomArcCenter)
   topArc = arc(start = outlineP02R, end = outlineP02, center = topArcCenter)
 
-  // --- MIRRORED RIGHT SIDE ---
-  // Mirrored arcs swap start/end to preserve the same geometric arc after reflection.
   arcR9 = arc(start = outlineP10R, end = outlineP09R, center = arcL9CenterR)
   arcR8 = arc(start = outlineP09R, end = outlineP08R, center = arcL8CenterR)
   arcR7 = arc(start = outlineP08R, end = outlineP07R, center = arcL7CenterR)
@@ -279,7 +264,6 @@ export sketchGuitar = sketch(on = XY) {
   arcR3 = arc(start = outlineP04R, end = outlineP03R, center = arcL3CenterR)
   arcR2 = arc(start = outlineP03R, end = outlineP02R, center = arcL2CenterR)
 
-  // Connectivity for one closed outline.
   coincident([topArc.end, arcL2.start])
   coincident([arcL2.end, arcL3.start])
   coincident([arcL3.end, arcL4.start])
@@ -299,7 +283,6 @@ export sketchGuitar = sketch(on = XY) {
   coincident([arcR3.end, arcR2.start])
   coincident([arcR2.end, topArc.start])
 
-  // Tangency at the continuous seam arcs for the smoothest shoulder and lower-bout transitions.
   tangent([topArc, arcL2])
   tangent([arcR2, topArc])
   tangent([arcL9, bottomArc])
@@ -307,10 +290,6 @@ export sketchGuitar = sketch(on = XY) {
 }
 
 export guitarBodyRegion = region(point = sketchGuitar.insideBody)
-
-// Inward offset used to hollow the guitar sides. This is a separate cutter profile,
-// not a scaled copy. Most arcs offset toward their centers; the concave waist arcs
-// offset away from their centers so the side wall remains 0.08 in thick in plan.
 export guitarSideWallThickness = 0.08in
 innerTopArcRadius = topArcRadius - guitarSideWallThickness
 innerBottomArcRadius = bottomArcRadius - guitarSideWallThickness
@@ -349,7 +328,6 @@ export sketchGuitarInner = sketch(on = XY) {
   innerArcR3 = arc(start = [var 5.70in, var 3.04in], end = [var 5.03in, var 4.87in], center = arcL3CenterR)
   innerArcR2 = arc(start = [var 5.03in, var 4.87in], end = [var 3.45in, var 5.54in], center = arcL2CenterR)
 
-  // Connectivity for one closed inward-offset cutter outline.
   coincident([innerTopArc.end, innerArcL2.start])
   coincident([innerArcL2.end, innerArcL3.start])
   coincident([innerArcL3.end, innerArcL4.start])
@@ -369,7 +347,6 @@ export sketchGuitarInner = sketch(on = XY) {
   coincident([innerArcR3.end, innerArcR2.start])
   coincident([innerArcR2.end, innerTopArc.start])
 
-  // Keep every endpoint on its offset circle so the cutter is a true arc offset, not a scaled outline.
   radius(innerTopArc) == innerTopArcRadius
   distance([innerTopArc.end, innerTopArc.center]) == innerTopArcRadius
 
@@ -415,3 +392,24 @@ export sketchGuitarInner = sketch(on = XY) {
 }
 
 export guitarInnerBodyRegion = region(point = sketchGuitarInner.insideCutter)
+
+export guitarOuterPlanSolid = extrude(
+  guitarBodyRegion,
+  length = outlinePlanClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+
+export guitarInnerPlanSolid = extrude(
+  guitarInnerBodyRegion,
+  length = outlinePlanClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+
+hiddenGuitarOutlineConstruction = hide([
+  sketchGuitar,
+  guitarBodyRegion,
+  sketchGuitarInner,
+  guitarInnerBodyRegion
+])

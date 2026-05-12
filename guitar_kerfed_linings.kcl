@@ -3,20 +3,19 @@
 import guitarCenterlineUpperY, guitarCenterlineLowerY from "guitar_outline.kcl"
 
 // Lightweight kerfed-lining sketch/profile module.
-// Heavy lining solids are built in guitar_kerfed_lining_solids.kcl so side-block
-// work can reuse the lining inner outline without forcing lining CSG to recalculate.
+// Heavy lining solids are built here so dependent modules reuse stable source-owned
+// regions instead of recreating regions from imported sketches.
 
-// Traditional kerfed linings based on StewMac-style rough dimensions:
-// 7/32 in radial width x 9/16 in vertical height.
+
 kerfedLiningRadialWidth = 0.21875in
 kerfedLiningHeight = 0.5625in
 liningSideWallOffset = 0.08in
 liningInnerOffsetFromOuter = liningSideWallOffset + kerfedLiningRadialWidth
 
 sideProfileArcOffset = 0.125in
+liningBodyWidth = 16in
+liningClipDepth = 10in
 
-// Duplicated arc math from guitar_outline.kcl so this module can create one more
-// inward-offset outline for the inside edge of the kerfed lining.
 centerlineX = 0in
 outlineP02X = -3.5138in
 outlineP02Y = 5.6133in
@@ -296,3 +295,33 @@ export backLiningProfile = sketch(on = YZ) {
 }
 
 export backLiningProfileRegion = region(point = [0in, -3.6in], sketch = backLiningProfile)
+
+export guitarLiningInnerPlanSolid = extrude(
+  guitarLiningInnerRegion,
+  length = liningClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+
+export topLiningProfilePrism = extrude(
+  topLiningProfileRegion,
+  length = liningBodyWidth,
+  symmetric = true,
+  method = NEW,
+)
+
+export backLiningProfilePrism = extrude(
+  backLiningProfileRegion,
+  length = liningBodyWidth,
+  symmetric = true,
+  method = NEW,
+)
+
+hiddenKerfedLiningConstruction = hide([
+  sketchGuitarLiningInner,
+  guitarLiningInnerRegion,
+  topLiningProfile,
+  topLiningProfileRegion,
+  backLiningProfile,
+  backLiningProfileRegion
+])

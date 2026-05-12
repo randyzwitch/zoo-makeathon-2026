@@ -1,5 +1,0 @@
-@settings(defaultLengthUnit = in)
-
-import guitarsides from "guitar_sides_solid.kcl"
-import neckMortiseCutter from "guitar_neck_dovetail_mortise.kcl"
-cutSides = subtract(guitarsides, tools = [neckMortiseCutter], legacyMethod = true)

@@ -1,85 +1,87 @@
+// Guitar assembly
+// Main controls display by listing imported bodies in logical grouped sections.
 @settings(defaultLengthUnit = in)
 
-// Lightweight bridge/body assembly.
-// Shows the soundboard, rosette, primary bracing/patches attached to the soundboard,
-// side/finger braces, interior side blocks, blocks, external bridge/saddle,
-// backplate, sides, and separate top/back binding bodies.
-// Geometry source modules are untouched except for requested trim/rabbet features.
+import topSoundboardExport as topSoundboard, topBindingTrimmedExport as topBindingTrimmed, xBraceBassPlanTrimExport as xBraceBassPlanTrim, xBraceTreblePlanTrimExport as xBraceTreblePlanTrim from "guitar_top.kcl"
+import upperTransverseBraceExport as upperTransverseBrace, popsicleBraceExport as popsicleBrace, toneBarUpperExport as toneBarUpper, toneBarLowerExport as toneBarLower from "guitar_top.kcl"
+import topSideBrace1Export as topSideBrace1, topSideBrace2Export as topSideBrace2, topSideBrace3Export as topSideBrace3, topSideBrace4Export as topSideBrace4 from "guitar_top.kcl"
+import bridgePlateExport as bridgePlate, soundholeReinforcementExport as soundholeReinforcement from "guitar_top.kcl"
 
-import sketchGuitar, sketchGuitarInner, guitarBodyRegion, guitarInnerBodyRegion from "guitar_outline.kcl"
-import bodySideProfile, sideTopProfileRegion, sideMiddleProfileRegion, sideBackProfileRegion from "guitar_side_profile.kcl"
-import sketchGuitarLiningInner, guitarLiningInnerRegion, topLiningProfile, topLiningProfileRegion, backLiningProfile, backLiningProfileRegion from "guitar_kerfed_linings.kcl"
-import soundboard from "guitar_soundboard_solid.kcl"
-import backplate from "guitar_backplate_solid.kcl"
-import rosetteInnerPurfling, rosetteMainInlay, rosetteOuterPurfling from "guitar_rosette.kcl"
-import topBinding from "guitar_top_trim.kcl"
-import backBinding from "guitar_back_trim.kcl"
-import soundboardBracing from "guitar_soundboard_bracing.kcl"
-import soundboardTopSideBraces from "guitar_soundboard_top_side_braces.kcl"
-import bridgePlate from "guitar_bridge_plate.kcl"
-import soundholeReinforcement from "guitar_soundhole_reinforcement.kcl"
-import bridge, saddle from "guitar_bridge.kcl"
-import bridgePin1, bridgePin2, bridgePin3, bridgePin4, bridgePin5, bridgePin6 from "guitar_bridge_pins.kcl"
-import guitarsides from "guitar_sides_solid.kcl"
-import neckBlock, tailBlock from "guitar_blocks.kcl"
-import sideBlocks, sideBlockHeightProfile, sideBlockGapProfiles from "guitar_side_blocks.kcl"
-import topKerfedLining, backKerfedLining from "guitar_kerfed_lining_solids.kcl"
-import backCenterGlueSeamBrace, backCenterGlueSeamBraceProfile from "guitar_back_bracing.kcl"
-import backTransverseBrace1, backTransverseBrace2, backTransverseBrace3, backTransverseBrace4 from "guitar_back_transverse_bracing.kcl"
-import neckMortiseCutter from "guitar_neck_dovetail_mortise.kcl"
-import soundportCutter from "guitar_soundport.kcl"
+import rimSidesExport as rimSides, rimNeckBlockExport as rimNeckBlock, rimTailBlockExport as rimTailBlock, rimSideBlocksExport as rimSideBlocks, rimTopKerfedLiningExport as rimTopKerfedLining, rimBackKerfedLiningExport as rimBackKerfedLining from "guitar_rim.kcl"
 
-// Visible working set for bridge/body context.
-visibleSoundboard = subtract(soundboard, tools = [clone(neckMortiseCutter)], legacyMethod = true)
-visibleBackplate = backplate
-visibleRosetteInnerPurfling = rosetteInnerPurfling
-visibleRosetteMainInlay = rosetteMainInlay
-visibleRosetteOuterPurfling = rosetteOuterPurfling
-visibleTopBinding = subtract(topBinding, tools = [clone(neckMortiseCutter)], legacyMethod = true)
-visibleBackBinding = backBinding
-visibleBackCenterGlueSeamBrace = backCenterGlueSeamBrace
-visibleSoundboardBracing = soundboardBracing
-visibleSoundboardTopSideBraces = soundboardTopSideBraces
-visibleBridgePlate = bridgePlate
-visibleSoundholeReinforcement = soundholeReinforcement
-visibleBridge = bridge
-visibleSaddle = saddle
-visibleBridgePin1 = bridgePin1
-visibleBridgePin2 = bridgePin2
-visibleBridgePin3 = bridgePin3
-visibleBridgePin4 = bridgePin4
-visibleBridgePin5 = bridgePin5
-visibleBridgePin6 = bridgePin6
-visibleSides = subtract(
-  guitarsides,
-  tools = [
-    clone(neckMortiseCutter),
-    clone(soundportCutter)
-  ],
-  legacyMethod = true,
-)
-visibleNeckBlock = subtract(neckBlock, tools = [clone(neckMortiseCutter)], legacyMethod = true)
-visibleTailBlock = tailBlock
-visibleSideBraces = subtract(sideBlocks, tools = [clone(soundportCutter)], legacyMethod = true)
-visibleTopKerfedLining = subtract(topKerfedLining, tools = [clone(neckMortiseCutter)], legacyMethod = true)
-visibleBackKerfedLining = backKerfedLining
+import backplateExport as backplate, backBindingExport as backBinding, backCenterGlueSeamBraceExport as backCenterGlueSeamBrace from "guitar_back.kcl"
+import backTransverseBrace1Export as backTransverseBrace1, backTransverseBrace2Export as backTransverseBrace2, backTransverseBrace3Export as backTransverseBrace3, backTransverseBrace4Export as backTransverseBrace4 from "guitar_back.kcl"
 
-hiddenPresentationSketches = hide([
-  sketchGuitar,
-  sketchGuitarInner,
-  bodySideProfile,
-  guitarBodyRegion,
-  guitarInnerBodyRegion,
-  sideTopProfileRegion,
-  sideMiddleProfileRegion,
-  sideBackProfileRegion,
-  sketchGuitarLiningInner,
-  guitarLiningInnerRegion,
-  topLiningProfile,
-  topLiningProfileRegion,
-  backLiningProfile,
-  backLiningProfileRegion,
-  sideBlockHeightProfile,
-  sideBlockGapProfiles,
-  backCenterGlueSeamBraceProfile
+import bridgeExport as bridge, saddleExport as saddle, bridgePin1Export as bridgePin1, bridgePin2Export as bridgePin2, bridgePin3Export as bridgePin3, bridgePin4Export as bridgePin4, bridgePin5Export as bridgePin5, bridgePin6Export as bridgePin6 from "guitar_bridge.kcl"
+
+topShellBodies = [topSoundboard, topBindingTrimmed]
+topPrimaryBraceBodies = [xBraceBassPlanTrim, xBraceTreblePlanTrim, upperTransverseBrace, popsicleBrace]
+topSecondaryBraceBodies = [toneBarUpper, toneBarLower, topSideBrace1, topSideBrace2, topSideBrace3, topSideBrace4]
+topInternalBodies = [bridgePlate, soundholeReinforcement]
+
+rimStructureBodies = [rimSides, rimNeckBlock, rimTailBlock, rimSideBlocks]
+rimLiningBodies = [rimTopKerfedLining, rimBackKerfedLining]
+
+backShellBodies = [backplate, backBinding]
+backBraceBodies = [backCenterGlueSeamBrace, backTransverseBrace1, backTransverseBrace2, backTransverseBrace3, backTransverseBrace4]
+
+bridgeBodies = [bridge, saddle, bridgePin1, bridgePin2, bridgePin3, bridgePin4, bridgePin5, bridgePin6]
+
+guitarAssembly = flatten([
+  patternLinear3d(
+    topShellBodies,
+    instances = 2,
+    distance = 0in,
+    axis = X,
+  ),
+  patternLinear3d(
+    topPrimaryBraceBodies,
+    instances = 2,
+    distance = 0in,
+    axis = X,
+  ),
+  patternLinear3d(
+    topSecondaryBraceBodies,
+    instances = 2,
+    distance = 0in,
+    axis = X,
+  ),
+  patternLinear3d(
+    topInternalBodies,
+    instances = 2,
+    distance = 0in,
+    axis = X,
+  ),
+  patternLinear3d(
+    rimStructureBodies,
+    instances = 2,
+    distance = 0in,
+    axis = X,
+  ),
+  patternLinear3d(
+    rimLiningBodies,
+    instances = 2,
+    distance = 0in,
+    axis = X,
+  ),
+  patternLinear3d(
+    backShellBodies,
+    instances = 2,
+    distance = 0in,
+    axis = X,
+  ),
+  patternLinear3d(
+    backBraceBodies,
+    instances = 2,
+    distance = 0in,
+    axis = X,
+  ),
+  patternLinear3d(
+    bridgeBodies,
+    instances = 2,
+    distance = 0in,
+    axis = X,
+  )
 ])
+
+guitarAssembly

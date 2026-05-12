@@ -1,17 +1,12 @@
+// Guitar bridge subsystem
+// Bridge, saddle, and bridge pins.
 @settings(defaultLengthUnit = in)
 
 import bridgePin1X, bridgePin2X, bridgePin3X, bridgePin4X, bridgePin5X, bridgePin6X, bridgePinCounterboreDepth, bridgePinCounterboreRadius, bridgePinCounterboreStartZ, bridgePinHoleRadius, bridgePinHoleY, bridgePinThroughBottomZ, bridgePinThroughLength from "guitar_bridge_pin_holes.kcl"
 
-// Standard StewMac-style acoustic guitar bridge for the bridge-work assembly.
-// Placement rule:
-// - the soundboard front edge on the centerline is the 14th fret location
-// - the nearest/nut-side edge of the compensated saddle slot is placed at:
-// front edge of soundboard - remaining scale length after fret 14
-// - scale length is 24.75 in
-
-
 bridgeWoodColor = "#24100d"
 saddleBoneColor = "#f4ead2"
+bridgePinColor = "#f2ead1"
 
 soundboardFrontCenterY = 5.764093in
 bridgeScaleLength = 24.75in
@@ -24,14 +19,11 @@ bridgeHalfLength = bridgeLength / 2
 bridgeMaxDepth = 1.420in
 bridgeEndDepth = 0.720in
 bridgeThickness = 0.375in
-
 bridgeShoulderX = 2.350in
 bridgeBellyHalfLength = 1.650in
 bridgeWingFlatLength = bridgeHalfLength - bridgeShoulderX
-
 bridgeTopEdgeDrop = 0.085in
 bridgeTopEnvelopeRunout = 0.060in
-
 bridgeSaddleTrebleFrontOffset = 0.220in
 bridgeSaddleBassFrontOffset = 0.355in
 bridgeSaddleSlotWidth = 3 / 32 * 1in
@@ -69,6 +61,7 @@ saddleTrebleRearY = saddleTrebleFrontY - saddleWidth
 saddleBottomZ = bridgeTopZ - bridgeSaddleSlotPocketDepth + 0.010in
 saddleHeight = bridgeSaddleSlotPocketDepth + 0.170in
 saddleTopCrownRadius = 0.039in
+bridgePinShoulderGlobalZ = bridgePinCounterboreStartZ + 0.016in
 
 bridgeFootprintPlan = sketch(on = offsetPlane(XY, offset = bridgeBaseZ)) {
   frontEdge = line(start = [var -3.0in, var -5.040779in], end = [var 3.0in, var -5.040779in])
@@ -218,7 +211,6 @@ bridgeCutters = flatten([
   bridgePinHoleCutters,
   bridgePinCounterboreCutters
 ])
-
 bridgeCutPrism = subtract(bridgePlanPrism, tools = bridgeCutters, legacyMethod = true)
 
 bridgeTopEnvelopeProfile = sketch(on = YZ) {
@@ -255,7 +247,7 @@ bridgeTopEnvelope = extrude(
   method = NEW,
 )
 
-export bridge = intersect([bridgeCutPrism, bridgeTopEnvelope], legacyMethod = true)
+bridge = intersect([bridgeCutPrism, bridgeTopEnvelope], legacyMethod = true)
   |> appearance(color = bridgeWoodColor, metalness = 0, roughness = 58)
 
 saddlePlan = sketch(on = offsetPlane(XY, offset = saddleBottomZ)) {
@@ -309,16 +301,108 @@ saddleCrowned = fillet(
   radius = saddleTopCrownRadius,
 )
 
-export saddle = saddleCrowned
+saddle = saddleCrowned
   |> appearance(color = saddleBoneColor, metalness = 0, roughness = 34)
 
-hiddenBridgeWorkBodies = hide([pinHoleSeed, pinCounterboreSeed])
+bridgePinProfile = sketch(on = XZ) {
+  pinAxis = line(start = [var 0in, var 0.277474in], end = [var 0in, var -0.755in])
+  pinTip = line(start = [var 0in, var -0.755in], end = [var 0.055in, var -0.755in])
+  pinTaper = line(start = [var 0.055in, var -0.755in], end = [var 0.095in, var 0in])
+  lowerHead = arc(start = [var 0.095in, var 0in], end = [var 0.155in, var 0.122474in], center = [var 0in, var 0.122474in])
+  upperHead = arc(start = [var 0.155in, var 0.122474in], end = [var 0in, var 0.277474in], center = [var 0in, var 0.122474in])
 
+  coincident([pinAxis.end, pinTip.start])
+  coincident([pinTip.end, pinTaper.start])
+  coincident([pinTaper.end, lowerHead.start])
+  coincident([lowerHead.end, upperHead.start])
+  coincident([upperHead.end, pinAxis.start])
+
+  vertical(pinAxis)
+  horizontal(pinTip)
+}
+
+bridgePin1 = revolve(region(point = [0.04in, -0.20in], sketch = bridgePinProfile), axis = Y)
+  |> translate(
+       x = bridgePin1X,
+       y = bridgePinHoleY,
+       z = bridgePinShoulderGlobalZ,
+       global = true,
+     )
+  |> appearance(color = bridgePinColor, metalness = 0, roughness = 38)
+bridgePin2 = revolve(region(point = [0.04in, -0.20in], sketch = bridgePinProfile), axis = Y)
+  |> translate(
+       x = bridgePin2X,
+       y = bridgePinHoleY,
+       z = bridgePinShoulderGlobalZ,
+       global = true,
+     )
+  |> appearance(color = bridgePinColor, metalness = 0, roughness = 38)
+bridgePin3 = revolve(region(point = [0.04in, -0.20in], sketch = bridgePinProfile), axis = Y)
+  |> translate(
+       x = bridgePin3X,
+       y = bridgePinHoleY,
+       z = bridgePinShoulderGlobalZ,
+       global = true,
+     )
+  |> appearance(color = bridgePinColor, metalness = 0, roughness = 38)
+bridgePin4 = revolve(region(point = [0.04in, -0.20in], sketch = bridgePinProfile), axis = Y)
+  |> translate(
+       x = bridgePin4X,
+       y = bridgePinHoleY,
+       z = bridgePinShoulderGlobalZ,
+       global = true,
+     )
+  |> appearance(color = bridgePinColor, metalness = 0, roughness = 38)
+bridgePin5 = revolve(region(point = [0.04in, -0.20in], sketch = bridgePinProfile), axis = Y)
+  |> translate(
+       x = bridgePin5X,
+       y = bridgePinHoleY,
+       z = bridgePinShoulderGlobalZ,
+       global = true,
+     )
+  |> appearance(color = bridgePinColor, metalness = 0, roughness = 38)
+bridgePin6 = revolve(region(point = [0.04in, -0.20in], sketch = bridgePinProfile), axis = Y)
+  |> translate(
+       x = bridgePin6X,
+       y = bridgePinHoleY,
+       z = bridgePinShoulderGlobalZ,
+       global = true,
+     )
+  |> appearance(color = bridgePinColor, metalness = 0, roughness = 38)
+
+hiddenBridgeWorkBodies = hide([pinHoleSeed, pinCounterboreSeed])
 hiddenBridgeSketches = hide([
   bridgeFootprintPlan,
+  bridgeFootprintRegion,
   saddleSlotPlan,
+  saddleSlotRegion,
   pinHoleSeedPlan,
+  pinHoleSeedRegion,
   pinCounterboreSeedPlan,
+  pinCounterboreSeedRegion,
   bridgeTopEnvelopeProfile,
-  saddlePlan
+  bridgeTopEnvelopeRegion,
+  saddlePlan,
+  saddleRegion,
+  bridgePinProfile
 ])
+
+hiddenBridge = hide(bridge)
+hiddenSaddle = hide(saddle)
+hiddenBridgePin1 = hide(bridgePin1)
+hiddenBridgePin2 = hide(bridgePin2)
+hiddenBridgePin3 = hide(bridgePin3)
+hiddenBridgePin4 = hide(bridgePin4)
+hiddenBridgePin5 = hide(bridgePin5)
+hiddenBridgePin6 = hide(bridgePin6)
+
+export bridgeExport = hiddenBridge
+export saddleExport = hiddenSaddle
+export bridgePin1Export = hiddenBridgePin1
+export bridgePin2Export = hiddenBridgePin2
+export bridgePin3Export = hiddenBridgePin3
+export bridgePin4Export = hiddenBridgePin4
+export bridgePin5Export = hiddenBridgePin5
+export bridgePin6Export = hiddenBridgePin6
+
+0

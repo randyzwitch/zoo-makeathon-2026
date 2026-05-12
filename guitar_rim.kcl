@@ -1,0 +1,639 @@
+// Guitar rim subsystem
+// Sides, blocks, soundport, and kerfed linings.
+@settings(defaultLengthUnit = in)
+
+import guitarOuterPlanSolid, guitarInnerPlanSolid, guitarCenterlineUpperY, guitarCenterlineLowerY from "guitar_outline.kcl"
+import sideMiddleProfilePrism from "guitar_side_profile.kcl"
+import sideShellRemainingProfilePrism from "guitar_top_binding_rabbet_profiles.kcl"
+import guitarLiningInnerPlanSolid, topLiningProfilePrism, backLiningProfilePrism from "guitar_kerfed_linings.kcl"
+
+walnutSideColor = "#4a2615"
+liningWoodColor = "#caa06a"
+blockWoodColor = "#8a5632"
+sideBlockWoodColor = "#b77a3f"
+
+mortiseFrontY = 5.92in
+mortiseRearY = 5.42in
+mortiseTopFrontHalfWidth = 0.3125in
+mortiseTopRearHalfWidth = 0.50in
+mortiseBottomFrontHalfWidth = 0.25in
+mortiseBottomRearHalfWidth = 0.4375in
+mortiseTopZ = 0.25in
+mortiseBottomZ = -2.90in
+
+neckMortiseTopProfile = sketch(on = offsetPlane(XY, offset = mortiseTopZ)) {
+  frontEdge = line(start = [var 0.3125in, var 5.92in], end = [var -0.3125in, var 5.92in])
+  leftEdge = line(start = [var -0.3125in, var 5.92in], end = [var -0.50in, var 5.42in])
+  rearEdge = line(start = [var -0.50in, var 5.42in], end = [var 0.50in, var 5.42in])
+  rightEdge = line(start = [var 0.50in, var 5.42in], end = [var 0.3125in, var 5.92in])
+
+  coincident([frontEdge.end, leftEdge.start])
+  coincident([leftEdge.end, rearEdge.start])
+  coincident([rearEdge.end, rightEdge.start])
+  coincident([rightEdge.end, frontEdge.start])
+
+  horizontal(frontEdge)
+  horizontal(rearEdge)
+
+  horizontalDistance([ORIGIN, frontEdge.start]) == mortiseTopFrontHalfWidth
+  verticalDistance([ORIGIN, frontEdge.start]) == mortiseFrontY
+  horizontalDistance([ORIGIN, rearEdge.end]) == mortiseTopRearHalfWidth
+  verticalDistance([ORIGIN, rearEdge.end]) == mortiseRearY
+  distance([frontEdge.start, frontEdge.end]) == mortiseTopFrontHalfWidth * 2
+  distance([rearEdge.start, rearEdge.end]) == mortiseTopRearHalfWidth * 2
+}
+
+neckMortiseBottomProfile = sketch(on = offsetPlane(XY, offset = mortiseBottomZ)) {
+  frontEdge = line(start = [var 0.25in, var 5.92in], end = [var -0.25in, var 5.92in])
+  leftEdge = line(start = [var -0.25in, var 5.92in], end = [var -0.4375in, var 5.42in])
+  rearEdge = line(start = [var -0.4375in, var 5.42in], end = [var 0.4375in, var 5.42in])
+  rightEdge = line(start = [var 0.4375in, var 5.42in], end = [var 0.25in, var 5.92in])
+
+  coincident([frontEdge.end, leftEdge.start])
+  coincident([leftEdge.end, rearEdge.start])
+  coincident([rearEdge.end, rightEdge.start])
+  coincident([rightEdge.end, frontEdge.start])
+
+  horizontal(frontEdge)
+  horizontal(rearEdge)
+
+  horizontalDistance([ORIGIN, frontEdge.start]) == mortiseBottomFrontHalfWidth
+  verticalDistance([ORIGIN, frontEdge.start]) == mortiseFrontY
+  horizontalDistance([ORIGIN, rearEdge.end]) == mortiseBottomRearHalfWidth
+  verticalDistance([ORIGIN, rearEdge.end]) == mortiseRearY
+  distance([frontEdge.start, frontEdge.end]) == mortiseBottomFrontHalfWidth * 2
+  distance([rearEdge.start, rearEdge.end]) == mortiseBottomRearHalfWidth * 2
+}
+
+neckMortiseTopRegion = region(point = [0in, 5.65in], sketch = neckMortiseTopProfile)
+neckMortiseBottomRegion = region(point = [0in, 5.65in], sketch = neckMortiseBottomProfile)
+neckMortiseCutterForRimSides = loft([
+  neckMortiseTopRegion,
+  neckMortiseBottomRegion
+])
+neckMortiseCutterForNeckBlock = loft([
+  neckMortiseTopRegion,
+  neckMortiseBottomRegion
+])
+neckMortiseCutterForTopKerfedLining = loft([
+  neckMortiseTopRegion,
+  neckMortiseBottomRegion
+])
+
+soundportSeedRadius = 0.5in
+soundportMajorLength = 2.4in
+soundportMinorLength = 1.75in
+soundportCutterLength = 1.50in
+soundportSeedLength = 1.0in
+soundportSeedDiameter = soundportSeedRadius * 2
+soundportCutterScaleX = soundportCutterLength / soundportSeedLength
+soundportCutterScaleY = soundportMajorLength / soundportSeedDiameter
+soundportCutterScaleZ = soundportMinorLength / soundportSeedDiameter
+soundportCenterX = -5.60in
+soundportCenterY = 2.95in
+soundportCenterZ = -1.78in
+soundportPlaneYaw = 160deg
+soundportEllipseTilt = 18deg
+
+soundportSeedProfile = sketch(on = YZ) {
+  soundportCircle = circle(start = [var 0.5in, var 0in], center = [var 0in, var 0in])
+  coincident([soundportCircle.center, ORIGIN])
+  horizontalDistance([
+  soundportCircle.center,
+  soundportCircle.start
+]) == soundportSeedRadius
+  verticalDistance([
+  soundportCircle.center,
+  soundportCircle.start
+]) == 0in
+}
+
+soundportSeedRegion = region(point = [0in, 0in], sketch = soundportSeedProfile)
+soundportSeedSolid = extrude(
+  soundportSeedRegion,
+  length = soundportSeedLength,
+  symmetric = true,
+  method = NEW,
+)
+
+soundportCutter = clone(soundportSeedSolid)
+  |> scale(x = soundportCutterScaleX, y = soundportCutterScaleY, z = soundportCutterScaleZ)
+  |> rotate(axis = X, angle = soundportEllipseTilt)
+  |> rotate(axis = Z, angle = soundportPlaneYaw)
+  |> translate(
+       x = soundportCenterX,
+       y = soundportCenterY,
+       z = soundportCenterZ,
+       global = true,
+     )
+
+rimSides = subtract(
+  subtract(
+    intersect(
+      [
+        clone(sideShellRemainingProfilePrism),
+        clone(guitarOuterPlanSolid)
+      ],
+      legacyMethod = true,
+    ),
+    tools = [clone(guitarInnerPlanSolid)],
+    legacyMethod = true,
+  )
+    |> appearance(color = walnutSideColor, metalness = 0, roughness = 72),
+  tools = [
+    neckMortiseCutterForRimSides,
+    clone(soundportCutter)
+  ],
+  legacyMethod = true,
+)
+
+blockClipDepth = 10in
+neckBlockWidth = 3.5in
+neckBlockLength = 1.3in
+neckBlockOuterY = 5.85in
+neckBlockInnerY = neckBlockOuterY - neckBlockLength
+neckBlockRoundoverRadius = 0.25in
+tailBlockWidth = 2.9in
+tailBlockLength = 0.75in
+tailBlockChamfer = 0.25in
+tailBlockOuterY = -14.7in
+tailBlockInnerY = tailBlockOuterY + tailBlockLength
+
+neckBlockPlan = sketch(on = XY) {
+  neckTop = line(start = [var 1.50in, var 5.85in], end = [var -1.50in, var 5.85in])
+  neckTopLeftRound = arc(start = [var -1.50in, var 5.85in], end = [var -1.75in, var 5.60in], center = [var -1.50in, var 5.60in])
+  neckLeft = line(start = [var -1.75in, var 5.60in], end = [var -1.75in, var 4.80in])
+  neckBottomLeftRound = arc(start = [var -1.75in, var 4.80in], end = [var -1.50in, var 4.55in], center = [var -1.50in, var 4.80in])
+  neckBottom = line(start = [var -1.50in, var 4.55in], end = [var 1.50in, var 4.55in])
+  neckBottomRightRound = arc(start = [var 1.50in, var 4.55in], end = [var 1.75in, var 4.80in], center = [var 1.50in, var 4.80in])
+  neckRight = line(start = [var 1.75in, var 4.80in], end = [var 1.75in, var 5.60in])
+  neckTopRightRound = arc(start = [var 1.75in, var 5.60in], end = [var 1.50in, var 5.85in], center = [var 1.50in, var 5.60in])
+
+  coincident([neckTop.end, neckTopLeftRound.start])
+  coincident([neckTopLeftRound.end, neckLeft.start])
+  coincident([
+    neckLeft.end,
+    neckBottomLeftRound.start
+  ])
+  coincident([
+    neckBottomLeftRound.end,
+    neckBottom.start
+  ])
+  coincident([
+    neckBottom.end,
+    neckBottomRightRound.start
+  ])
+  coincident([
+    neckBottomRightRound.end,
+    neckRight.start
+  ])
+  coincident([neckRight.end, neckTopRightRound.start])
+  coincident([neckTopRightRound.end, neckTop.start])
+
+  horizontal(neckTop)
+  vertical(neckLeft)
+  horizontal(neckBottom)
+  vertical(neckRight)
+
+  tangent([neckTop, neckTopLeftRound])
+  tangent([neckTopLeftRound, neckLeft])
+  tangent([neckLeft, neckBottomLeftRound])
+  tangent([neckBottomLeftRound, neckBottom])
+  tangent([neckBottom, neckBottomRightRound])
+  tangent([neckBottomRightRound, neckRight])
+  tangent([neckRight, neckTopRightRound])
+  tangent([neckTopRightRound, neckTop])
+
+  horizontalDistance([ORIGIN, neckTop.start]) == neckBlockWidth / 2 - neckBlockRoundoverRadius
+  verticalDistance([ORIGIN, neckTop.start]) == neckBlockOuterY
+  distance([neckTop.start, neckTop.end]) == neckBlockWidth - (2 * neckBlockRoundoverRadius)
+  distance([neckLeft.start, neckLeft.end]) == neckBlockLength - (2 * neckBlockRoundoverRadius)
+  distance([neckBottom.start, neckBottom.end]) == neckBlockWidth - (2 * neckBlockRoundoverRadius)
+  distance([neckRight.start, neckRight.end]) == neckBlockLength - (2 * neckBlockRoundoverRadius)
+
+  radius(neckTopLeftRound) == neckBlockRoundoverRadius
+  radius(neckBottomLeftRound) == neckBlockRoundoverRadius
+  radius(neckBottomRightRound) == neckBlockRoundoverRadius
+  radius(neckTopRightRound) == neckBlockRoundoverRadius
+}
+
+tailBlockPlan = sketch(on = XY) {
+  tailTop = line(start = [var -0.95in, var -13.95in], end = [var 0.95in, var -13.95in])
+  tailRightChamfer = line(start = [var 0.95in, var -13.95in], end = [var 1.45in, var -14.45in])
+  tailRight = line(start = [var 1.45in, var -14.45in], end = [var 1.45in, var -14.70in])
+  tailBottom = line(start = [var 1.45in, var -14.70in], end = [var -1.45in, var -14.70in])
+  tailLeft = line(start = [var -1.45in, var -14.70in], end = [var -1.45in, var -14.45in])
+  tailLeftChamfer = line(start = [var -1.45in, var -14.45in], end = [var -0.95in, var -13.95in])
+
+  coincident([tailTop.end, tailRightChamfer.start])
+  coincident([tailRightChamfer.end, tailRight.start])
+  coincident([tailRight.end, tailBottom.start])
+  coincident([tailBottom.end, tailLeft.start])
+  coincident([tailLeft.end, tailLeftChamfer.start])
+  coincident([tailLeftChamfer.end, tailTop.start])
+
+  horizontal(tailTop)
+  vertical(tailRight)
+  horizontal(tailBottom)
+  vertical(tailLeft)
+
+  horizontalDistance([ORIGIN, tailTop.start]) == 0in - (tailBlockWidth / 2 - tailBlockChamfer)
+  verticalDistance([ORIGIN, tailTop.start]) == tailBlockInnerY
+  distance([tailTop.start, tailTop.end]) == tailBlockWidth - (2 * tailBlockChamfer)
+  distance([tailBottom.start, tailBottom.end]) == tailBlockWidth
+  distance([tailRight.start, tailRight.end]) == tailBlockLength - tailBlockChamfer
+
+  horizontalDistance([tailTop.end, tailRightChamfer.end]) == tailBlockChamfer
+  verticalDistance([tailRightChamfer.end, tailTop.end]) == tailBlockChamfer
+  horizontalDistance([tailLeft.end, tailTop.start]) == tailBlockChamfer
+  verticalDistance([tailLeft.end, tailTop.start]) == tailBlockChamfer
+}
+
+neckBlockPlanRegion = region(point = [0in, 5.1in], sketch = neckBlockPlan)
+tailBlockPlanRegion = region(point = [0in, -14.3in], sketch = tailBlockPlan)
+neckBlockPlanPrism = extrude(
+  neckBlockPlanRegion,
+  length = blockClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+tailBlockPlanPrism = extrude(
+  tailBlockPlanRegion,
+  length = blockClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+
+neckBlockInCavity = intersect(
+  [
+    neckBlockPlanPrism,
+    clone(guitarInnerPlanSolid)
+  ],
+  legacyMethod = true,
+)
+tailBlockInCavity = intersect(
+  [
+    tailBlockPlanPrism,
+    clone(guitarInnerPlanSolid)
+  ],
+  legacyMethod = true,
+)
+
+rimNeckBlock = subtract(
+  intersect(
+    [
+      neckBlockInCavity,
+      clone(sideMiddleProfilePrism)
+    ],
+    legacyMethod = true,
+  )
+    |> appearance(color = blockWoodColor, metalness = 0, roughness = 74),
+  tools = [neckMortiseCutterForNeckBlock],
+  legacyMethod = true,
+)
+
+rimTailBlock = intersect(
+  [
+    tailBlockInCavity,
+    clone(sideMiddleProfilePrism)
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = blockWoodColor, metalness = 0, roughness = 74)
+
+sideBlockAcrossWidth = 18in
+sideBlockCutterTopZ = -0.45in
+sideBlockCutterBottomZ = -3.95in
+sideBlockTopZ = -0.6875in
+sideBlockBackZAtTail = -3.5625in
+sideBlockBackZAtNeck = -3.0625in
+
+sideBlockContinuousPlanBand = subtract(clone(guitarInnerPlanSolid), tools = [clone(guitarLiningInnerPlanSolid)], legacyMethod = true)
+
+sideBlockHeightProfile = sketch(on = YZ) {
+  blockTopEdge = line(start = [var -14.63in, var -0.69in], end = [var 5.76in, var -0.69in])
+  blockNeckEdge = line(start = [var 5.76in, var -0.69in], end = [var 5.76in, var -3.06in])
+  blockBackEdge = line(start = [var 5.76in, var -3.06in], end = [var -14.63in, var -3.56in])
+  blockTailEdge = line(start = [var -14.63in, var -3.56in], end = [var -14.63in, var -0.69in])
+
+  coincident([blockTopEdge.end, blockNeckEdge.start])
+  coincident([blockNeckEdge.end, blockBackEdge.start])
+  coincident([blockBackEdge.end, blockTailEdge.start])
+  coincident([blockTailEdge.end, blockTopEdge.start])
+
+  horizontal(blockTopEdge)
+  vertical(blockNeckEdge)
+  vertical(blockTailEdge)
+
+  horizontalDistance([blockTopEdge.start, ORIGIN]) == 0in - guitarCenterlineLowerY
+  verticalDistance([blockTopEdge.start, ORIGIN]) == 0in - sideBlockTopZ
+  distance([blockTopEdge.start, blockTopEdge.end]) == guitarCenterlineUpperY - guitarCenterlineLowerY
+  distance([blockNeckEdge.start, blockNeckEdge.end]) == sideBlockTopZ - sideBlockBackZAtNeck
+  distance([blockTailEdge.start, blockTailEdge.end]) == sideBlockTopZ - sideBlockBackZAtTail
+}
+
+sideBlockHeightRegion = region(point = [0in, -2in], sketch = sideBlockHeightProfile)
+sideBlockHeightEnvelope = extrude(
+  sideBlockHeightRegion,
+  length = sideBlockAcrossWidth,
+  symmetric = true,
+  method = NEW,
+)
+sideBlockFullLadderBlank = intersect(
+  [
+    sideBlockContinuousPlanBand,
+    sideBlockHeightEnvelope
+  ],
+  legacyMethod = true,
+)
+
+upperGapProfile = sketch(on = YZ) {
+  topEdge = line(start = [var 4.46in, var -0.45in], end = [var 6.0in, var -0.45in])
+  rightEdge = line(start = [var 6.0in, var -0.45in], end = [var 6.0in, var -3.95in])
+  bottomEdge = line(start = [var 6.0in, var -3.95in], end = [var 4.46in, var -3.95in])
+  leftEdge = line(start = [var 4.46in, var -3.95in], end = [var 4.46in, var -0.45in])
+
+  coincident([topEdge.end, rightEdge.start])
+  coincident([rightEdge.end, bottomEdge.start])
+  coincident([bottomEdge.end, leftEdge.start])
+  coincident([leftEdge.end, topEdge.start])
+
+  horizontal(topEdge)
+  vertical(rightEdge)
+  horizontal(bottomEdge)
+  vertical(leftEdge)
+}
+
+gap12Profile = sketch(on = YZ) {
+  topEdge = line(start = [var 1.36in, var -0.45in], end = [var 3.84in, var -0.45in])
+  rightEdge = line(start = [var 3.84in, var -0.45in], end = [var 3.84in, var -3.95in])
+  bottomEdge = line(start = [var 3.84in, var -3.95in], end = [var 1.36in, var -3.95in])
+  leftEdge = line(start = [var 1.36in, var -3.95in], end = [var 1.36in, var -0.45in])
+
+  coincident([topEdge.end, rightEdge.start])
+  coincident([rightEdge.end, bottomEdge.start])
+  coincident([bottomEdge.end, leftEdge.start])
+  coincident([leftEdge.end, topEdge.start])
+
+  horizontal(topEdge)
+  vertical(rightEdge)
+  horizontal(bottomEdge)
+  vertical(leftEdge)
+}
+
+gap23Profile = sketch(on = YZ) {
+  topEdge = line(start = [var -1.74in, var -0.45in], end = [var 0.74in, var -0.45in])
+  rightEdge = line(start = [var 0.74in, var -0.45in], end = [var 0.74in, var -3.95in])
+  bottomEdge = line(start = [var 0.74in, var -3.95in], end = [var -1.74in, var -3.95in])
+  leftEdge = line(start = [var -1.74in, var -3.95in], end = [var -1.74in, var -0.45in])
+
+  coincident([topEdge.end, rightEdge.start])
+  coincident([rightEdge.end, bottomEdge.start])
+  coincident([bottomEdge.end, leftEdge.start])
+  coincident([leftEdge.end, topEdge.start])
+
+  horizontal(topEdge)
+  vertical(rightEdge)
+  horizontal(bottomEdge)
+  vertical(leftEdge)
+}
+
+gap34Profile = sketch(on = YZ) {
+  topEdge = line(start = [var -4.84in, var -0.45in], end = [var -2.36in, var -0.45in])
+  rightEdge = line(start = [var -2.36in, var -0.45in], end = [var -2.36in, var -3.95in])
+  bottomEdge = line(start = [var -2.36in, var -3.95in], end = [var -4.84in, var -3.95in])
+  leftEdge = line(start = [var -4.84in, var -3.95in], end = [var -4.84in, var -0.45in])
+
+  coincident([topEdge.end, rightEdge.start])
+  coincident([rightEdge.end, bottomEdge.start])
+  coincident([bottomEdge.end, leftEdge.start])
+  coincident([leftEdge.end, topEdge.start])
+
+  horizontal(topEdge)
+  vertical(rightEdge)
+  horizontal(bottomEdge)
+  vertical(leftEdge)
+}
+
+gap45Profile = sketch(on = YZ) {
+  topEdge = line(start = [var -7.94in, var -0.45in], end = [var -5.46in, var -0.45in])
+  rightEdge = line(start = [var -5.46in, var -0.45in], end = [var -5.46in, var -3.95in])
+  bottomEdge = line(start = [var -5.46in, var -3.95in], end = [var -7.94in, var -3.95in])
+  leftEdge = line(start = [var -7.94in, var -3.95in], end = [var -7.94in, var -0.45in])
+
+  coincident([topEdge.end, rightEdge.start])
+  coincident([rightEdge.end, bottomEdge.start])
+  coincident([bottomEdge.end, leftEdge.start])
+  coincident([leftEdge.end, topEdge.start])
+
+  horizontal(topEdge)
+  vertical(rightEdge)
+  horizontal(bottomEdge)
+  vertical(leftEdge)
+}
+
+gap56Profile = sketch(on = YZ) {
+  topEdge = line(start = [var -10.94in, var -0.45in], end = [var -8.56in, var -0.45in])
+  rightEdge = line(start = [var -8.56in, var -0.45in], end = [var -8.56in, var -3.95in])
+  bottomEdge = line(start = [var -8.56in, var -3.95in], end = [var -10.94in, var -3.95in])
+  leftEdge = line(start = [var -10.94in, var -3.95in], end = [var -10.94in, var -0.45in])
+
+  coincident([topEdge.end, rightEdge.start])
+  coincident([rightEdge.end, bottomEdge.start])
+  coincident([bottomEdge.end, leftEdge.start])
+  coincident([leftEdge.end, topEdge.start])
+
+  horizontal(topEdge)
+  vertical(rightEdge)
+  horizontal(bottomEdge)
+  vertical(leftEdge)
+}
+
+tailGapProfile = sketch(on = YZ) {
+  topEdge = line(start = [var -15.0in, var -0.45in], end = [var -11.56in, var -0.45in])
+  rightEdge = line(start = [var -11.56in, var -0.45in], end = [var -11.56in, var -3.95in])
+  bottomEdge = line(start = [var -11.56in, var -3.95in], end = [var -15.0in, var -3.95in])
+  leftEdge = line(start = [var -15.0in, var -3.95in], end = [var -15.0in, var -0.45in])
+
+  coincident([topEdge.end, rightEdge.start])
+  coincident([rightEdge.end, bottomEdge.start])
+  coincident([bottomEdge.end, leftEdge.start])
+  coincident([leftEdge.end, topEdge.start])
+
+  horizontal(topEdge)
+  vertical(rightEdge)
+  horizontal(bottomEdge)
+  vertical(leftEdge)
+}
+
+upperGapRegion = region(point = [5.2in, -2.1in], sketch = upperGapProfile)
+gap12Region = region(point = [2.6in, -2.1in], sketch = gap12Profile)
+gap23Region = region(point = [-0.5in, -2.1in], sketch = gap23Profile)
+gap34Region = region(point = [-3.6in, -2.1in], sketch = gap34Profile)
+gap45Region = region(point = [-6.7in, -2.1in], sketch = gap45Profile)
+gap56Region = region(point = [-9.7in, -2.1in], sketch = gap56Profile)
+tailGapRegion = region(point = [-13.2in, -2.1in], sketch = tailGapProfile)
+
+upperGapCutter = extrude(
+  upperGapRegion,
+  length = sideBlockAcrossWidth,
+  symmetric = true,
+  method = NEW,
+)
+gap12Cutter = extrude(
+  gap12Region,
+  length = sideBlockAcrossWidth,
+  symmetric = true,
+  method = NEW,
+)
+gap23Cutter = extrude(
+  gap23Region,
+  length = sideBlockAcrossWidth,
+  symmetric = true,
+  method = NEW,
+)
+gap34Cutter = extrude(
+  gap34Region,
+  length = sideBlockAcrossWidth,
+  symmetric = true,
+  method = NEW,
+)
+gap45Cutter = extrude(
+  gap45Region,
+  length = sideBlockAcrossWidth,
+  symmetric = true,
+  method = NEW,
+)
+gap56Cutter = extrude(
+  gap56Region,
+  length = sideBlockAcrossWidth,
+  symmetric = true,
+  method = NEW,
+)
+tailGapCutter = extrude(
+  tailGapRegion,
+  length = sideBlockAcrossWidth,
+  symmetric = true,
+  method = NEW,
+)
+
+sideBlocksBase = subtract(
+  sideBlockFullLadderBlank,
+  tools = [
+    upperGapCutter,
+    gap12Cutter,
+    gap23Cutter,
+    gap34Cutter,
+    gap45Cutter,
+    gap56Cutter,
+    tailGapCutter
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = sideBlockWoodColor, metalness = 0, roughness = 80)
+
+rimSideBlocks = subtract(sideBlocksBase, tools = [clone(soundportCutter)], legacyMethod = true)
+
+liningMortiseCutDepth = 10in
+liningMortiseTopZ = 0.25in
+
+liningMortiseTopProfile = sketch(on = offsetPlane(XY, offset = liningMortiseTopZ)) {
+  frontEdge = line(start = [var 0.3125in, var 5.92in], end = [var -0.3125in, var 5.92in])
+  leftEdge = line(start = [var -0.3125in, var 5.92in], end = [var -0.50in, var 5.42in])
+  rearEdge = line(start = [var -0.50in, var 5.42in], end = [var 0.50in, var 5.42in])
+  rightEdge = line(start = [var 0.50in, var 5.42in], end = [var 0.3125in, var 5.92in])
+
+  coincident([frontEdge.end, leftEdge.start])
+  coincident([leftEdge.end, rearEdge.start])
+  coincident([rearEdge.end, rightEdge.start])
+  coincident([rightEdge.end, frontEdge.start])
+
+  horizontal(frontEdge)
+  horizontal(rearEdge)
+
+  horizontalDistance([ORIGIN, frontEdge.start]) == 0.3125in
+  verticalDistance([ORIGIN, frontEdge.start]) == 5.92in
+  horizontalDistance([ORIGIN, rearEdge.end]) == 0.50in
+  verticalDistance([ORIGIN, rearEdge.end]) == 5.42in
+  distance([frontEdge.start, frontEdge.end]) == 0.625in
+  distance([rearEdge.start, rearEdge.end]) == 1.0in
+}
+
+liningMortiseTopRegion = region(point = [0in, 5.65in], sketch = liningMortiseTopProfile)
+liningTopMortisePlanCutter = extrude(
+  liningMortiseTopRegion,
+  length = liningMortiseCutDepth,
+  symmetric = true,
+  method = NEW,
+)
+
+rimTopKerfedLining = subtract(
+  intersect(
+    [
+      subtract(subtract(clone(guitarInnerPlanSolid), tools = [clone(guitarLiningInnerPlanSolid)], legacyMethod = true), tools = [liningTopMortisePlanCutter], legacyMethod = true),
+      clone(topLiningProfilePrism)
+    ],
+    legacyMethod = true,
+  )
+    |> appearance(color = liningWoodColor, metalness = 0, roughness = 82),
+  tools = [neckMortiseCutterForTopKerfedLining],
+  legacyMethod = true,
+)
+
+rimBackKerfedLining = intersect(
+  [
+    subtract(clone(guitarInnerPlanSolid), tools = [clone(guitarLiningInnerPlanSolid)], legacyMethod = true),
+    clone(backLiningProfilePrism)
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = liningWoodColor, metalness = 0, roughness = 82)
+
+hiddenRimWorkBodies = hide([soundportSeedSolid, soundportCutter])
+
+hiddenRimSketches = hide([
+  neckMortiseTopProfile,
+  neckMortiseBottomProfile,
+  neckMortiseTopRegion,
+  neckMortiseBottomRegion,
+  soundportSeedProfile,
+  soundportSeedRegion,
+  neckBlockPlan,
+  tailBlockPlan,
+  neckBlockPlanRegion,
+  tailBlockPlanRegion,
+  sideBlockHeightProfile,
+  sideBlockHeightRegion,
+  upperGapProfile,
+  gap12Profile,
+  gap23Profile,
+  gap34Profile,
+  gap45Profile,
+  gap56Profile,
+  tailGapProfile,
+  upperGapRegion,
+  gap12Region,
+  gap23Region,
+  gap34Region,
+  gap45Region,
+  gap56Region,
+  tailGapRegion,
+  liningMortiseTopProfile,
+  liningMortiseTopRegion
+])
+
+hiddenRimSides = hide(rimSides)
+hiddenRimNeckBlock = hide(rimNeckBlock)
+hiddenRimTailBlock = hide(rimTailBlock)
+hiddenRimSideBlocks = hide(rimSideBlocks)
+hiddenRimTopKerfedLining = hide(rimTopKerfedLining)
+hiddenRimBackKerfedLining = hide(rimBackKerfedLining)
+
+export rimSidesExport = hiddenRimSides
+export rimNeckBlockExport = hiddenRimNeckBlock
+export rimTailBlockExport = hiddenRimTailBlock
+export rimSideBlocksExport = hiddenRimSideBlocks
+export rimTopKerfedLiningExport = hiddenRimTopKerfedLining
+export rimBackKerfedLiningExport = hiddenRimBackKerfedLining
+
+0

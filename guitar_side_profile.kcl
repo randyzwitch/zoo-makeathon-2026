@@ -4,13 +4,14 @@ import guitarCenterlineUpperY, guitarCenterlineLowerY from "guitar_outline.kcl"
 
 // Lightweight acoustic guitar body side-profile sketch module.
 // In this YZ sketch, local horizontal coordinates are guitar-body Y stations.
-// Heavy body solids are built in guitar_body_solids.kcl so blocks can reuse this
-// profile without forcing soundboard/side/backplate CSG to recalculate.
+// Heavy body solids are built here so dependent modules reuse stable source-owned
+// regions instead of recreating regions from imported sketches.
 
 
 backArcRadius = 28ft
 soundboardArcRadius = 40ft
 sideProfileArcOffset = 0.125in
+sideProfileBodyWidth = 16in
 
 export bodySideProfile = sketch(on = YZ) {
   upperCenterlineStation = point(at = [var 5.76in, var 0in])
@@ -22,7 +23,6 @@ export bodySideProfile = sketch(on = YZ) {
   horizontalDistance([lowerCenterlineStation, ORIGIN]) == 0in - guitarCenterlineLowerY
   verticalDistance([ORIGIN, lowerCenterlineStation]) == 0in
 
-  // Full-depth reference lines keep the original end depths controlled.
   taildef = line(start = [var -14.63in, var 0in], end = [var -14.63in, var -4.25in], construction = true)
   coincident([taildef.start, lowerCenterlineStation])
   vertical(taildef)
@@ -33,7 +33,6 @@ export bodySideProfile = sketch(on = YZ) {
   vertical(neckdef)
   verticalDistance([neckdef.end, neckdef.start]) == 3.75in
 
-  // Outer arcs.
   backarc = arc(start = [var -14.63in, var -4.25in], end = [var 5.76in, var -3.75in], center = [var -12.66in, var 331.74in])
   coincident([backarc.start, taildef.end])
   coincident([backarc.end, neckdef.end])
@@ -45,7 +44,6 @@ export bodySideProfile = sketch(on = YZ) {
   horizontalDistance([toparc.center, upperCenterlineStation]) == (guitarCenterlineUpperY - guitarCenterlineLowerY) / 2
   radius(toparc) == soundboardArcRadius
 
-  // Inside offset arcs.
   backarcInside = arc(start = [var -14.63in, var -4.13in], end = [var 5.76in, var -3.63in], center = [var -12.66in, var 331.74in])
   coincident([backarcInside.center, backarc.center])
   coincident([backarcInside.start, taildef])
@@ -58,7 +56,6 @@ export bodySideProfile = sketch(on = YZ) {
   coincident([toparcInside.end, taildef])
   radius(toparcInside) == soundboardArcRadius - sideProfileArcOffset
 
-  // Closed top 1/8 in profile side walls.
   tailTopWall = line(start = [var -14.63in, var 0in], end = [var -14.63in, var -0.13in])
   coincident([
     tailTopWall.start,
@@ -75,7 +72,6 @@ export bodySideProfile = sketch(on = YZ) {
   coincident([neckTopWall.end, toparcInside.start])
   vertical(neckTopWall)
 
-  // Closed middle profile side walls.
   tailMiddleWall = line(start = [var -14.63in, var -0.13in], end = [var -14.63in, var -4.13in])
   coincident([tailMiddleWall.start, toparcInside.end])
   coincident([
@@ -92,7 +88,6 @@ export bodySideProfile = sketch(on = YZ) {
   coincident([neckMiddleWall.end, backarcInside.end])
   vertical(neckMiddleWall)
 
-  // Closed back 1/8 in profile side walls.
   tailBackWall = line(start = [var -14.63in, var -4.13in], end = [var -14.63in, var -4.25in])
   coincident([
     tailBackWall.start,
@@ -107,8 +102,34 @@ export bodySideProfile = sketch(on = YZ) {
   vertical(neckBackWall)
 }
 
-// Region selectors for the three closed areas in bodySideProfile.
-// Points are intentionally inside each band, not on boundaries.
 export sideTopProfileRegion = region(point = [0in, 0.03in], sketch = bodySideProfile)
 export sideMiddleProfileRegion = region(point = [0in, -2in], sketch = bodySideProfile)
 export sideBackProfileRegion = region(point = [0in, -3.96in], sketch = bodySideProfile)
+
+export sideTopProfilePrism = extrude(
+  sideTopProfileRegion,
+  length = sideProfileBodyWidth,
+  symmetric = true,
+  method = NEW,
+)
+
+export sideMiddleProfilePrism = extrude(
+  sideMiddleProfileRegion,
+  length = sideProfileBodyWidth,
+  symmetric = true,
+  method = NEW,
+)
+
+export sideBackProfilePrism = extrude(
+  sideBackProfileRegion,
+  length = sideProfileBodyWidth,
+  symmetric = true,
+  method = NEW,
+)
+
+hiddenSideProfileConstruction = hide([
+  bodySideProfile,
+  sideTopProfileRegion,
+  sideMiddleProfileRegion,
+  sideBackProfileRegion
+])

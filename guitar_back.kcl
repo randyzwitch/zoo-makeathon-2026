@@ -1,7 +1,84 @@
+// Guitar back subsystem
+// Back plate, binding, center seam brace, and back braces.
 @settings(defaultLengthUnit = in)
 
-// Four transverse back braces with concave-up end scoops.
-// Ends reach into the back kerfing envelope without crossing outside the side outline.
+import guitarOuterPlanSolid, guitarInnerPlanSolid from "guitar_outline.kcl"
+import sideBackProfilePrism from "guitar_side_profile.kcl"
+import backBindingProfilePrism from "guitar_top_binding_rabbet_profiles.kcl"
+
+bindingColor = "#f2ead1"
+walnutBackColor = "#5a2f1a"
+backBraceWoodColor = "#d8bd7a"
+
+backArcRadius = 28ft
+sideProfileArcOffset = 0.125in
+backBraceGlueRadius = backArcRadius - sideProfileArcOffset
+centerSeamBraceWidth = 1.0in
+centerSeamBraceHeight = 0.125in
+centerSeamBraceTopRadius = backBraceGlueRadius - centerSeamBraceHeight
+centerSeamBraceTailY = -13.95in
+centerSeamBraceNeckY = 4.55in
+backBraceArcCenterY = -12.66in
+backBraceArcCenterZ = 331.74in
+
+backplate = intersect(
+  [
+    clone(sideBackProfilePrism),
+    clone(guitarInnerPlanSolid)
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = walnutBackColor, metalness = 0, roughness = 74)
+
+backBinding = intersect(
+  [
+    clone(backBindingProfilePrism),
+    subtract(clone(guitarOuterPlanSolid), tools = [clone(guitarInnerPlanSolid)], legacyMethod = true)
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = bindingColor, metalness = 0, roughness = 64)
+
+backCenterGlueSeamBraceProfile = sketch(on = YZ) {
+  glueFace = arc(start = [var -13.95in, var -4.13in], end = [var 4.55in, var -3.69in], center = [var -12.66in, var 331.74in])
+  topFace = arc(start = [var -13.95in, var -4.01in], end = [var 4.55in, var -3.57in], center = [var -12.66in, var 331.74in])
+  neckEnd = line(start = [var 4.55in, var -3.69in], end = [var 4.55in, var -3.57in])
+  tailEnd = line(start = [var -13.95in, var -4.01in], end = [var -13.95in, var -4.13in])
+
+  coincident([glueFace.end, neckEnd.start])
+  coincident([neckEnd.end, topFace.end])
+  coincident([topFace.start, tailEnd.start])
+  coincident([tailEnd.end, glueFace.start])
+  coincident([topFace.center, glueFace.center])
+
+  vertical(neckEnd)
+  vertical(tailEnd)
+
+  horizontalDistance([glueFace.center, ORIGIN]) == 0in - backBraceArcCenterY
+  verticalDistance([ORIGIN, glueFace.center]) == backBraceArcCenterZ
+  horizontalDistance([glueFace.start, ORIGIN]) == 0in - centerSeamBraceTailY
+  horizontalDistance([ORIGIN, glueFace.end]) == centerSeamBraceNeckY
+  radius(glueFace) == backBraceGlueRadius
+  distance([glueFace.end, glueFace.center]) == backBraceGlueRadius
+  radius(topFace) == centerSeamBraceTopRadius
+  distance([topFace.end, topFace.center]) == centerSeamBraceTopRadius
+}
+
+backCenterGlueSeamBraceRegion = region(point = [0in, -3.83in], sketch = backCenterGlueSeamBraceProfile)
+backCenterGlueSeamBraceBlank = extrude(
+  backCenterGlueSeamBraceRegion,
+  length = centerSeamBraceWidth,
+  symmetric = true,
+  method = NEW,
+)
+backCenterGlueSeamBrace = intersect(
+  [
+    backCenterGlueSeamBraceBlank,
+    clone(guitarInnerPlanSolid)
+  ],
+  legacyMethod = true,
+)
+  |> appearance(color = backBraceWoodColor, metalness = 0, roughness = 78)
 
 backTransverseBraceWoodColor = "#d6b66f"
 centerSeamNotchHalfWidth = 0.54in
@@ -18,8 +95,8 @@ b2StartHalfSpan = 5.37in
 b2EndHalfSpan = 5.32in
 b3StartHalfSpan = 7.16in
 b3EndHalfSpan = 7.12in
-b4StartHalfSpan = 7.47in
-b4EndHalfSpan = 7.48in
+b4StartHalfSpan = 7.31in
+b4EndHalfSpan = 7.32in
 
 b1StartBottomZ = -3.77in
 b1EndBottomZ = -3.75in
@@ -30,7 +107,6 @@ b3EndBottomZ = -4.06in
 b4StartBottomZ = -4.13in
 b4EndBottomZ = -4.12in
 
-// Brace 1: upper bout.
 b1StartProfile = sketch(on = offsetPlane(XZ, offset = -2.99in)) {
   bottomLeft = line(start = [var -5.70in, var -3.77in], end = [var -0.54in, var -3.77in])
   notchLeft = line(start = [var -0.54in, var -3.77in], end = [var -0.54in, var -3.59in])
@@ -137,10 +213,9 @@ b1EndProfile = sketch(on = offsetPlane(XZ, offset = -3.41in)) {
 
 b1StartRegion = region(point = [0in, -3.38in], sketch = b1StartProfile)
 b1EndRegion = region(point = [0in, -3.36in], sketch = b1EndProfile)
-export backTransverseBrace1 = loft([b1StartRegion, b1EndRegion], vDegree = 1, bezApproximateRational = true)
+backTransverseBrace1 = loft([b1StartRegion, b1EndRegion], vDegree = 1, bezApproximateRational = true)
   |> appearance(color = backTransverseBraceWoodColor, metalness = 0, roughness = 78)
 
-// Brace 2: waist / upper transition.
 b2StartProfile = sketch(on = offsetPlane(XZ, offset = 1.61in)) {
   bottomLeft = line(start = [var -5.37in, var -3.95in], end = [var -0.54in, var -3.95in])
   notchLeft = line(start = [var -0.54in, var -3.95in], end = [var -0.54in, var -3.77in])
@@ -247,10 +322,9 @@ b2EndProfile = sketch(on = offsetPlane(XZ, offset = 1.19in)) {
 
 b2StartRegion = region(point = [0in, -3.58in], sketch = b2StartProfile)
 b2EndRegion = region(point = [0in, -3.57in], sketch = b2EndProfile)
-export backTransverseBrace2 = loft([b2StartRegion, b2EndRegion], vDegree = 1, bezApproximateRational = true)
+backTransverseBrace2 = loft([b2StartRegion, b2EndRegion], vDegree = 1, bezApproximateRational = true)
   |> appearance(color = backTransverseBraceWoodColor, metalness = 0, roughness = 78)
 
-// Brace 3: lower bout.
 b3StartProfile = sketch(on = offsetPlane(XZ, offset = 6.01in)) {
   bottomLeft = line(start = [var -7.16in, var -4.07in], end = [var -0.54in, var -4.07in])
   notchLeft = line(start = [var -0.54in, var -4.07in], end = [var -0.54in, var -3.89in])
@@ -357,10 +431,9 @@ b3EndProfile = sketch(on = offsetPlane(XZ, offset = 5.59in)) {
 
 b3StartRegion = region(point = [0in, -3.70in], sketch = b3StartProfile)
 b3EndRegion = region(point = [0in, -3.69in], sketch = b3EndProfile)
-export backTransverseBrace3 = loft([b3StartRegion, b3EndRegion], vDegree = 1, bezApproximateRational = true)
+backTransverseBrace3 = loft([b3StartRegion, b3EndRegion], vDegree = 1, bezApproximateRational = true)
   |> appearance(color = backTransverseBraceWoodColor, metalness = 0, roughness = 78)
 
-// Brace 4: lower bout near tail block.
 b4StartProfile = sketch(on = offsetPlane(XZ, offset = 10.41in)) {
   bottomLeft = line(start = [var -7.31in, var -4.13in], end = [var -0.54in, var -4.13in])
   notchLeft = line(start = [var -0.54in, var -4.13in], end = [var -0.54in, var -3.95in])
@@ -467,14 +540,44 @@ b4EndProfile = sketch(on = offsetPlane(XZ, offset = 9.99in)) {
 
 b4StartRegion = region(point = [0in, -3.76in], sketch = b4StartProfile)
 b4EndRegion = region(point = [0in, -3.75in], sketch = b4EndProfile)
-export backTransverseBrace4 = loft([b4StartRegion, b4EndRegion], vDegree = 1, bezApproximateRational = true)
+backTransverseBrace4 = loft([b4StartRegion, b4EndRegion], vDegree = 1, bezApproximateRational = true)
   |> appearance(color = backTransverseBraceWoodColor, metalness = 0, roughness = 78)
 
-hiddenB1StartProfile = hide(b1StartProfile)
-hiddenB1EndProfile = hide(b1EndProfile)
-hiddenB2StartProfile = hide(b2StartProfile)
-hiddenB2EndProfile = hide(b2EndProfile)
-hiddenB3StartProfile = hide(b3StartProfile)
-hiddenB3EndProfile = hide(b3EndProfile)
-hiddenB4StartProfile = hide(b4StartProfile)
-hiddenB4EndProfile = hide(b4EndProfile)
+hiddenBackSketches = hide([
+  backCenterGlueSeamBraceProfile,
+  backCenterGlueSeamBraceRegion,
+  b1StartProfile,
+  b1EndProfile,
+  b1StartRegion,
+  b1EndRegion,
+  b2StartProfile,
+  b2EndProfile,
+  b2StartRegion,
+  b2EndRegion,
+  b3StartProfile,
+  b3EndProfile,
+  b3StartRegion,
+  b3EndRegion,
+  b4StartProfile,
+  b4EndProfile,
+  b4StartRegion,
+  b4EndRegion
+])
+
+hiddenBackplate = hide(backplate)
+hiddenBackBinding = hide(backBinding)
+hiddenBackCenterGlueSeamBrace = hide(backCenterGlueSeamBrace)
+hiddenBackTransverseBrace1 = hide(backTransverseBrace1)
+hiddenBackTransverseBrace2 = hide(backTransverseBrace2)
+hiddenBackTransverseBrace3 = hide(backTransverseBrace3)
+hiddenBackTransverseBrace4 = hide(backTransverseBrace4)
+
+export backplateExport = hiddenBackplate
+export backBindingExport = hiddenBackBinding
+export backCenterGlueSeamBraceExport = hiddenBackCenterGlueSeamBrace
+export backTransverseBrace1Export = hiddenBackTransverseBrace1
+export backTransverseBrace2Export = hiddenBackTransverseBrace2
+export backTransverseBrace3Export = hiddenBackTransverseBrace3
+export backTransverseBrace4Export = hiddenBackTransverseBrace4
+
+0
