@@ -5,6 +5,7 @@
 import guitarOuterPlanSolid, guitarInnerPlanSolid from "guitar_outline.kcl"
 import sideBackProfilePrism from "guitar_side_profile.kcl"
 import backBindingProfilePrism from "guitar_top_binding_rabbet_profiles.kcl"
+import guitarLiningInnerPlanSolid from "guitar_kerfed_linings.kcl"
 
 bindingColor = "#f2ead1"
 walnutBackColor = "#5a2f1a"
@@ -88,6 +89,7 @@ backBraceFullHeight = 0.60in
 backBraceScallopLength = 4in
 backBraceScallopRise = 0.42in
 backBraceScallopRadius = 19.2576in
+backTransverseBrace4KerfTrimOverrun = 3.0in
 
 b1StartHalfSpan = 5.70in
 b1EndHalfSpan = 5.68in
@@ -97,6 +99,14 @@ b3StartHalfSpan = 7.16in
 b3EndHalfSpan = 7.12in
 b4StartHalfSpan = 7.31in
 b4EndHalfSpan = 7.32in
+b1StartTrimHalfSpan = b1StartHalfSpan + backTransverseBrace4KerfTrimOverrun
+b1EndTrimHalfSpan = b1EndHalfSpan + backTransverseBrace4KerfTrimOverrun
+b2StartTrimHalfSpan = b2StartHalfSpan + backTransverseBrace4KerfTrimOverrun
+b2EndTrimHalfSpan = b2EndHalfSpan + backTransverseBrace4KerfTrimOverrun
+b3StartTrimHalfSpan = b3StartHalfSpan + backTransverseBrace4KerfTrimOverrun
+b3EndTrimHalfSpan = b3EndHalfSpan + backTransverseBrace4KerfTrimOverrun
+b4StartTrimHalfSpan = b4StartHalfSpan + backTransverseBrace4KerfTrimOverrun
+b4EndTrimHalfSpan = b4EndHalfSpan + backTransverseBrace4KerfTrimOverrun
 
 b1StartBottomZ = -3.77in
 b1EndBottomZ = -3.75in
@@ -108,26 +118,36 @@ b4StartBottomZ = -4.13in
 b4EndBottomZ = -4.12in
 
 b1StartProfile = sketch(on = offsetPlane(XZ, offset = -2.99in)) {
-  bottomLeft = line(start = [var -5.70in, var -3.77in], end = [var -0.54in, var -3.77in])
+  bottomLeft = line(start = [var -8.70in, var -3.77in], end = [var -0.54in, var -3.77in])
   notchLeft = line(start = [var -0.54in, var -3.77in], end = [var -0.54in, var -3.59in])
   notchTop = line(start = [var -0.54in, var -3.59in], end = [var 0.54in, var -3.59in])
   notchRight = line(start = [var 0.54in, var -3.59in], end = [var 0.54in, var -3.77in])
-  bottomRight = line(start = [var 0.54in, var -3.77in], end = [var 5.70in, var -3.77in])
-  rightEnd = line(start = [var 5.70in, var -3.77in], end = [var 5.70in, var -3.59in])
+  bottomRight = line(start = [var 0.54in, var -3.77in], end = [var 8.70in, var -3.77in])
+  rightEnd = line(start = [var 8.70in, var -3.77in], end = [var 8.70in, var -3.59in])
+  rightExtensionTop = line(start = [var 8.70in, var -3.59in], end = [var 5.70in, var -3.59in])
   rightScallop = arc(start = [var 1.70in, var -3.17in], end = [var 5.70in, var -3.59in], center = [var 5.70in, var 15.67in])
   topFlat = line(start = [var 1.70in, var -3.17in], end = [var -1.70in, var -3.17in])
   leftScallop = arc(start = [var -5.70in, var -3.59in], end = [var -1.70in, var -3.17in], center = [var -5.70in, var 15.67in])
-  leftEnd = line(start = [var -5.70in, var -3.59in], end = [var -5.70in, var -3.77in])
+  leftExtensionTop = line(start = [var -5.70in, var -3.59in], end = [var -8.70in, var -3.59in])
+  leftEnd = line(start = [var -8.70in, var -3.59in], end = [var -8.70in, var -3.77in])
 
   coincident([bottomLeft.end, notchLeft.start])
   coincident([notchLeft.end, notchTop.start])
   coincident([notchTop.end, notchRight.start])
   coincident([notchRight.end, bottomRight.start])
   coincident([bottomRight.end, rightEnd.start])
-  coincident([rightEnd.end, rightScallop.end])
+  coincident([rightEnd.end, rightExtensionTop.start])
+  coincident([
+    rightExtensionTop.end,
+    rightScallop.end
+  ])
   coincident([rightScallop.start, topFlat.start])
   coincident([topFlat.end, leftScallop.end])
-  coincident([leftScallop.start, leftEnd.start])
+  coincident([
+    leftScallop.start,
+    leftExtensionTop.start
+  ])
+  coincident([leftExtensionTop.end, leftEnd.start])
   coincident([leftEnd.end, bottomLeft.start])
 
   horizontal(bottomLeft)
@@ -136,16 +156,26 @@ b1StartProfile = sketch(on = offsetPlane(XZ, offset = -2.99in)) {
   vertical(notchRight)
   horizontal(bottomRight)
   vertical(rightEnd)
+  horizontal(rightExtensionTop)
   horizontal(topFlat)
+  horizontal(leftExtensionTop)
   vertical(leftEnd)
 
-  horizontalDistance([bottomLeft.start, ORIGIN]) == b1StartHalfSpan
+  horizontalDistance([bottomLeft.start, ORIGIN]) == b1StartTrimHalfSpan
   verticalDistance([ORIGIN, bottomLeft.start]) == b1StartBottomZ
-  distance([bottomLeft.start, bottomLeft.end]) == b1StartHalfSpan - centerSeamNotchHalfWidth
+  distance([bottomLeft.start, bottomLeft.end]) == b1StartTrimHalfSpan - centerSeamNotchHalfWidth
   distance([notchLeft.start, notchLeft.end]) == centerSeamNotchHeight
   distance([notchTop.start, notchTop.end]) == centerSeamNotchHalfWidth * 2
-  distance([bottomRight.start, bottomRight.end]) == b1StartHalfSpan - centerSeamNotchHalfWidth
+  distance([bottomRight.start, bottomRight.end]) == b1StartTrimHalfSpan - centerSeamNotchHalfWidth
   distance([rightEnd.start, rightEnd.end]) == backBraceEndHeight
+  horizontalDistance([
+  rightExtensionTop.end,
+  rightExtensionTop.start
+]) == backTransverseBrace4KerfTrimOverrun
+  horizontalDistance([
+  leftExtensionTop.end,
+  leftExtensionTop.start
+]) == backTransverseBrace4KerfTrimOverrun
   distance([leftEnd.start, leftEnd.end]) == backBraceEndHeight
   horizontalDistance([rightScallop.start, rightScallop.end]) == backBraceScallopLength
   verticalDistance([rightScallop.end, rightScallop.start]) == backBraceScallopRise
@@ -160,26 +190,36 @@ b1StartProfile = sketch(on = offsetPlane(XZ, offset = -2.99in)) {
 }
 
 b1EndProfile = sketch(on = offsetPlane(XZ, offset = -3.41in)) {
-  bottomLeft = line(start = [var -5.68in, var -3.75in], end = [var -0.54in, var -3.75in])
+  bottomLeft = line(start = [var -8.68in, var -3.75in], end = [var -0.54in, var -3.75in])
   notchLeft = line(start = [var -0.54in, var -3.75in], end = [var -0.54in, var -3.57in])
   notchTop = line(start = [var -0.54in, var -3.57in], end = [var 0.54in, var -3.57in])
   notchRight = line(start = [var 0.54in, var -3.57in], end = [var 0.54in, var -3.75in])
-  bottomRight = line(start = [var 0.54in, var -3.75in], end = [var 5.68in, var -3.75in])
-  rightEnd = line(start = [var 5.68in, var -3.75in], end = [var 5.68in, var -3.57in])
+  bottomRight = line(start = [var 0.54in, var -3.75in], end = [var 8.68in, var -3.75in])
+  rightEnd = line(start = [var 8.68in, var -3.75in], end = [var 8.68in, var -3.57in])
+  rightExtensionTop = line(start = [var 8.68in, var -3.57in], end = [var 5.68in, var -3.57in])
   rightScallop = arc(start = [var 1.68in, var -3.15in], end = [var 5.68in, var -3.57in], center = [var 5.68in, var 15.69in])
   topFlat = line(start = [var 1.68in, var -3.15in], end = [var -1.68in, var -3.15in])
   leftScallop = arc(start = [var -5.68in, var -3.57in], end = [var -1.68in, var -3.15in], center = [var -5.68in, var 15.69in])
-  leftEnd = line(start = [var -5.68in, var -3.57in], end = [var -5.68in, var -3.75in])
+  leftExtensionTop = line(start = [var -5.68in, var -3.57in], end = [var -8.68in, var -3.57in])
+  leftEnd = line(start = [var -8.68in, var -3.57in], end = [var -8.68in, var -3.75in])
 
   coincident([bottomLeft.end, notchLeft.start])
   coincident([notchLeft.end, notchTop.start])
   coincident([notchTop.end, notchRight.start])
   coincident([notchRight.end, bottomRight.start])
   coincident([bottomRight.end, rightEnd.start])
-  coincident([rightEnd.end, rightScallop.end])
+  coincident([rightEnd.end, rightExtensionTop.start])
+  coincident([
+    rightExtensionTop.end,
+    rightScallop.end
+  ])
   coincident([rightScallop.start, topFlat.start])
   coincident([topFlat.end, leftScallop.end])
-  coincident([leftScallop.start, leftEnd.start])
+  coincident([
+    leftScallop.start,
+    leftExtensionTop.start
+  ])
+  coincident([leftExtensionTop.end, leftEnd.start])
   coincident([leftEnd.end, bottomLeft.start])
 
   horizontal(bottomLeft)
@@ -188,16 +228,26 @@ b1EndProfile = sketch(on = offsetPlane(XZ, offset = -3.41in)) {
   vertical(notchRight)
   horizontal(bottomRight)
   vertical(rightEnd)
+  horizontal(rightExtensionTop)
   horizontal(topFlat)
+  horizontal(leftExtensionTop)
   vertical(leftEnd)
 
-  horizontalDistance([bottomLeft.start, ORIGIN]) == b1EndHalfSpan
+  horizontalDistance([bottomLeft.start, ORIGIN]) == b1EndTrimHalfSpan
   verticalDistance([ORIGIN, bottomLeft.start]) == b1EndBottomZ
-  distance([bottomLeft.start, bottomLeft.end]) == b1EndHalfSpan - centerSeamNotchHalfWidth
+  distance([bottomLeft.start, bottomLeft.end]) == b1EndTrimHalfSpan - centerSeamNotchHalfWidth
   distance([notchLeft.start, notchLeft.end]) == centerSeamNotchHeight
   distance([notchTop.start, notchTop.end]) == centerSeamNotchHalfWidth * 2
-  distance([bottomRight.start, bottomRight.end]) == b1EndHalfSpan - centerSeamNotchHalfWidth
+  distance([bottomRight.start, bottomRight.end]) == b1EndTrimHalfSpan - centerSeamNotchHalfWidth
   distance([rightEnd.start, rightEnd.end]) == backBraceEndHeight
+  horizontalDistance([
+  rightExtensionTop.end,
+  rightExtensionTop.start
+]) == backTransverseBrace4KerfTrimOverrun
+  horizontalDistance([
+  leftExtensionTop.end,
+  leftExtensionTop.start
+]) == backTransverseBrace4KerfTrimOverrun
   distance([leftEnd.start, leftEnd.end]) == backBraceEndHeight
   horizontalDistance([rightScallop.start, rightScallop.end]) == backBraceScallopLength
   verticalDistance([rightScallop.end, rightScallop.start]) == backBraceScallopRise
@@ -213,30 +263,46 @@ b1EndProfile = sketch(on = offsetPlane(XZ, offset = -3.41in)) {
 
 b1StartRegion = region(point = [0in, -3.38in], sketch = b1StartProfile)
 b1EndRegion = region(point = [0in, -3.36in], sketch = b1EndProfile)
-backTransverseBrace1 = loft([b1StartRegion, b1EndRegion], vDegree = 1, bezApproximateRational = true)
+backTransverseBrace1 = intersect(
+  [
+    loft([b1StartRegion, b1EndRegion], vDegree = 1, bezApproximateRational = true),
+    clone(guitarLiningInnerPlanSolid)
+  ],
+  legacyMethod = true,
+)
   |> appearance(color = backTransverseBraceWoodColor, metalness = 0, roughness = 78)
 
 b2StartProfile = sketch(on = offsetPlane(XZ, offset = 1.61in)) {
-  bottomLeft = line(start = [var -5.37in, var -3.95in], end = [var -0.54in, var -3.95in])
+  bottomLeft = line(start = [var -8.37in, var -3.95in], end = [var -0.54in, var -3.95in])
   notchLeft = line(start = [var -0.54in, var -3.95in], end = [var -0.54in, var -3.77in])
   notchTop = line(start = [var -0.54in, var -3.77in], end = [var 0.54in, var -3.77in])
   notchRight = line(start = [var 0.54in, var -3.77in], end = [var 0.54in, var -3.95in])
-  bottomRight = line(start = [var 0.54in, var -3.95in], end = [var 5.37in, var -3.95in])
-  rightEnd = line(start = [var 5.37in, var -3.95in], end = [var 5.37in, var -3.77in])
+  bottomRight = line(start = [var 0.54in, var -3.95in], end = [var 8.37in, var -3.95in])
+  rightEnd = line(start = [var 8.37in, var -3.95in], end = [var 8.37in, var -3.77in])
+  rightExtensionTop = line(start = [var 8.37in, var -3.77in], end = [var 5.37in, var -3.77in])
   rightScallop = arc(start = [var 1.37in, var -3.35in], end = [var 5.37in, var -3.77in], center = [var 5.37in, var 15.49in])
   topFlat = line(start = [var 1.37in, var -3.35in], end = [var -1.37in, var -3.35in])
   leftScallop = arc(start = [var -5.37in, var -3.77in], end = [var -1.37in, var -3.35in], center = [var -5.37in, var 15.49in])
-  leftEnd = line(start = [var -5.37in, var -3.77in], end = [var -5.37in, var -3.95in])
+  leftExtensionTop = line(start = [var -5.37in, var -3.77in], end = [var -8.37in, var -3.77in])
+  leftEnd = line(start = [var -8.37in, var -3.77in], end = [var -8.37in, var -3.95in])
 
   coincident([bottomLeft.end, notchLeft.start])
   coincident([notchLeft.end, notchTop.start])
   coincident([notchTop.end, notchRight.start])
   coincident([notchRight.end, bottomRight.start])
   coincident([bottomRight.end, rightEnd.start])
-  coincident([rightEnd.end, rightScallop.end])
+  coincident([rightEnd.end, rightExtensionTop.start])
+  coincident([
+    rightExtensionTop.end,
+    rightScallop.end
+  ])
   coincident([rightScallop.start, topFlat.start])
   coincident([topFlat.end, leftScallop.end])
-  coincident([leftScallop.start, leftEnd.start])
+  coincident([
+    leftScallop.start,
+    leftExtensionTop.start
+  ])
+  coincident([leftExtensionTop.end, leftEnd.start])
   coincident([leftEnd.end, bottomLeft.start])
 
   horizontal(bottomLeft)
@@ -245,16 +311,26 @@ b2StartProfile = sketch(on = offsetPlane(XZ, offset = 1.61in)) {
   vertical(notchRight)
   horizontal(bottomRight)
   vertical(rightEnd)
+  horizontal(rightExtensionTop)
   horizontal(topFlat)
+  horizontal(leftExtensionTop)
   vertical(leftEnd)
 
-  horizontalDistance([bottomLeft.start, ORIGIN]) == b2StartHalfSpan
+  horizontalDistance([bottomLeft.start, ORIGIN]) == b2StartTrimHalfSpan
   verticalDistance([ORIGIN, bottomLeft.start]) == b2StartBottomZ
-  distance([bottomLeft.start, bottomLeft.end]) == b2StartHalfSpan - centerSeamNotchHalfWidth
+  distance([bottomLeft.start, bottomLeft.end]) == b2StartTrimHalfSpan - centerSeamNotchHalfWidth
   distance([notchLeft.start, notchLeft.end]) == centerSeamNotchHeight
   distance([notchTop.start, notchTop.end]) == centerSeamNotchHalfWidth * 2
-  distance([bottomRight.start, bottomRight.end]) == b2StartHalfSpan - centerSeamNotchHalfWidth
+  distance([bottomRight.start, bottomRight.end]) == b2StartTrimHalfSpan - centerSeamNotchHalfWidth
   distance([rightEnd.start, rightEnd.end]) == backBraceEndHeight
+  horizontalDistance([
+  rightExtensionTop.end,
+  rightExtensionTop.start
+]) == backTransverseBrace4KerfTrimOverrun
+  horizontalDistance([
+  leftExtensionTop.end,
+  leftExtensionTop.start
+]) == backTransverseBrace4KerfTrimOverrun
   distance([leftEnd.start, leftEnd.end]) == backBraceEndHeight
   horizontalDistance([rightScallop.start, rightScallop.end]) == backBraceScallopLength
   verticalDistance([rightScallop.end, rightScallop.start]) == backBraceScallopRise
@@ -269,26 +345,36 @@ b2StartProfile = sketch(on = offsetPlane(XZ, offset = 1.61in)) {
 }
 
 b2EndProfile = sketch(on = offsetPlane(XZ, offset = 1.19in)) {
-  bottomLeft = line(start = [var -5.32in, var -3.94in], end = [var -0.54in, var -3.94in])
+  bottomLeft = line(start = [var -8.32in, var -3.94in], end = [var -0.54in, var -3.94in])
   notchLeft = line(start = [var -0.54in, var -3.94in], end = [var -0.54in, var -3.76in])
   notchTop = line(start = [var -0.54in, var -3.76in], end = [var 0.54in, var -3.76in])
   notchRight = line(start = [var 0.54in, var -3.76in], end = [var 0.54in, var -3.94in])
-  bottomRight = line(start = [var 0.54in, var -3.94in], end = [var 5.32in, var -3.94in])
-  rightEnd = line(start = [var 5.32in, var -3.94in], end = [var 5.32in, var -3.76in])
+  bottomRight = line(start = [var 0.54in, var -3.94in], end = [var 8.32in, var -3.94in])
+  rightEnd = line(start = [var 8.32in, var -3.94in], end = [var 8.32in, var -3.76in])
+  rightExtensionTop = line(start = [var 8.32in, var -3.76in], end = [var 5.32in, var -3.76in])
   rightScallop = arc(start = [var 1.32in, var -3.34in], end = [var 5.32in, var -3.76in], center = [var 5.32in, var 15.50in])
   topFlat = line(start = [var 1.32in, var -3.34in], end = [var -1.32in, var -3.34in])
   leftScallop = arc(start = [var -5.32in, var -3.76in], end = [var -1.32in, var -3.34in], center = [var -5.32in, var 15.50in])
-  leftEnd = line(start = [var -5.32in, var -3.76in], end = [var -5.32in, var -3.94in])
+  leftExtensionTop = line(start = [var -5.32in, var -3.76in], end = [var -8.32in, var -3.76in])
+  leftEnd = line(start = [var -8.32in, var -3.76in], end = [var -8.32in, var -3.94in])
 
   coincident([bottomLeft.end, notchLeft.start])
   coincident([notchLeft.end, notchTop.start])
   coincident([notchTop.end, notchRight.start])
   coincident([notchRight.end, bottomRight.start])
   coincident([bottomRight.end, rightEnd.start])
-  coincident([rightEnd.end, rightScallop.end])
+  coincident([rightEnd.end, rightExtensionTop.start])
+  coincident([
+    rightExtensionTop.end,
+    rightScallop.end
+  ])
   coincident([rightScallop.start, topFlat.start])
   coincident([topFlat.end, leftScallop.end])
-  coincident([leftScallop.start, leftEnd.start])
+  coincident([
+    leftScallop.start,
+    leftExtensionTop.start
+  ])
+  coincident([leftExtensionTop.end, leftEnd.start])
   coincident([leftEnd.end, bottomLeft.start])
 
   horizontal(bottomLeft)
@@ -297,16 +383,26 @@ b2EndProfile = sketch(on = offsetPlane(XZ, offset = 1.19in)) {
   vertical(notchRight)
   horizontal(bottomRight)
   vertical(rightEnd)
+  horizontal(rightExtensionTop)
   horizontal(topFlat)
+  horizontal(leftExtensionTop)
   vertical(leftEnd)
 
-  horizontalDistance([bottomLeft.start, ORIGIN]) == b2EndHalfSpan
+  horizontalDistance([bottomLeft.start, ORIGIN]) == b2EndTrimHalfSpan
   verticalDistance([ORIGIN, bottomLeft.start]) == b2EndBottomZ
-  distance([bottomLeft.start, bottomLeft.end]) == b2EndHalfSpan - centerSeamNotchHalfWidth
+  distance([bottomLeft.start, bottomLeft.end]) == b2EndTrimHalfSpan - centerSeamNotchHalfWidth
   distance([notchLeft.start, notchLeft.end]) == centerSeamNotchHeight
   distance([notchTop.start, notchTop.end]) == centerSeamNotchHalfWidth * 2
-  distance([bottomRight.start, bottomRight.end]) == b2EndHalfSpan - centerSeamNotchHalfWidth
+  distance([bottomRight.start, bottomRight.end]) == b2EndTrimHalfSpan - centerSeamNotchHalfWidth
   distance([rightEnd.start, rightEnd.end]) == backBraceEndHeight
+  horizontalDistance([
+  rightExtensionTop.end,
+  rightExtensionTop.start
+]) == backTransverseBrace4KerfTrimOverrun
+  horizontalDistance([
+  leftExtensionTop.end,
+  leftExtensionTop.start
+]) == backTransverseBrace4KerfTrimOverrun
   distance([leftEnd.start, leftEnd.end]) == backBraceEndHeight
   horizontalDistance([rightScallop.start, rightScallop.end]) == backBraceScallopLength
   verticalDistance([rightScallop.end, rightScallop.start]) == backBraceScallopRise
@@ -322,30 +418,46 @@ b2EndProfile = sketch(on = offsetPlane(XZ, offset = 1.19in)) {
 
 b2StartRegion = region(point = [0in, -3.58in], sketch = b2StartProfile)
 b2EndRegion = region(point = [0in, -3.57in], sketch = b2EndProfile)
-backTransverseBrace2 = loft([b2StartRegion, b2EndRegion], vDegree = 1, bezApproximateRational = true)
+backTransverseBrace2 = intersect(
+  [
+    loft([b2StartRegion, b2EndRegion], vDegree = 1, bezApproximateRational = true),
+    clone(guitarLiningInnerPlanSolid)
+  ],
+  legacyMethod = true,
+)
   |> appearance(color = backTransverseBraceWoodColor, metalness = 0, roughness = 78)
 
 b3StartProfile = sketch(on = offsetPlane(XZ, offset = 6.01in)) {
-  bottomLeft = line(start = [var -7.16in, var -4.07in], end = [var -0.54in, var -4.07in])
+  bottomLeft = line(start = [var -10.16in, var -4.07in], end = [var -0.54in, var -4.07in])
   notchLeft = line(start = [var -0.54in, var -4.07in], end = [var -0.54in, var -3.89in])
   notchTop = line(start = [var -0.54in, var -3.89in], end = [var 0.54in, var -3.89in])
   notchRight = line(start = [var 0.54in, var -3.89in], end = [var 0.54in, var -4.07in])
-  bottomRight = line(start = [var 0.54in, var -4.07in], end = [var 7.16in, var -4.07in])
-  rightEnd = line(start = [var 7.16in, var -4.07in], end = [var 7.16in, var -3.89in])
+  bottomRight = line(start = [var 0.54in, var -4.07in], end = [var 10.16in, var -4.07in])
+  rightEnd = line(start = [var 10.16in, var -4.07in], end = [var 10.16in, var -3.89in])
+  rightExtensionTop = line(start = [var 10.16in, var -3.89in], end = [var 7.16in, var -3.89in])
   rightScallop = arc(start = [var 3.16in, var -3.47in], end = [var 7.16in, var -3.89in], center = [var 7.16in, var 15.37in])
   topFlat = line(start = [var 3.16in, var -3.47in], end = [var -3.16in, var -3.47in])
   leftScallop = arc(start = [var -7.16in, var -3.89in], end = [var -3.16in, var -3.47in], center = [var -7.16in, var 15.37in])
-  leftEnd = line(start = [var -7.16in, var -3.89in], end = [var -7.16in, var -4.07in])
+  leftExtensionTop = line(start = [var -7.16in, var -3.89in], end = [var -10.16in, var -3.89in])
+  leftEnd = line(start = [var -10.16in, var -3.89in], end = [var -10.16in, var -4.07in])
 
   coincident([bottomLeft.end, notchLeft.start])
   coincident([notchLeft.end, notchTop.start])
   coincident([notchTop.end, notchRight.start])
   coincident([notchRight.end, bottomRight.start])
   coincident([bottomRight.end, rightEnd.start])
-  coincident([rightEnd.end, rightScallop.end])
+  coincident([rightEnd.end, rightExtensionTop.start])
+  coincident([
+    rightExtensionTop.end,
+    rightScallop.end
+  ])
   coincident([rightScallop.start, topFlat.start])
   coincident([topFlat.end, leftScallop.end])
-  coincident([leftScallop.start, leftEnd.start])
+  coincident([
+    leftScallop.start,
+    leftExtensionTop.start
+  ])
+  coincident([leftExtensionTop.end, leftEnd.start])
   coincident([leftEnd.end, bottomLeft.start])
 
   horizontal(bottomLeft)
@@ -354,16 +466,26 @@ b3StartProfile = sketch(on = offsetPlane(XZ, offset = 6.01in)) {
   vertical(notchRight)
   horizontal(bottomRight)
   vertical(rightEnd)
+  horizontal(rightExtensionTop)
   horizontal(topFlat)
+  horizontal(leftExtensionTop)
   vertical(leftEnd)
 
-  horizontalDistance([bottomLeft.start, ORIGIN]) == b3StartHalfSpan
+  horizontalDistance([bottomLeft.start, ORIGIN]) == b3StartTrimHalfSpan
   verticalDistance([ORIGIN, bottomLeft.start]) == b3StartBottomZ
-  distance([bottomLeft.start, bottomLeft.end]) == b3StartHalfSpan - centerSeamNotchHalfWidth
+  distance([bottomLeft.start, bottomLeft.end]) == b3StartTrimHalfSpan - centerSeamNotchHalfWidth
   distance([notchLeft.start, notchLeft.end]) == centerSeamNotchHeight
   distance([notchTop.start, notchTop.end]) == centerSeamNotchHalfWidth * 2
-  distance([bottomRight.start, bottomRight.end]) == b3StartHalfSpan - centerSeamNotchHalfWidth
+  distance([bottomRight.start, bottomRight.end]) == b3StartTrimHalfSpan - centerSeamNotchHalfWidth
   distance([rightEnd.start, rightEnd.end]) == backBraceEndHeight
+  horizontalDistance([
+  rightExtensionTop.end,
+  rightExtensionTop.start
+]) == backTransverseBrace4KerfTrimOverrun
+  horizontalDistance([
+  leftExtensionTop.end,
+  leftExtensionTop.start
+]) == backTransverseBrace4KerfTrimOverrun
   distance([leftEnd.start, leftEnd.end]) == backBraceEndHeight
   horizontalDistance([rightScallop.start, rightScallop.end]) == backBraceScallopLength
   verticalDistance([rightScallop.end, rightScallop.start]) == backBraceScallopRise
@@ -378,26 +500,36 @@ b3StartProfile = sketch(on = offsetPlane(XZ, offset = 6.01in)) {
 }
 
 b3EndProfile = sketch(on = offsetPlane(XZ, offset = 5.59in)) {
-  bottomLeft = line(start = [var -7.12in, var -4.06in], end = [var -0.54in, var -4.06in])
+  bottomLeft = line(start = [var -10.12in, var -4.06in], end = [var -0.54in, var -4.06in])
   notchLeft = line(start = [var -0.54in, var -4.06in], end = [var -0.54in, var -3.88in])
   notchTop = line(start = [var -0.54in, var -3.88in], end = [var 0.54in, var -3.88in])
   notchRight = line(start = [var 0.54in, var -3.88in], end = [var 0.54in, var -4.06in])
-  bottomRight = line(start = [var 0.54in, var -4.06in], end = [var 7.12in, var -4.06in])
-  rightEnd = line(start = [var 7.12in, var -4.06in], end = [var 7.12in, var -3.88in])
+  bottomRight = line(start = [var 0.54in, var -4.06in], end = [var 10.12in, var -4.06in])
+  rightEnd = line(start = [var 10.12in, var -4.06in], end = [var 10.12in, var -3.88in])
+  rightExtensionTop = line(start = [var 10.12in, var -3.88in], end = [var 7.12in, var -3.88in])
   rightScallop = arc(start = [var 3.12in, var -3.46in], end = [var 7.12in, var -3.88in], center = [var 7.12in, var 15.38in])
   topFlat = line(start = [var 3.12in, var -3.46in], end = [var -3.12in, var -3.46in])
   leftScallop = arc(start = [var -7.12in, var -3.88in], end = [var -3.12in, var -3.46in], center = [var -7.12in, var 15.38in])
-  leftEnd = line(start = [var -7.12in, var -3.88in], end = [var -7.12in, var -4.06in])
+  leftExtensionTop = line(start = [var -7.12in, var -3.88in], end = [var -10.12in, var -3.88in])
+  leftEnd = line(start = [var -10.12in, var -3.88in], end = [var -10.12in, var -4.06in])
 
   coincident([bottomLeft.end, notchLeft.start])
   coincident([notchLeft.end, notchTop.start])
   coincident([notchTop.end, notchRight.start])
   coincident([notchRight.end, bottomRight.start])
   coincident([bottomRight.end, rightEnd.start])
-  coincident([rightEnd.end, rightScallop.end])
+  coincident([rightEnd.end, rightExtensionTop.start])
+  coincident([
+    rightExtensionTop.end,
+    rightScallop.end
+  ])
   coincident([rightScallop.start, topFlat.start])
   coincident([topFlat.end, leftScallop.end])
-  coincident([leftScallop.start, leftEnd.start])
+  coincident([
+    leftScallop.start,
+    leftExtensionTop.start
+  ])
+  coincident([leftExtensionTop.end, leftEnd.start])
   coincident([leftEnd.end, bottomLeft.start])
 
   horizontal(bottomLeft)
@@ -406,16 +538,26 @@ b3EndProfile = sketch(on = offsetPlane(XZ, offset = 5.59in)) {
   vertical(notchRight)
   horizontal(bottomRight)
   vertical(rightEnd)
+  horizontal(rightExtensionTop)
   horizontal(topFlat)
+  horizontal(leftExtensionTop)
   vertical(leftEnd)
 
-  horizontalDistance([bottomLeft.start, ORIGIN]) == b3EndHalfSpan
+  horizontalDistance([bottomLeft.start, ORIGIN]) == b3EndTrimHalfSpan
   verticalDistance([ORIGIN, bottomLeft.start]) == b3EndBottomZ
-  distance([bottomLeft.start, bottomLeft.end]) == b3EndHalfSpan - centerSeamNotchHalfWidth
+  distance([bottomLeft.start, bottomLeft.end]) == b3EndTrimHalfSpan - centerSeamNotchHalfWidth
   distance([notchLeft.start, notchLeft.end]) == centerSeamNotchHeight
   distance([notchTop.start, notchTop.end]) == centerSeamNotchHalfWidth * 2
-  distance([bottomRight.start, bottomRight.end]) == b3EndHalfSpan - centerSeamNotchHalfWidth
+  distance([bottomRight.start, bottomRight.end]) == b3EndTrimHalfSpan - centerSeamNotchHalfWidth
   distance([rightEnd.start, rightEnd.end]) == backBraceEndHeight
+  horizontalDistance([
+  rightExtensionTop.end,
+  rightExtensionTop.start
+]) == backTransverseBrace4KerfTrimOverrun
+  horizontalDistance([
+  leftExtensionTop.end,
+  leftExtensionTop.start
+]) == backTransverseBrace4KerfTrimOverrun
   distance([leftEnd.start, leftEnd.end]) == backBraceEndHeight
   horizontalDistance([rightScallop.start, rightScallop.end]) == backBraceScallopLength
   verticalDistance([rightScallop.end, rightScallop.start]) == backBraceScallopRise
@@ -431,30 +573,46 @@ b3EndProfile = sketch(on = offsetPlane(XZ, offset = 5.59in)) {
 
 b3StartRegion = region(point = [0in, -3.70in], sketch = b3StartProfile)
 b3EndRegion = region(point = [0in, -3.69in], sketch = b3EndProfile)
-backTransverseBrace3 = loft([b3StartRegion, b3EndRegion], vDegree = 1, bezApproximateRational = true)
+backTransverseBrace3 = intersect(
+  [
+    loft([b3StartRegion, b3EndRegion], vDegree = 1, bezApproximateRational = true),
+    clone(guitarLiningInnerPlanSolid)
+  ],
+  legacyMethod = true,
+)
   |> appearance(color = backTransverseBraceWoodColor, metalness = 0, roughness = 78)
 
 b4StartProfile = sketch(on = offsetPlane(XZ, offset = 10.41in)) {
-  bottomLeft = line(start = [var -7.31in, var -4.13in], end = [var -0.54in, var -4.13in])
+  bottomLeft = line(start = [var -7.81in, var -4.13in], end = [var -0.54in, var -4.13in])
   notchLeft = line(start = [var -0.54in, var -4.13in], end = [var -0.54in, var -3.95in])
   notchTop = line(start = [var -0.54in, var -3.95in], end = [var 0.54in, var -3.95in])
   notchRight = line(start = [var 0.54in, var -3.95in], end = [var 0.54in, var -4.13in])
-  bottomRight = line(start = [var 0.54in, var -4.13in], end = [var 7.31in, var -4.13in])
-  rightEnd = line(start = [var 7.31in, var -4.13in], end = [var 7.31in, var -3.95in])
+  bottomRight = line(start = [var 0.54in, var -4.13in], end = [var 7.81in, var -4.13in])
+  rightEnd = line(start = [var 7.81in, var -4.13in], end = [var 7.81in, var -3.95in])
+  rightExtensionTop = line(start = [var 7.81in, var -3.95in], end = [var 7.31in, var -3.95in])
   rightScallop = arc(start = [var 3.31in, var -3.53in], end = [var 7.31in, var -3.95in], center = [var 7.31in, var 15.31in])
   topFlat = line(start = [var 3.31in, var -3.53in], end = [var -3.31in, var -3.53in])
   leftScallop = arc(start = [var -7.31in, var -3.95in], end = [var -3.31in, var -3.53in], center = [var -7.31in, var 15.31in])
-  leftEnd = line(start = [var -7.31in, var -3.95in], end = [var -7.31in, var -4.13in])
+  leftExtensionTop = line(start = [var -7.31in, var -3.95in], end = [var -7.81in, var -3.95in])
+  leftEnd = line(start = [var -7.81in, var -3.95in], end = [var -7.81in, var -4.13in])
 
   coincident([bottomLeft.end, notchLeft.start])
   coincident([notchLeft.end, notchTop.start])
   coincident([notchTop.end, notchRight.start])
   coincident([notchRight.end, bottomRight.start])
   coincident([bottomRight.end, rightEnd.start])
-  coincident([rightEnd.end, rightScallop.end])
+  coincident([rightEnd.end, rightExtensionTop.start])
+  coincident([
+    rightExtensionTop.end,
+    rightScallop.end
+  ])
   coincident([rightScallop.start, topFlat.start])
   coincident([topFlat.end, leftScallop.end])
-  coincident([leftScallop.start, leftEnd.start])
+  coincident([
+    leftScallop.start,
+    leftExtensionTop.start
+  ])
+  coincident([leftExtensionTop.end, leftEnd.start])
   coincident([leftEnd.end, bottomLeft.start])
 
   horizontal(bottomLeft)
@@ -463,16 +621,26 @@ b4StartProfile = sketch(on = offsetPlane(XZ, offset = 10.41in)) {
   vertical(notchRight)
   horizontal(bottomRight)
   vertical(rightEnd)
+  horizontal(rightExtensionTop)
   horizontal(topFlat)
+  horizontal(leftExtensionTop)
   vertical(leftEnd)
 
-  horizontalDistance([bottomLeft.start, ORIGIN]) == b4StartHalfSpan
+  horizontalDistance([bottomLeft.start, ORIGIN]) == b4StartTrimHalfSpan
   verticalDistance([ORIGIN, bottomLeft.start]) == b4StartBottomZ
-  distance([bottomLeft.start, bottomLeft.end]) == b4StartHalfSpan - centerSeamNotchHalfWidth
+  distance([bottomLeft.start, bottomLeft.end]) == b4StartTrimHalfSpan - centerSeamNotchHalfWidth
   distance([notchLeft.start, notchLeft.end]) == centerSeamNotchHeight
   distance([notchTop.start, notchTop.end]) == centerSeamNotchHalfWidth * 2
-  distance([bottomRight.start, bottomRight.end]) == b4StartHalfSpan - centerSeamNotchHalfWidth
+  distance([bottomRight.start, bottomRight.end]) == b4StartTrimHalfSpan - centerSeamNotchHalfWidth
   distance([rightEnd.start, rightEnd.end]) == backBraceEndHeight
+  horizontalDistance([
+  rightExtensionTop.end,
+  rightExtensionTop.start
+]) == backTransverseBrace4KerfTrimOverrun
+  horizontalDistance([
+  leftExtensionTop.end,
+  leftExtensionTop.start
+]) == backTransverseBrace4KerfTrimOverrun
   distance([leftEnd.start, leftEnd.end]) == backBraceEndHeight
   horizontalDistance([rightScallop.start, rightScallop.end]) == backBraceScallopLength
   verticalDistance([rightScallop.end, rightScallop.start]) == backBraceScallopRise
@@ -487,26 +655,36 @@ b4StartProfile = sketch(on = offsetPlane(XZ, offset = 10.41in)) {
 }
 
 b4EndProfile = sketch(on = offsetPlane(XZ, offset = 9.99in)) {
-  bottomLeft = line(start = [var -7.32in, var -4.12in], end = [var -0.54in, var -4.12in])
+  bottomLeft = line(start = [var -7.82in, var -4.12in], end = [var -0.54in, var -4.12in])
   notchLeft = line(start = [var -0.54in, var -4.12in], end = [var -0.54in, var -3.94in])
   notchTop = line(start = [var -0.54in, var -3.94in], end = [var 0.54in, var -3.94in])
   notchRight = line(start = [var 0.54in, var -3.94in], end = [var 0.54in, var -4.12in])
-  bottomRight = line(start = [var 0.54in, var -4.12in], end = [var 7.32in, var -4.12in])
-  rightEnd = line(start = [var 7.32in, var -4.12in], end = [var 7.32in, var -3.94in])
+  bottomRight = line(start = [var 0.54in, var -4.12in], end = [var 7.82in, var -4.12in])
+  rightEnd = line(start = [var 7.82in, var -4.12in], end = [var 7.82in, var -3.94in])
+  rightExtensionTop = line(start = [var 7.82in, var -3.94in], end = [var 7.32in, var -3.94in])
   rightScallop = arc(start = [var 3.32in, var -3.52in], end = [var 7.32in, var -3.94in], center = [var 7.32in, var 15.32in])
   topFlat = line(start = [var 3.32in, var -3.52in], end = [var -3.32in, var -3.52in])
   leftScallop = arc(start = [var -7.32in, var -3.94in], end = [var -3.32in, var -3.52in], center = [var -7.32in, var 15.32in])
-  leftEnd = line(start = [var -7.32in, var -3.94in], end = [var -7.32in, var -4.12in])
+  leftExtensionTop = line(start = [var -7.32in, var -3.94in], end = [var -7.82in, var -3.94in])
+  leftEnd = line(start = [var -7.82in, var -3.94in], end = [var -7.82in, var -4.12in])
 
   coincident([bottomLeft.end, notchLeft.start])
   coincident([notchLeft.end, notchTop.start])
   coincident([notchTop.end, notchRight.start])
   coincident([notchRight.end, bottomRight.start])
   coincident([bottomRight.end, rightEnd.start])
-  coincident([rightEnd.end, rightScallop.end])
+  coincident([rightEnd.end, rightExtensionTop.start])
+  coincident([
+    rightExtensionTop.end,
+    rightScallop.end
+  ])
   coincident([rightScallop.start, topFlat.start])
   coincident([topFlat.end, leftScallop.end])
-  coincident([leftScallop.start, leftEnd.start])
+  coincident([
+    leftScallop.start,
+    leftExtensionTop.start
+  ])
+  coincident([leftExtensionTop.end, leftEnd.start])
   coincident([leftEnd.end, bottomLeft.start])
 
   horizontal(bottomLeft)
@@ -515,16 +693,26 @@ b4EndProfile = sketch(on = offsetPlane(XZ, offset = 9.99in)) {
   vertical(notchRight)
   horizontal(bottomRight)
   vertical(rightEnd)
+  horizontal(rightExtensionTop)
   horizontal(topFlat)
+  horizontal(leftExtensionTop)
   vertical(leftEnd)
 
-  horizontalDistance([bottomLeft.start, ORIGIN]) == b4EndHalfSpan
+  horizontalDistance([bottomLeft.start, ORIGIN]) == b4EndTrimHalfSpan
   verticalDistance([ORIGIN, bottomLeft.start]) == b4EndBottomZ
-  distance([bottomLeft.start, bottomLeft.end]) == b4EndHalfSpan - centerSeamNotchHalfWidth
+  distance([bottomLeft.start, bottomLeft.end]) == b4EndTrimHalfSpan - centerSeamNotchHalfWidth
   distance([notchLeft.start, notchLeft.end]) == centerSeamNotchHeight
   distance([notchTop.start, notchTop.end]) == centerSeamNotchHalfWidth * 2
-  distance([bottomRight.start, bottomRight.end]) == b4EndHalfSpan - centerSeamNotchHalfWidth
+  distance([bottomRight.start, bottomRight.end]) == b4EndTrimHalfSpan - centerSeamNotchHalfWidth
   distance([rightEnd.start, rightEnd.end]) == backBraceEndHeight
+  horizontalDistance([
+  rightExtensionTop.end,
+  rightExtensionTop.start
+]) == backTransverseBrace4KerfTrimOverrun
+  horizontalDistance([
+  leftExtensionTop.end,
+  leftExtensionTop.start
+]) == backTransverseBrace4KerfTrimOverrun
   distance([leftEnd.start, leftEnd.end]) == backBraceEndHeight
   horizontalDistance([rightScallop.start, rightScallop.end]) == backBraceScallopLength
   verticalDistance([rightScallop.end, rightScallop.start]) == backBraceScallopRise
@@ -540,7 +728,13 @@ b4EndProfile = sketch(on = offsetPlane(XZ, offset = 9.99in)) {
 
 b4StartRegion = region(point = [0in, -3.76in], sketch = b4StartProfile)
 b4EndRegion = region(point = [0in, -3.75in], sketch = b4EndProfile)
-backTransverseBrace4 = loft([b4StartRegion, b4EndRegion], vDegree = 1, bezApproximateRational = true)
+backTransverseBrace4 = intersect(
+  [
+    loft([b4StartRegion, b4EndRegion], vDegree = 1, bezApproximateRational = true),
+    clone(guitarLiningInnerPlanSolid)
+  ],
+  legacyMethod = true,
+)
   |> appearance(color = backTransverseBraceWoodColor, metalness = 0, roughness = 78)
 
 hiddenBackSketches = hide([

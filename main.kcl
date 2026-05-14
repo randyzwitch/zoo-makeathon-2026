@@ -15,17 +15,52 @@ import backTransverseBrace1Export as backTransverseBrace1, backTransverseBrace2E
 import bridgeExport as bridge, saddleExport as saddle, bridgePin1Export as bridgePin1, bridgePin2Export as bridgePin2, bridgePin3Export as bridgePin3, bridgePin4Export as bridgePin4, bridgePin5Export as bridgePin5, bridgePin6Export as bridgePin6 from "guitar_bridge.kcl"
 
 topShellBodies = [topSoundboard, topBindingTrimmed]
-topPrimaryBraceBodies = [xBraceBassPlanTrim, xBraceTreblePlanTrim, upperTransverseBrace, popsicleBrace]
-topSecondaryBraceBodies = [toneBarUpper, toneBarLower, topSideBrace1, topSideBrace2, topSideBrace3, topSideBrace4]
+topPrimaryBraceBodies = [
+  xBraceBassPlanTrim,
+  xBraceTreblePlanTrim,
+  upperTransverseBrace,
+  popsicleBrace
+]
+topSecondaryBraceBodies = [
+  toneBarUpper,
+  toneBarLower,
+  topSideBrace1,
+  topSideBrace2,
+  topSideBrace3,
+  topSideBrace4
+]
 topInternalBodies = [bridgePlate, soundholeReinforcement]
 
-rimStructureBodies = [rimSides, rimNeckBlock, rimTailBlock, rimSideBlocks]
-rimLiningBodies = [rimTopKerfedLining, rimBackKerfedLining]
+rimStructureBodies = [
+  rimSides,
+  rimNeckBlock,
+  rimTailBlock,
+  rimSideBlocks
+]
+rimLiningBodies = [
+  rimTopKerfedLining,
+  rimBackKerfedLining
+]
 
 backShellBodies = [backplate, backBinding]
-backBraceBodies = [backCenterGlueSeamBrace, backTransverseBrace1, backTransverseBrace2, backTransverseBrace3, backTransverseBrace4]
+backBraceBodies = [
+  backCenterGlueSeamBrace,
+  backTransverseBrace1,
+  backTransverseBrace2,
+  backTransverseBrace3,
+  backTransverseBrace4
+]
 
-bridgeBodies = [bridge, saddle, bridgePin1, bridgePin2, bridgePin3, bridgePin4, bridgePin5, bridgePin6]
+bridgeBodies = [
+  bridge,
+  saddle,
+  bridgePin1,
+  bridgePin2,
+  bridgePin3,
+  bridgePin4,
+  bridgePin5,
+  bridgePin6
+]
 
 guitarAssembly = flatten([
   patternLinear3d(
