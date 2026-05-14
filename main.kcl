@@ -32,17 +32,20 @@ topSecondaryBraceBodies = [
 topInternalBodies = [bridgePlate, soundholeReinforcement]
 
 rimStructureBodies = [
-  rimSides,
+  //rimSides,
   rimNeckBlock,
   rimTailBlock,
-  rimSideBlocks
+  //rimSideBlocks
 ]
 rimLiningBodies = [
-  rimTopKerfedLining,
+  //rimTopKerfedLining,
   rimBackKerfedLining
 ]
 
-backShellBodies = [backplate, backBinding]
+backShellBodies = [
+  backplate,
+  //backBinding
+]
 backBraceBodies = [
   backCenterGlueSeamBrace,
   backTransverseBrace1,
@@ -63,30 +66,30 @@ bridgeBodies = [
 ]
 
 guitarAssembly = flatten([
-  patternLinear3d(
-    topShellBodies,
-    instances = 2,
-    distance = 0in,
-    axis = X,
-  ),
-  patternLinear3d(
-    topPrimaryBraceBodies,
-    instances = 2,
-    distance = 0in,
-    axis = X,
-  ),
-  patternLinear3d(
-    topSecondaryBraceBodies,
-    instances = 2,
-    distance = 0in,
-    axis = X,
-  ),
-  patternLinear3d(
-    topInternalBodies,
-    instances = 2,
-    distance = 0in,
-    axis = X,
-  ),
+  // patternLinear3d(
+  //   topShellBodies,
+  //   instances = 2,
+  //   distance = 0in,
+  //   axis = X,
+  // ),
+  // patternLinear3d(
+  //   topPrimaryBraceBodies,
+  //   instances = 2,
+  //   distance = 0in,
+  //   axis = X,
+  // ),
+  // patternLinear3d(
+  //   topSecondaryBraceBodies,
+  //   instances = 2,
+  //   distance = 0in,
+  //   axis = X,
+  // ),
+  // patternLinear3d(
+  //   topInternalBodies,
+  //   instances = 2,
+  //   distance = 0in,
+  //   axis = X,
+  // ),
   patternLinear3d(
     rimStructureBodies,
     instances = 2,
@@ -111,12 +114,12 @@ guitarAssembly = flatten([
     distance = 0in,
     axis = X,
   ),
-  patternLinear3d(
-    bridgeBodies,
-    instances = 2,
-    distance = 0in,
-    axis = X,
-  )
+  // patternLinear3d(
+  //   bridgeBodies,
+  //   instances = 2,
+  //   distance = 0in,
+  //   axis = X,
+  // )
 ])
 
 guitarAssembly

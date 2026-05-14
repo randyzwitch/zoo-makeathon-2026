@@ -46,3 +46,22 @@ While this is a custom design, if you are looking for design inspiration, the de
 
 ### Do not trust stale viewport state
 If the user reports that the viewport does not match the expected result, do not insist that the model is correct. Re-inspect the active file, render a fresh snapshot, and check for editor/file sync mismatch.
+
+## Protected final geometry
+
+The back transverse braces are final geometry.
+
+Do not modify any code, dimensions, sketches, regions, lofts, trims, booleans,
+appearances, hide/export variables, names, or assembly references related to:
+
+- `backTransverseBrace1`
+- `backTransverseBrace2`
+- `backTransverseBrace3`
+- `backTransverseBrace4`
+
+This includes the related `b1*`, `b2*`, `b3*`, and `b4*` profile sketches,
+regions, half-span parameters, bottom-Z parameters, trim-span parameters, and
+brace construction logic in `guitar_back.kcl`.
+
+If a future request appears to require changing any of these braces, stop and
+ask for explicit permission before making the edit.

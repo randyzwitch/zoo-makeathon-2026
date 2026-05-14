@@ -81,6 +81,11 @@ backCenterGlueSeamBrace = intersect(
 )
   |> appearance(color = backBraceWoodColor, metalness = 0, roughness = 78)
 
+// PROTECTED FINAL GEOMETRY:
+// The back transverse braces 1 through 4 are final.
+// Do not edit their parameters, sketches, regions, lofts, trim/intersect logic,
+// appearances, hide/export variables, names, or assembly references unless the
+// user explicitly grants permission to modify these protected braces.
 backTransverseBraceWoodColor = "#d6b66f"
 centerSeamNotchHalfWidth = 0.54in
 centerSeamNotchHeight = 0.18in
