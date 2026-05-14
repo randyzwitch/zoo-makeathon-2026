@@ -17,7 +17,9 @@ liningSideWallOffset = 0.08in
 liningInnerOffsetFromOuter = liningSideWallOffset + kerfedLiningRadialWidth
 
 sideProfileArcOffset = 0.125in
+soundboardArcRadius = 40ft
 backArcRadius = 28ft
+topLiningGlueRadius = soundboardArcRadius - sideProfileArcOffset
 backLiningGlueRadius = backArcRadius - sideProfileArcOffset
 liningBodyWidth = 16in
 liningClipDepth = 10in
@@ -254,24 +256,27 @@ export sketchGuitarLiningInner = sketch(on = XY) {
 export guitarLiningInnerRegion = region(point = sketchGuitarLiningInner.insideLining)
 
 export topLiningProfile = sketch(on = YZ) {
-  topOuterEdge = line(start = [var -14.63in, var -0.13in], end = [var 5.76in, var -0.13in])
-  topNeckWall = line(start = [var 5.76in, var -0.13in], end = [var 5.76in, var -0.69in])
-  topInnerEdge = line(start = [var 5.76in, var -0.69in], end = [var -14.63in, var -0.69in])
-  topTailWall = line(start = [var -14.63in, var -0.69in], end = [var -14.63in, var -0.13in])
+  topOuterEdge = arc(start = [var 5.76in, var -0.13in], end = [var -14.63in, var -0.13in], center = [var -4.43in, var -479.89in])
+  topTailWall = line(start = [var -14.63in, var -0.13in], end = [var -14.63in, var -0.69in])
+  topInnerEdge = line(start = [var -14.63in, var -0.69in], end = [var 5.76in, var -0.69in])
+  topNeckWall = line(start = [var 5.76in, var -0.69in], end = [var 5.76in, var -0.13in])
 
-  coincident([topOuterEdge.end, topNeckWall.start])
-  coincident([topNeckWall.end, topInnerEdge.start])
-  coincident([topInnerEdge.end, topTailWall.start])
-  coincident([topTailWall.end, topOuterEdge.start])
+  coincident([topOuterEdge.end, topTailWall.start])
+  coincident([topTailWall.end, topInnerEdge.start])
+  coincident([topInnerEdge.end, topNeckWall.start])
+  coincident([topNeckWall.end, topOuterEdge.start])
 
-  horizontal(topOuterEdge)
-  vertical(topNeckWall)
-  horizontal(topInnerEdge)
   vertical(topTailWall)
+  horizontal(topInnerEdge)
+  vertical(topNeckWall)
 
-  horizontalDistance([topOuterEdge.start, ORIGIN]) == 0in - guitarCenterlineLowerY
+  horizontalDistance([ORIGIN, topOuterEdge.start]) == guitarCenterlineUpperY
+  horizontalDistance([topOuterEdge.end, ORIGIN]) == 0in - guitarCenterlineLowerY
   verticalDistance([topOuterEdge.start, ORIGIN]) == sideProfileArcOffset
-  distance([topOuterEdge.start, topOuterEdge.end]) == guitarCenterlineUpperY - guitarCenterlineLowerY
+  verticalDistance([topOuterEdge.end, ORIGIN]) == sideProfileArcOffset
+  horizontalDistance([topOuterEdge.center, topOuterEdge.start]) == (guitarCenterlineUpperY - guitarCenterlineLowerY) / 2
+  radius(topOuterEdge) == topLiningGlueRadius
+  distance([topOuterEdge.end, topOuterEdge.center]) == topLiningGlueRadius
   distance([topNeckWall.start, topNeckWall.end]) == kerfedLiningHeight
 }
 
