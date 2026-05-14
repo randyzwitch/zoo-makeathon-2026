@@ -580,9 +580,217 @@ rimTopKerfedLining = subtract(
   legacyMethod = true,
 )
 
-rimBackKerfedLining = intersect(
+backLiningBlockButtJointProfile = sketch(on = XY) {
+  clearanceTopLeftRun = line(start = [var -9in, var 7in], end = [var -1.50in, var 7in])
+  clearanceNeckLeftDrop = line(start = [var -1.50in, var 7in], end = [var -1.50in, var 5.85in])
+  clearanceNeckTopLeftRound = arc(start = [var -1.50in, var 5.85in], end = [var -1.75in, var 5.60in], center = [var -1.50in, var 5.60in])
+  clearanceNeckLeft = line(start = [var -1.75in, var 5.60in], end = [var -1.75in, var 4.80in])
+  clearanceNeckBottomLeftRound = arc(start = [var -1.75in, var 4.80in], end = [var -1.50in, var 4.55in], center = [var -1.50in, var 4.80in])
+  clearanceNeckBottom = line(start = [var -1.50in, var 4.55in], end = [var 1.50in, var 4.55in])
+  clearanceNeckBottomRightRound = arc(start = [var 1.50in, var 4.55in], end = [var 1.75in, var 4.80in], center = [var 1.50in, var 4.80in])
+  clearanceNeckRight = line(start = [var 1.75in, var 4.80in], end = [var 1.75in, var 5.60in])
+  clearanceNeckTopRightRound = arc(start = [var 1.75in, var 5.60in], end = [var 1.50in, var 5.85in], center = [var 1.50in, var 5.60in])
+  clearanceNeckRightRise = line(start = [var 1.50in, var 5.85in], end = [var 1.50in, var 7in])
+  clearanceTopRightRun = line(start = [var 1.50in, var 7in], end = [var 9in, var 7in])
+  clearanceRightSide = line(start = [var 9in, var 7in], end = [var 9in, var -16in])
+  clearanceBottomRightRun = line(start = [var 9in, var -16in], end = [var 1.45in, var -16in])
+  clearanceTailRight = line(start = [var 1.45in, var -16in], end = [var 1.45in, var -14.45in])
+  clearanceTailRightChamfer = line(start = [var 1.45in, var -14.45in], end = [var 0.95in, var -13.95in])
+  clearanceTailTop = line(start = [var 0.95in, var -13.95in], end = [var -0.95in, var -13.95in])
+  clearanceTailLeftChamfer = line(start = [var -0.95in, var -13.95in], end = [var -1.45in, var -14.45in])
+  clearanceTailLeft = line(start = [var -1.45in, var -14.45in], end = [var -1.45in, var -16in])
+  clearanceBottomLeftRun = line(start = [var -1.45in, var -16in], end = [var -9in, var -16in])
+  clearanceLeftSide = line(start = [var -9in, var -16in], end = [var -9in, var 7in])
+
+  coincident([
+    clearanceTopLeftRun.end,
+    clearanceNeckLeftDrop.start
+  ])
+  coincident([
+    clearanceNeckLeftDrop.end,
+    clearanceNeckTopLeftRound.start
+  ])
+  coincident([
+    clearanceNeckTopLeftRound.end,
+    clearanceNeckLeft.start
+  ])
+  coincident([
+    clearanceNeckLeft.end,
+    clearanceNeckBottomLeftRound.start
+  ])
+  coincident([
+    clearanceNeckBottomLeftRound.end,
+    clearanceNeckBottom.start
+  ])
+  coincident([
+    clearanceNeckBottom.end,
+    clearanceNeckBottomRightRound.start
+  ])
+  coincident([
+    clearanceNeckBottomRightRound.end,
+    clearanceNeckRight.start
+  ])
+  coincident([
+    clearanceNeckRight.end,
+    clearanceNeckTopRightRound.start
+  ])
+  coincident([
+    clearanceNeckTopRightRound.end,
+    clearanceNeckRightRise.start
+  ])
+  coincident([
+    clearanceNeckRightRise.end,
+    clearanceTopRightRun.start
+  ])
+  coincident([
+    clearanceTopRightRun.end,
+    clearanceRightSide.start
+  ])
+  coincident([
+    clearanceRightSide.end,
+    clearanceBottomRightRun.start
+  ])
+  coincident([
+    clearanceBottomRightRun.end,
+    clearanceTailRight.start
+  ])
+  coincident([
+    clearanceTailRight.end,
+    clearanceTailRightChamfer.start
+  ])
+  coincident([
+    clearanceTailRightChamfer.end,
+    clearanceTailTop.start
+  ])
+  coincident([
+    clearanceTailTop.end,
+    clearanceTailLeftChamfer.start
+  ])
+  coincident([
+    clearanceTailLeftChamfer.end,
+    clearanceTailLeft.start
+  ])
+  coincident([
+    clearanceTailLeft.end,
+    clearanceBottomLeftRun.start
+  ])
+  coincident([
+    clearanceBottomLeftRun.end,
+    clearanceLeftSide.start
+  ])
+  coincident([
+    clearanceLeftSide.end,
+    clearanceTopLeftRun.start
+  ])
+
+  coincident([clearanceTopLeftRun.start, [-9in, 7in]])
+  coincident([
+    clearanceTopLeftRun.end,
+    [-1.50in, 7in]
+  ])
+  coincident([
+    clearanceNeckLeftDrop.end,
+    [-1.50in, 5.85in]
+  ])
+  coincident([
+    clearanceNeckTopLeftRound.center,
+    [-1.50in, 5.60in]
+  ])
+  coincident([
+    clearanceNeckTopLeftRound.end,
+    [-1.75in, 5.60in]
+  ])
+  coincident([
+    clearanceNeckLeft.end,
+    [-1.75in, 4.80in]
+  ])
+  coincident([
+    clearanceNeckBottomLeftRound.center,
+    [-1.50in, 4.80in]
+  ])
+  coincident([
+    clearanceNeckBottomLeftRound.end,
+    [-1.50in, 4.55in]
+  ])
+  coincident([
+    clearanceNeckBottom.end,
+    [1.50in, 4.55in]
+  ])
+  coincident([
+    clearanceNeckBottomRightRound.center,
+    [1.50in, 4.80in]
+  ])
+  coincident([
+    clearanceNeckBottomRightRound.end,
+    [1.75in, 4.80in]
+  ])
+  coincident([
+    clearanceNeckRight.end,
+    [1.75in, 5.60in]
+  ])
+  coincident([
+    clearanceNeckTopRightRound.center,
+    [1.50in, 5.60in]
+  ])
+  coincident([
+    clearanceNeckTopRightRound.end,
+    [1.50in, 5.85in]
+  ])
+  coincident([
+    clearanceNeckRightRise.end,
+    [1.50in, 7in]
+  ])
+  coincident([clearanceTopRightRun.end, [9in, 7in]])
+  coincident([clearanceRightSide.end, [9in, -16in]])
+  coincident([
+    clearanceBottomRightRun.end,
+    [1.45in, -16in]
+  ])
+  coincident([
+    clearanceTailRight.end,
+    [1.45in, -14.45in]
+  ])
+  coincident([
+    clearanceTailRightChamfer.end,
+    [0.95in, -13.95in]
+  ])
+  coincident([
+    clearanceTailTop.end,
+    [-0.95in, -13.95in]
+  ])
+  coincident([
+    clearanceTailLeftChamfer.end,
+    [-1.45in, -14.45in]
+  ])
+  coincident([
+    clearanceTailLeft.end,
+    [-1.45in, -16in]
+  ])
+  coincident([
+    clearanceBottomLeftRun.end,
+    [-9in, -16in]
+  ])
+}
+
+backLiningBlockButtJointRegion = region(point = [0in, 0in], sketch = backLiningBlockButtJointProfile)
+backLiningBlockButtJointPrism = extrude(
+  backLiningBlockButtJointRegion,
+  length = blockClipDepth,
+  symmetric = true,
+  method = NEW,
+)
+
+backLiningPlanBandWithBlockButts = intersect(
   [
     subtract(clone(guitarInnerPlanSolid), tools = [clone(guitarLiningInnerPlanSolid)], legacyMethod = true),
+    backLiningBlockButtJointPrism
+  ],
+  legacyMethod = true,
+)
+
+rimBackKerfedLining = intersect(
+  [
+    backLiningPlanBandWithBlockButts,
     clone(backLiningProfilePrism)
   ],
   legacyMethod = true,
@@ -619,7 +827,9 @@ hiddenRimSketches = hide([
   gap56Region,
   tailGapRegion,
   liningMortiseTopProfile,
-  liningMortiseTopRegion
+  liningMortiseTopRegion,
+  backLiningBlockButtJointProfile,
+  backLiningBlockButtJointRegion
 ])
 
 hiddenRimSides = hide(rimSides)

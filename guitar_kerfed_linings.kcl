@@ -292,7 +292,10 @@ export backLiningProfile = sketch(on = YZ) {
   horizontalDistance([backOuterEdge.start, ORIGIN]) == 0in - guitarCenterlineLowerY
   horizontalDistance([ORIGIN, backOuterEdge.end]) == guitarCenterlineUpperY
   radius(backOuterEdge) == backLiningGlueRadius
-  distance([backOuterEdge.end, backOuterEdge.center]) == backLiningGlueRadius
+  distance([
+  backOuterEdge.end,
+  backOuterEdge.center
+]) == backLiningGlueRadius
   horizontalDistance([ORIGIN, backInnerEdge.start]) == guitarCenterlineUpperY
   verticalDistance([backInnerEdge.start, ORIGIN]) == 3.75in - sideProfileArcOffset - kerfedLiningHeight
   horizontalDistance([backInnerEdge.end, ORIGIN]) == 0in - guitarCenterlineLowerY
