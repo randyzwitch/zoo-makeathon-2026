@@ -13,6 +13,8 @@ liningSideWallOffset = 0.08in
 liningInnerOffsetFromOuter = liningSideWallOffset + kerfedLiningRadialWidth
 
 sideProfileArcOffset = 0.125in
+backArcRadius = 28ft
+backLiningGlueRadius = backArcRadius - sideProfileArcOffset
 liningBodyWidth = 16in
 liningClipDepth = 10in
 
@@ -26,14 +28,14 @@ outlineP04Y = 3.0430in
 outlineP05X = -5.4668in
 outlineP05Y = 0.3435in
 outlineP06X = -5.8302in
-outlineP06Y = -2.6941in
 outlineP07X = -7.2244in
-outlineP07Y = -5.6934in
 outlineP08X = -7.4232in
-outlineP08Y = -11.1187in
 outlineP09X = -4.6353in
-outlineP09Y = -13.8463in
 outlineP10X = -0.5668in
+outlineP06Y = -2.6941in
+outlineP07Y = -5.6934in
+outlineP08Y = -11.1187in
+outlineP09Y = -13.8463in
 outlineP10Y = -14.6169in
 
 topArcCenterX = centerlineX
@@ -272,7 +274,7 @@ export topLiningProfile = sketch(on = YZ) {
 export topLiningProfileRegion = region(point = [0in, -0.4in], sketch = topLiningProfile)
 
 export backLiningProfile = sketch(on = YZ) {
-  backOuterEdge = line(start = [var -14.63in, var -4.13in], end = [var 5.76in, var -3.63in])
+  backOuterEdge = arc(start = [var -14.63in, var -4.13in], end = [var 5.76in, var -3.63in], center = [var -12.66in, var 331.74in])
   backNeckWall = line(start = [var 5.76in, var -3.63in], end = [var 5.76in, var -3.06in])
   backInnerEdge = line(start = [var 5.76in, var -3.06in], end = [var -14.63in, var -3.56in])
   backTailWall = line(start = [var -14.63in, var -3.56in], end = [var -14.63in, var -4.13in])
@@ -284,14 +286,17 @@ export backLiningProfile = sketch(on = YZ) {
 
   vertical(backNeckWall)
   vertical(backTailWall)
-  parallel([backOuterEdge, backInnerEdge])
 
+  horizontalDistance([backOuterEdge.center, ORIGIN]) == 12.66in
+  verticalDistance([ORIGIN, backOuterEdge.center]) == 331.74in
   horizontalDistance([backOuterEdge.start, ORIGIN]) == 0in - guitarCenterlineLowerY
-  verticalDistance([backOuterEdge.start, ORIGIN]) == 4.25in - sideProfileArcOffset
   horizontalDistance([ORIGIN, backOuterEdge.end]) == guitarCenterlineUpperY
-  verticalDistance([backOuterEdge.end, ORIGIN]) == 3.75in - sideProfileArcOffset
-  distance([backTailWall.start, backTailWall.end]) == kerfedLiningHeight
-  distance([backNeckWall.start, backNeckWall.end]) == kerfedLiningHeight
+  radius(backOuterEdge) == backLiningGlueRadius
+  distance([backOuterEdge.end, backOuterEdge.center]) == backLiningGlueRadius
+  horizontalDistance([ORIGIN, backInnerEdge.start]) == guitarCenterlineUpperY
+  verticalDistance([backInnerEdge.start, ORIGIN]) == 3.75in - sideProfileArcOffset - kerfedLiningHeight
+  horizontalDistance([backInnerEdge.end, ORIGIN]) == 0in - guitarCenterlineLowerY
+  verticalDistance([backInnerEdge.end, ORIGIN]) == 4.25in - sideProfileArcOffset - kerfedLiningHeight
 }
 
 export backLiningProfileRegion = region(point = [0in, -3.6in], sketch = backLiningProfile)
