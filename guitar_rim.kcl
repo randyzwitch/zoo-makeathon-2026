@@ -12,6 +12,12 @@ liningWoodColor = "#caa06a"
 blockWoodColor = "#8a5632"
 sideBlockWoodColor = "#b77a3f"
 
+// PROTECTED FINAL GEOMETRY:
+// rimNeckBlock, rimTailBlock, and rimBackKerfedLining are final.
+// Do not edit their block/lining dimensions, sketches, regions, cutters,
+// butt-joint trims, appearances, hide/export names, or assembly references
+// unless the user explicitly grants permission.
+
 mortiseFrontY = 5.92in
 mortiseRearY = 5.42in
 mortiseTopFrontHalfWidth = 0.3125in

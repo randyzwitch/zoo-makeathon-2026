@@ -49,19 +49,37 @@ If the user reports that the viewport does not match the expected result, do not
 
 ## Protected final geometry
 
-The back transverse braces are final geometry.
+The following visible/back-assembly parts are final geometry:
 
-Do not modify any code, dimensions, sketches, regions, lofts, trims, booleans,
-appearances, hide/export variables, names, or assembly references related to:
-
+- `rimNeckBlock`
+- `rimTailBlock`
+- `rimBackKerfedLining`
+- `backCenterGlueSeamBrace`
 - `backTransverseBrace1`
 - `backTransverseBrace2`
 - `backTransverseBrace3`
 - `backTransverseBrace4`
 
-This includes the related `b1*`, `b2*`, `b3*`, and `b4*` profile sketches,
-regions, half-span parameters, bottom-Z parameters, trim-span parameters, and
-brace construction logic in `guitar_back.kcl`.
+Do not modify any code, dimensions, sketches, regions, lofts, trims, booleans,
+intersections, cutters, appearances, hide/export variables, names, imports,
+display-group references, or assembly references related to those parts.
 
-If a future request appears to require changing any of these braces, stop and
-ask for explicit permission before making the edit.
+This includes, but is not limited to:
+
+- neck/tail block construction in `guitar_rim.kcl`, including `neckBlock*`,
+  `tailBlock*`, `rimNeckBlock`, and `rimTailBlock`
+- back kerfing construction in `guitar_rim.kcl`, including
+  `backLiningBlockButtJoint*`, `backLiningPlanBandWithBlockButts`, and
+  `rimBackKerfedLining`
+- back kerfing source profile construction in `guitar_kerfed_linings.kcl`,
+  including `backLiningProfile`, `backLiningProfileRegion`, and
+  `backLiningProfilePrism`
+- back center seam brace construction in `guitar_back.kcl`, including
+  `centerSeamBrace*` and `backCenterGlueSeamBrace*`
+- back transverse brace construction in `guitar_back.kcl`, including the related
+  `b1*`, `b2*`, `b3*`, and `b4*` profile sketches, regions, half-span
+  parameters, bottom-Z parameters, trim-span parameters, and brace construction
+  logic
+
+If a future request appears to require changing any of these protected parts,
+stop and ask for explicit permission before making the edit.

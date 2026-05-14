@@ -6,6 +6,10 @@ import guitarCenterlineUpperY, guitarCenterlineLowerY from "guitar_outline.kcl"
 // Heavy lining solids are built here so dependent modules reuse stable source-owned
 // regions instead of recreating regions from imported sketches.
 
+// PROTECTED FINAL GEOMETRY SOURCE:
+// backLiningProfile, backLiningProfileRegion, and backLiningProfilePrism are
+// final because they define rimBackKerfedLining's backplate glue face/height.
+// Do not edit these or related back-lining dimensions without explicit permission.
 
 kerfedLiningRadialWidth = 0.21875in
 kerfedLiningHeight = 0.5625in

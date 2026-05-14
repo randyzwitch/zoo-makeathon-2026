@@ -14,6 +14,12 @@ backBraceWoodColor = "#d8bd7a"
 backArcRadius = 28ft
 sideProfileArcOffset = 0.125in
 backBraceGlueRadius = backArcRadius - sideProfileArcOffset
+
+// PROTECTED FINAL GEOMETRY:
+// The back center glue seam brace is final.
+// Do not edit centerSeamBrace* parameters, backCenterGlueSeamBrace* sketches,
+// regions, intersect/trim logic, appearance, hide/export names, or assembly
+// references unless the user explicitly grants permission.
 centerSeamBraceWidth = 1.0in
 centerSeamBraceHeight = 0.125in
 centerSeamBraceTopRadius = backBraceGlueRadius - centerSeamBraceHeight
