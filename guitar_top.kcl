@@ -160,15 +160,15 @@ xBraceHalfAngle = 54deg
 xBraceCrossY = -3.85in
 xBraceWidth = 0.38in
 xBraceLowerArmLength = 9.485in
-xBraceUpperArmLength = 5.65in
+xBraceUpperArmLength = 13.25in
 xBraceEndHeight = 0.18in
 xBraceFullHeight = 0.58in
 xBraceFlatLength = 4.0in
 
 xBraceProfile = sketch(on = YZ) {
-  glueFace = line(start = [var -9.485in, var -0.065in], end = [var 5.65in, var -0.065in])
-  upperEnd = line(start = [var 5.65in, var -0.065in], end = [var 5.65in, var -0.245in])
-  crownLeft = line(start = [var 5.65in, var -0.245in], end = [var 2.0in, var -0.645in])
+  glueFace = line(start = [var -9.485in, var -0.065in], end = [var 13.25in, var -0.065in])
+  upperEnd = line(start = [var 13.25in, var -0.065in], end = [var 13.25in, var -0.245in])
+  crownLeft = line(start = [var 13.25in, var -0.245in], end = [var 2.0in, var -0.645in])
   crownFlat = line(start = [var 2.0in, var -0.645in], end = [var -2.0in, var -0.645in])
   crownRight = line(start = [var -2.0in, var -0.645in], end = [var -9.485in, var -0.245in])
   lowerEnd = line(start = [var -9.485in, var -0.245in], end = [var -9.485in, var -0.065in])
@@ -299,53 +299,33 @@ toneBarLowerProfile = sketch(on = YZ) {
 
 toneBarLowerRegion = region(point = [0in, -0.28in], sketch = toneBarLowerProfile)
 
-xBraceBassPlanTrim = subtract(
-  intersect(
-    [
-      extrude(
-        xBraceRegionBass,
-        length = xBraceWidth,
-        symmetric = true,
-        method = NEW,
-      )
-        |> rotate(axis = Z, angle = xBraceHalfAngle, global = true)
-        |> translate(y = xBraceCrossY, global = true),
-      clone(guitarInnerPlanSolid)
-    ],
-    legacyMethod = true,
-  ),
-  tools = [
-    subtract(
-      clone(guitarInnerPlanSolid),
-      tools = [clone(guitarLiningInnerPlanSolid)],
-      legacyMethod = true,
+xBraceBassPlanTrim = intersect(
+  [
+    extrude(
+      xBraceRegionBass,
+      length = xBraceWidth,
+      symmetric = true,
+      method = NEW,
     )
+      |> rotate(axis = Z, angle = xBraceHalfAngle, global = true)
+      |> translate(y = xBraceCrossY, global = true),
+    clone(guitarLiningInnerPlanSolid)
   ],
   legacyMethod = true,
 )
   |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 78)
 
-xBraceTreblePlanTrim = subtract(
-  intersect(
-    [
-      extrude(
-        xBraceRegionTreble,
-        length = xBraceWidth,
-        symmetric = true,
-        method = NEW,
-      )
-        |> rotate(axis = Z, angle = 0deg - xBraceHalfAngle, global = true)
-        |> translate(y = xBraceCrossY, global = true),
-      clone(guitarInnerPlanSolid)
-    ],
-    legacyMethod = true,
-  ),
-  tools = [
-    subtract(
-      clone(guitarInnerPlanSolid),
-      tools = [clone(guitarLiningInnerPlanSolid)],
-      legacyMethod = true,
+xBraceTreblePlanTrim = intersect(
+  [
+    extrude(
+      xBraceRegionTreble,
+      length = xBraceWidth,
+      symmetric = true,
+      method = NEW,
     )
+      |> rotate(axis = Z, angle = 0deg - xBraceHalfAngle, global = true)
+      |> translate(y = xBraceCrossY, global = true),
+    clone(guitarLiningInnerPlanSolid)
   ],
   legacyMethod = true,
 )

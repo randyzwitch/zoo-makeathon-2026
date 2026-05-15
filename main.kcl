@@ -15,8 +15,8 @@ import backTransverseBrace1Export as backTransverseBrace1, backTransverseBrace2E
 import bridgeExport as bridge, saddleExport as saddle, bridgePin1Export as bridgePin1, bridgePin2Export as bridgePin2, bridgePin3Export as bridgePin3, bridgePin4Export as bridgePin4, bridgePin5Export as bridgePin5, bridgePin6Export as bridgePin6 from "guitar_bridge.kcl"
 
 topShellBodies = [
-  topSoundboard, 
-  //topBindingTrimmed
+  topSoundboard,
+  // topBindingTrimmed
 ]
 topPrimaryBraceBodies = [
   xBraceBassPlanTrim,
@@ -35,14 +35,14 @@ topSecondaryBraceBodies = [
 topInternalBodies = [bridgePlate, soundholeReinforcement]
 
 rimStructureBodies = [
-  //rimSides,
+  // rimSides,
   rimNeckBlock,
   rimTailBlock,
-  //rimSideBlocks
+  // rimSideBlocks
 ]
 rimLiningBodies = [
   rimTopKerfedLining,
-  //rimBackKerfedLining
+  // rimBackKerfedLining
 ]
 
 backShellBodies = [
@@ -70,16 +70,16 @@ bridgeBodies = [
 
 guitarAssembly = flatten([
   patternLinear3d(
-  topShellBodies,
-  instances = 2,
-  distance = 0in,
-  axis = X,
+    topShellBodies,
+    instances = 2,
+    distance = 0in,
+    axis = X,
   ),
   patternLinear3d(
-  topPrimaryBraceBodies,
-  instances = 2,
-  distance = 0in,
-  axis = X,
+    topPrimaryBraceBodies,
+    instances = 2,
+    distance = 0in,
+    axis = X,
   ),
   // patternLinear3d(
   // topSecondaryBraceBodies,
@@ -106,16 +106,16 @@ guitarAssembly = flatten([
     axis = X,
   ),
   // patternLinear3d(
-  //   backShellBodies,
-  //   instances = 2,
-  //   distance = 0in,
-  //   axis = X,
+  // backShellBodies,
+  // instances = 2,
+  // distance = 0in,
+  // axis = X,
   // ),
   // patternLinear3d(
-  //   backBraceBodies,
-  //   instances = 2,
-  //   distance = 0in,
-  //   axis = X,
+  // backBraceBodies,
+  // instances = 2,
+  // distance = 0in,
+  // axis = X,
   // ),
   // patternLinear3d(
   // bridgeBodies,

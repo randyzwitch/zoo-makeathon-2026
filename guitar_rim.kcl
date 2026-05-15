@@ -18,6 +18,7 @@ sideBlockWoodColor = "#b77a3f"
 // butt-joint trims, appearances, hide/export names, or assembly references
 // unless the user explicitly grants permission.
 
+
 mortiseFrontY = 5.92in
 mortiseRearY = 5.42in
 mortiseTopFrontHalfWidth = 0.3125in
