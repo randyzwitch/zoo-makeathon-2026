@@ -12,6 +12,38 @@ While this is a custom design, if you are looking for design inspiration, the de
 - If I present a DXF, STEP or other reference image, USE IT! Don't guess at what I might want, the reference shows you exactly what I want.
 - If I give you a reference image and it seems like items might be parallel or perpendicular, try to model it that way. It's likely that I would do that in real life, I wouldn't likely choose 89.6 degrees instead of a perfect right angle.
 
+### Brace scalloping design intent
+
+Guitar braces are structural parts, but their ends should generally be scalloped
+or feathered for weight reduction and flexibility unless I explicitly request a
+straight, full-height brace.
+
+When creating or modifying braces with scalloped ends:
+
+- The scallop target applies to the **final visible post-trim brace end**, not
+  the raw/pre-trim construction endpoint.
+- If a brace terminates at kerfing, lining, a rim, or a block, first extend the
+  raw brace far enough to cross the boundary, then physically trim it back to the
+  actual mating part/boundary. Do not merely make the pre-trim endpoint thin.
+- The brace should still terminate exactly at its intended physical boundary
+  with a real butt joint or trim. Do not use visual masking or display-only
+  hiding to fake the result.
+- At the post-trim end where a brace butts into kerfing/lining, the brace should
+  usually be feathered down to roughly `1/16in` to `1/8in` thick unless a
+  different dimension is specified.
+- The brace should smoothly regain full height toward the structurally important
+  region, such as the X-brace intersection, bridge area, center span, or other
+  load path.
+- Use smooth arcs/curves for scallops. Do not replace curved scallops with
+  straight-line/chord approximations.
+- Preserve the brace’s intended plan-view length, mating boundary, intersections,
+  and trim relationships while changing only the scallop/profile height.
+- Validate scallops from a view that shows the actual post-trim end thickness,
+  not just the raw construction profile.
+
+For protected/final braces, this design intent should only be applied if I
+explicitly grant permission to modify those protected brace bodies.
+
 ## Zookeeper / AI assistant workflow expectations
 
 ### Source of truth and sync
@@ -49,7 +81,7 @@ If the user reports that the viewport does not match the expected result, do not
 
 ## Protected final geometry
 
-The following visible/back-assembly parts are final geometry:
+The following visible/back/top assembly parts are final geometry:
 
 - `rimNeckBlock`
 - `rimTailBlock`
@@ -59,6 +91,10 @@ The following visible/back-assembly parts are final geometry:
 - `backTransverseBrace2`
 - `backTransverseBrace3`
 - `backTransverseBrace4`
+- `xBraceBassPlanTrim`
+- `xBraceTreblePlanTrim`
+- `upperTransverseBrace`
+- `popsicleBrace`
 
 Do not modify any code, dimensions, sketches, regions, lofts, trims, booleans,
 intersections, cutters, appearances, hide/export variables, names, imports,
@@ -80,6 +116,16 @@ This includes, but is not limited to:
   `b1*`, `b2*`, `b3*`, and `b4*` profile sketches, regions, half-span
   parameters, bottom-Z parameters, trim-span parameters, and brace construction
   logic
+- top X-brace construction in `guitar_top.kcl`, including all `xBrace*`
+  parameters, sketches, profiles, scallops, upper/tail arm lengths, post-trim
+  butt-height references, plan trims, intersections, kerfing boundary trims,
+  appearances, exports, and assembly references related to
+  `xBraceBassPlanTrim` and `xBraceTreblePlanTrim`
+- top upper transverse and popsicle brace construction in `guitar_top.kcl`,
+  including all `upperTransverse*` and `popsicleBrace*` parameters, sketches,
+  profiles, scallops/free faces, regions, trims/intersections, appearances,
+  exports, and assembly references related to `upperTransverseBrace` and
+  `popsicleBrace`
 
 If a future request appears to require changing any of these protected parts,
 stop and ask for explicit permission before making the edit.

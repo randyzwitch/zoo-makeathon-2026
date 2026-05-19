@@ -21,16 +21,17 @@ topShellBodies = [
 topPrimaryBraceBodies = [
   xBraceBassPlanTrim,
   xBraceTreblePlanTrim,
+  // PROTECTED FINAL GEOMETRY: keep these top brace assembly references unless explicitly permitted.
   upperTransverseBrace,
   popsicleBrace
 ]
 topSecondaryBraceBodies = [
-  toneBarUpper,
-  toneBarLower,
-  topSideBrace1,
-  topSideBrace2,
-  topSideBrace3,
-  topSideBrace4
+  // toneBarUpper,
+  // toneBarLower,
+  // topSideBrace1,
+  // topSideBrace2,
+  // topSideBrace3,
+  // topSideBrace4
 ]
 topInternalBodies = [bridgePlate, soundholeReinforcement]
 
