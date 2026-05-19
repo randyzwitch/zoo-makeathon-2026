@@ -95,6 +95,8 @@ The following visible/back/top assembly parts are final geometry:
 - `xBraceTreblePlanTrim`
 - `upperTransverseBrace`
 - `popsicleBrace`
+- `topSideBrace3`
+- `topSideBrace4`
 
 Do not modify any code, dimensions, sketches, regions, lofts, trims, booleans,
 intersections, cutters, appearances, hide/export variables, names, imports,
@@ -126,6 +128,12 @@ This includes, but is not limited to:
   profiles, scallops/free faces, regions, trims/intersections, appearances,
   exports, and assembly references related to `upperTransverseBrace` and
   `popsicleBrace`
+- fixed lower top side brace construction in `guitar_top_side_brace_fixes.kcl`,
+  including all `topSideBraceLower*` parameters, lower brace profile sketches,
+  `topSideBrace3*` and `topSideBrace4*` regions and X-brace butt clip plans,
+  lining-inner-edge intersections with `guitarLiningInnerPlanSolid`, appearances,
+  exports, and assembly references related to `topSideBrace3` and
+  `topSideBrace4`
 
 If a future request appears to require changing any of these protected parts,
 stop and ask for explicit permission before making the edit.

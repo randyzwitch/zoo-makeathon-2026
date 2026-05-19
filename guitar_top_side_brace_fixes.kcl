@@ -7,6 +7,11 @@ import guitarLiningInnerPlanSolid from "guitar_kerfed_linings.kcl"
 soundboardBraceWoodColor = "#d6b66f"
 soundboardBraceGlueZ = -0.065in
 
+// PROTECTED FINAL GEOMETRY:
+// The fixed lower top side braces 3 and 4 are final.
+// Do not edit topSideBraceLower* parameters, profiles, regions, X-brace butt
+// clip sketches, lining-inner-edge intersections, appearances, export names,
+// or related assembly references unless the user explicitly grants permission.
 topSideBraceLowerLeftReach = 2.0in
 topSideBraceLowerRightRawReach = 1.75in
 topSideBraceLowerEndHeight = 0.08in
