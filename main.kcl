@@ -4,8 +4,9 @@
 
 import topSoundboardExport as topSoundboard, topBindingTrimmedExport as topBindingTrimmed, xBraceBassPlanTrimExport as xBraceBassPlanTrim, xBraceTreblePlanTrimExport as xBraceTreblePlanTrim from "guitar_top.kcl"
 import upperTransverseBraceExport as upperTransverseBrace, popsicleBraceExport as popsicleBrace, toneBarUpperExport as toneBarUpper, toneBarLowerExport as toneBarLower from "guitar_top.kcl"
-import topSideBrace1Export as topSideBrace1, topSideBrace2Export as topSideBrace2, topSideBrace3Export as topSideBrace3, topSideBrace4Export as topSideBrace4 from "guitar_top.kcl"
+import topSideBrace1Export as topSideBrace1, topSideBrace2Export as topSideBrace2 from "guitar_top.kcl"
 import bridgePlateExport as bridgePlate, soundholeReinforcementExport as soundholeReinforcement from "guitar_top.kcl"
+import topSideBrace3FixedExport as topSideBrace3, topSideBrace4FixedExport as topSideBrace4 from "guitar_top_side_brace_fixes.kcl"
 
 import rimSidesExport as rimSides, rimNeckBlockExport as rimNeckBlock, rimTailBlockExport as rimTailBlock, rimSideBlocksExport as rimSideBlocks, rimTopKerfedLiningExport as rimTopKerfedLining, rimBackKerfedLiningExport as rimBackKerfedLining from "guitar_rim.kcl"
 
@@ -28,9 +29,9 @@ topSecondaryBraceBodies = [
   toneBarUpper,
   toneBarLower,
   topSideBrace1,
-  // topSideBrace2,
-  // topSideBrace3,
-  // topSideBrace4
+  topSideBrace2,
+  topSideBrace3,
+  topSideBrace4
 ]
 topInternalBodies = [bridgePlate, soundholeReinforcement]
 
