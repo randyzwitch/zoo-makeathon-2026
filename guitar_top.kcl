@@ -156,110 +156,130 @@ topBindingTrimmed = subtract(
 )
   |> appearance(color = bindingColor, metalness = 0, roughness = 64)
 
-// PROTECTED FINAL GEOMETRY: X-brace profile, scallops, plan trims, and exports.
-// Do not edit xBrace* construction without explicit permission.
+// PROTECTED FINAL GEOMETRY:
+// X and upper transverse braces overrun and trim to the top lining inner edge.
 xBraceHalfAngle = 54deg
 xBraceCrossY = -3.85in
 xBraceWidth = 0.38in
-xBraceLowerArmLength = 9.485in
-xBraceUpperButtArmLength = 6.30in
-xBraceUpperRawTrimStock = 1.851in
-xBraceUpperArmLength = xBraceUpperButtArmLength + xBraceUpperRawTrimStock
-xBraceEndHeight = 0.18in
-xBraceUpperEndHeight = 0.08in
-xBraceUpperButtHeight = 0.125in
+xBraceLowerArmLength = 10.05in
+xBraceUpperArmLength = 7.05in
+xBraceEndHeight = 0.125in
 xBraceFullHeight = 0.58in
 xBraceFlatLength = 4.0in
-xBraceLowerScallopRadius = 70.23153125in
-xBraceUpperScallopRadius = 38.0848in
+xBraceEndFlatLength = 1.65in
+xBraceUpperScallopRadius = 10.0in
+xBraceLowerScallopRadius = 30.0in
 
 xBraceProfile = sketch(on = YZ) {
-  glueFace = line(start = [var -9.485in, var -0.065in], end = [var 8.151in, var -0.065in])
-  upperEnd = line(start = [var 8.151in, var -0.065in], end = [var 8.151in, var -0.145in])
-  crownLeft = arc(start = [var 8.151in, var -0.145in], end = [var 2.0in, var -0.645in], center = [var 8.151in, var -38.2298in])
+  glueFace = line(start = [var -10.05in, var -0.065in], end = [var 7.05in, var -0.065in])
+  upperEnd = line(start = [var 7.05in, var -0.065in], end = [var 7.05in, var -0.190in])
+  upperFlat = line(start = [var 7.05in, var -0.190in], end = [var 5.40in, var -0.190in])
+  upperScallop = arc(start = [var 5.40in, var -0.190in], end = [var 2.0in, var -0.645in], center = [var 5.01in, var -10.18in])
   crownFlat = line(start = [var 2.0in, var -0.645in], end = [var -2.0in, var -0.645in])
-  crownRight = arc(start = [var -2.0in, var -0.645in], end = [var -9.485in, var -0.245in], center = [var -9.485in, var -70.477in])
-  lowerEnd = line(start = [var -9.485in, var -0.245in], end = [var -9.485in, var -0.065in])
+  lowerScallop = arc(start = [var -2.0in, var -0.645in], end = [var -8.40in, var -0.190in], center = [var -7.31in, var -30.17in])
+  lowerFlat = line(start = [var -8.40in, var -0.190in], end = [var -10.05in, var -0.190in])
+  lowerEnd = line(start = [var -10.05in, var -0.190in], end = [var -10.05in, var -0.065in])
   coincident([glueFace.end, upperEnd.start])
-  coincident([upperEnd.end, crownLeft.start])
-  coincident([crownLeft.end, crownFlat.start])
-  coincident([crownFlat.end, crownRight.start])
-  coincident([crownRight.end, lowerEnd.start])
+  coincident([upperEnd.end, upperFlat.start])
+  coincident([upperFlat.end, upperScallop.start])
+  coincident([upperScallop.end, crownFlat.start])
+  coincident([crownFlat.end, lowerScallop.start])
+  coincident([lowerScallop.end, lowerFlat.start])
+  coincident([lowerFlat.end, lowerEnd.start])
   coincident([lowerEnd.end, glueFace.start])
   horizontal(glueFace)
   vertical(upperEnd)
+  horizontal(upperFlat)
   horizontal(crownFlat)
+  horizontal(lowerFlat)
   vertical(lowerEnd)
   horizontalDistance([glueFace.start, ORIGIN]) == xBraceLowerArmLength
   verticalDistance([ORIGIN, glueFace.start]) == soundboardBraceGlueZ
   distance([glueFace.start, glueFace.end]) == xBraceLowerArmLength + xBraceUpperArmLength
-  distance([upperEnd.start, upperEnd.end]) == xBraceUpperEndHeight
+  distance([upperEnd.start, upperEnd.end]) == xBraceEndHeight
   distance([lowerEnd.start, lowerEnd.end]) == xBraceEndHeight
+  distance([upperFlat.start, upperFlat.end]) == xBraceEndFlatLength
+  distance([lowerFlat.start, lowerFlat.end]) == xBraceEndFlatLength
+  horizontalDistance([ORIGIN, crownFlat.start]) == xBraceFlatLength / 2
+  horizontalDistance([crownFlat.end, ORIGIN]) == xBraceFlatLength / 2
   distance([crownFlat.start, crownFlat.end]) == xBraceFlatLength
-  verticalDistance([crownLeft.end, glueFace.end]) == xBraceFullHeight
-  horizontalDistance([ORIGIN, crownLeft.center]) == xBraceUpperArmLength
-  verticalDistance([ORIGIN, crownLeft.center]) == soundboardBraceGlueZ - xBraceUpperEndHeight - xBraceUpperScallopRadius
-  horizontalDistance([crownRight.center, ORIGIN]) == xBraceLowerArmLength
-  verticalDistance([ORIGIN, crownRight.center]) == soundboardBraceGlueZ - xBraceEndHeight - xBraceLowerScallopRadius
+  verticalDistance([crownFlat.start, glueFace.end]) == xBraceFullHeight
+  radius(upperScallop) == xBraceUpperScallopRadius
+  distance([
+  upperScallop.start,
+  upperScallop.center
+]) == xBraceUpperScallopRadius
+  radius(lowerScallop) == xBraceLowerScallopRadius
+  distance([
+  lowerScallop.start,
+  lowerScallop.center
+]) == xBraceLowerScallopRadius
 }
 
 xBraceRegionBass = region(point = [0in, -0.34in], sketch = xBraceProfile)
 xBraceRegionTreble = region(point = [0in, -0.34in], sketch = xBraceProfile)
+xBraceRegionBassToneBarCutter = region(point = [0in, -0.34in], sketch = xBraceProfile)
 
-// PROTECTED FINAL GEOMETRY:
-// The upper transverse brace and popsicle brace are final.
-// Do not edit upperTransverse* or popsicleBrace* parameters, profiles, regions,
-// trim/intersect logic, appearances, hide/export variables, names, or assembly
-// references unless the user explicitly grants permission.
 upperTransverseBraceCenterY = 2.98in
 upperTransverseBraceWidth = 0.34in
-upperTransverseBraceHalfLength = 5.45in
+upperTransverseBraceHalfLength = 5.75in
 upperTransverseBraceEndHeight = 0.12in
 upperTransverseBraceFullHeight = 0.46in
-upperTransverseBraceFlatLength = 3.0in
-upperTransverseBraceScallopRadius = 23.11485294in
+upperTransverseBraceEndFlatLength = 0.75in
+upperTransverseBraceCrownFlatLength = 2.5in
+upperTransverseBraceScallopRadius = 15.0in
 
 upperTransverseProfile = sketch(on = YZ) {
-  glueFace = line(start = [var -5.45in, var -0.065in], end = [var 5.45in, var -0.065in])
-  rightEnd = line(start = [var 5.45in, var -0.065in], end = [var 5.45in, var -0.185in])
-  rightScallop = arc(start = [var 5.45in, var -0.185in], end = [var 1.5in, var -0.525in], center = [var 5.45in, var -23.29985294in])
-  crownFlat = line(start = [var 1.5in, var -0.525in], end = [var -1.5in, var -0.525in])
-  leftScallop = arc(start = [var -1.5in, var -0.525in], end = [var -5.45in, var -0.185in], center = [var -5.45in, var -23.29985294in])
-  leftEnd = line(start = [var -5.45in, var -0.185in], end = [var -5.45in, var -0.065in])
+  glueFace = line(start = [var -5.75in, var -0.065in], end = [var 5.75in, var -0.065in])
+  rightEnd = line(start = [var 5.75in, var -0.065in], end = [var 5.75in, var -0.185in])
+  rightFlat = line(start = [var 5.75in, var -0.185in], end = [var 5.0in, var -0.185in])
+  rightScallop = arc(start = [var 5.0in, var -0.185in], end = [var 1.25in, var -0.525in], center = [var 4.47in, var -15.18in])
+  crownFlat = line(start = [var 1.25in, var -0.525in], end = [var -1.25in, var -0.525in])
+  leftScallop = arc(start = [var -1.25in, var -0.525in], end = [var -5.0in, var -0.185in], center = [var -4.47in, var -15.18in])
+  leftFlat = line(start = [var -5.0in, var -0.185in], end = [var -5.75in, var -0.185in])
+  leftEnd = line(start = [var -5.75in, var -0.185in], end = [var -5.75in, var -0.065in])
   coincident([glueFace.end, rightEnd.start])
-  coincident([rightEnd.end, rightScallop.start])
+  coincident([rightEnd.end, rightFlat.start])
+  coincident([rightFlat.end, rightScallop.start])
   coincident([rightScallop.end, crownFlat.start])
   coincident([crownFlat.end, leftScallop.start])
-  coincident([leftScallop.end, leftEnd.start])
+  coincident([leftScallop.end, leftFlat.start])
+  coincident([leftFlat.end, leftEnd.start])
   coincident([leftEnd.end, glueFace.start])
   horizontal(glueFace)
   vertical(rightEnd)
+  horizontal(rightFlat)
   horizontal(crownFlat)
+  horizontal(leftFlat)
   vertical(leftEnd)
   horizontalDistance([glueFace.start, ORIGIN]) == upperTransverseBraceHalfLength
   verticalDistance([ORIGIN, glueFace.start]) == soundboardBraceGlueZ
   distance([glueFace.start, glueFace.end]) == upperTransverseBraceHalfLength * 2
   distance([rightEnd.start, rightEnd.end]) == upperTransverseBraceEndHeight
   distance([leftEnd.start, leftEnd.end]) == upperTransverseBraceEndHeight
-  distance([crownFlat.start, crownFlat.end]) == upperTransverseBraceFlatLength
-  verticalDistance([crownFlat.start, glueFace.start]) == upperTransverseBraceFullHeight
-  horizontalDistance([ORIGIN, rightScallop.center]) == upperTransverseBraceHalfLength
-  horizontalDistance([leftScallop.center, ORIGIN]) == upperTransverseBraceHalfLength
-  verticalDistance([ORIGIN, rightScallop.center]) == soundboardBraceGlueZ - upperTransverseBraceEndHeight - upperTransverseBraceScallopRadius
-  verticalDistance([ORIGIN, leftScallop.center]) == soundboardBraceGlueZ - upperTransverseBraceEndHeight - upperTransverseBraceScallopRadius
+  distance([rightFlat.start, rightFlat.end]) == upperTransverseBraceEndFlatLength
+  distance([leftFlat.start, leftFlat.end]) == upperTransverseBraceEndFlatLength
+  horizontalDistance([ORIGIN, crownFlat.start]) == upperTransverseBraceCrownFlatLength / 2
+  horizontalDistance([crownFlat.end, ORIGIN]) == upperTransverseBraceCrownFlatLength / 2
+  distance([crownFlat.start, crownFlat.end]) == upperTransverseBraceCrownFlatLength
+  verticalDistance([crownFlat.start, glueFace.end]) == upperTransverseBraceFullHeight
+  radius(rightScallop) == upperTransverseBraceScallopRadius
+  distance([
+  rightScallop.start,
+  rightScallop.center
+]) == upperTransverseBraceScallopRadius
+  radius(leftScallop) == upperTransverseBraceScallopRadius
+  distance([leftScallop.start, leftScallop.center]) == upperTransverseBraceScallopRadius
 }
 
 upperTransverseRegion = region(point = [0in, -0.28in], sketch = upperTransverseProfile)
 
 popsicleBraceHalfLength = 4.9in
-popsicleBraceEndHeight = 0.125in
-popsicleBraceScallopRise = 0.045in
-popsicleBraceScallopRadius = 266.80027778in
 
 popsicleBraceProfile = sketch(on = YZ) {
   glueFace = line(start = [var -4.9in, var -0.065in], end = [var 4.9in, var -0.065in])
   rightEnd = line(start = [var 4.9in, var -0.065in], end = [var 4.9in, var -0.19in])
-  freeFace = arc(start = [var 4.9in, var -0.19in], end = [var -4.9in, var -0.19in], center = [var 0in, var -266.836in])
+  freeFace = line(start = [var 4.9in, var -0.19in], end = [var -4.9in, var -0.19in])
   leftEnd = line(start = [var -4.9in, var -0.19in], end = [var -4.9in, var -0.065in])
   coincident([glueFace.end, rightEnd.start])
   coincident([rightEnd.end, freeFace.start])
@@ -267,27 +287,27 @@ popsicleBraceProfile = sketch(on = YZ) {
   coincident([leftEnd.end, glueFace.start])
   horizontal(glueFace)
   vertical(rightEnd)
+  horizontal(freeFace)
   vertical(leftEnd)
   horizontalDistance([glueFace.start, ORIGIN]) == popsicleBraceHalfLength
   verticalDistance([ORIGIN, glueFace.start]) == soundboardBraceGlueZ
   distance([glueFace.start, glueFace.end]) == popsicleBraceHalfLength * 2
-  distance([rightEnd.start, rightEnd.end]) == popsicleBraceEndHeight
-  distance([leftEnd.start, leftEnd.end]) == popsicleBraceEndHeight
-  horizontalDistance([ORIGIN, freeFace.center]) == 0in
-  verticalDistance([ORIGIN, freeFace.center]) == soundboardBraceGlueZ - popsicleBraceEndHeight + popsicleBraceScallopRise - popsicleBraceScallopRadius
+  distance([rightEnd.start, rightEnd.end]) == 0.125in
+  distance([leftEnd.start, leftEnd.end]) == 0.125in
 }
 
 popsicleBraceRegion = region(point = [0in, -0.12in], sketch = popsicleBraceProfile)
 
-toneBarUpperHalfLength = 5.35in
+toneBarUpperKerfReach = 5.35in
+toneBarUpperXBraceReach = 5.70in
 toneBarLowerHalfLength = 5.75in
 
 toneBarUpperProfile = sketch(on = YZ) {
-  glueFace = line(start = [var -5.35in, var -0.065in], end = [var 5.35in, var -0.065in])
+  glueFace = line(start = [var -5.70in, var -0.065in], end = [var 5.35in, var -0.065in])
   rightEnd = line(start = [var 5.35in, var -0.065in], end = [var 5.35in, var -0.225in])
   topPeak = line(start = [var 5.35in, var -0.225in], end = [var 0in, var -0.565in])
-  leftPeak = line(start = [var 0in, var -0.565in], end = [var -5.35in, var -0.225in])
-  leftEnd = line(start = [var -5.35in, var -0.225in], end = [var -5.35in, var -0.065in])
+  leftPeak = line(start = [var 0in, var -0.565in], end = [var -5.70in, var -0.225in])
+  leftEnd = line(start = [var -5.70in, var -0.225in], end = [var -5.70in, var -0.065in])
   coincident([glueFace.end, rightEnd.start])
   coincident([rightEnd.end, topPeak.start])
   coincident([topPeak.end, leftPeak.start])
@@ -296,9 +316,9 @@ toneBarUpperProfile = sketch(on = YZ) {
   horizontal(glueFace)
   vertical(rightEnd)
   vertical(leftEnd)
-  horizontalDistance([glueFace.start, ORIGIN]) == toneBarUpperHalfLength
+  horizontalDistance([glueFace.start, ORIGIN]) == toneBarUpperXBraceReach
   verticalDistance([ORIGIN, glueFace.start]) == soundboardBraceGlueZ
-  distance([glueFace.start, glueFace.end]) == toneBarUpperHalfLength * 2
+  distance([glueFace.start, glueFace.end]) == toneBarUpperXBraceReach + toneBarUpperKerfReach
   distance([rightEnd.start, rightEnd.end]) == 0.16in
   distance([leftEnd.start, leftEnd.end]) == 0.16in
   verticalDistance([topPeak.end, glueFace.start]) == 0.50in
@@ -372,7 +392,7 @@ upperTransverseBrace = intersect(
     )
       |> rotate(axis = Z, angle = 90deg, global = true)
       |> translate(y = upperTransverseBraceCenterY, global = true),
-    clone(guitarInnerPlanSolid)
+    clone(guitarLiningInnerPlanSolid)
   ],
   legacyMethod = true,
 )
@@ -394,17 +414,30 @@ popsicleBrace = intersect(
 )
   |> appearance(color = soundboardBraceWoodColor, metalness = 0, roughness = 80)
 
-toneBarUpper = intersect(
-  [
+toneBarUpper = subtract(
+  intersect(
+    [
+      extrude(
+        toneBarUpperRegion,
+        length = 0.34in,
+        symmetric = true,
+        method = NEW,
+      )
+        |> rotate(axis = Z, angle = 110deg, global = true)
+        |> translate(x = -1.99in, y = -8.28in, global = true),
+      clone(guitarInnerPlanSolid)
+    ],
+    legacyMethod = true,
+  ),
+  tools = [
     extrude(
-      toneBarUpperRegion,
-      length = 0.34in,
+      xBraceRegionBassToneBarCutter,
+      length = xBraceWidth,
       symmetric = true,
       method = NEW,
     )
-      |> rotate(axis = Z, angle = 110deg, global = true)
-      |> translate(x = -1.99in, y = -8.28in, global = true),
-    clone(guitarInnerPlanSolid)
+      |> rotate(axis = Z, angle = xBraceHalfAngle, global = true)
+      |> translate(y = xBraceCrossY, global = true)
   ],
   legacyMethod = true,
 )
@@ -668,6 +701,7 @@ hiddenTopSketches = hide([
   xBraceProfile,
   xBraceRegionBass,
   xBraceRegionTreble,
+  xBraceRegionBassToneBarCutter,
   upperTransverseProfile,
   upperTransverseRegion,
   popsicleBraceProfile,

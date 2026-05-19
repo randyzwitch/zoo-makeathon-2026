@@ -1,0 +1,48 @@
+// Temporary top brace identifier
+// Patterns imported hidden bodies visible for review only.
+@settings(defaultLengthUnit = in)
+
+import xBraceBassPlanTrimExport as xBraceBassPlanTrim, xBraceTreblePlanTrimExport as xBraceTreblePlanTrim, toneBarUpperExport as toneBarUpper, toneBarLowerExport as toneBarLower from "guitar_top.kcl"
+import topSideBrace1Export as topSideBrace1, topSideBrace2Export as topSideBrace2, topSideBrace3Export as topSideBrace3, topSideBrace4Export as topSideBrace4 from "guitar_top.kcl"
+import rimTopKerfedLiningExport as rimTopKerfedLining, rimNeckBlockExport as rimNeckBlock, rimTailBlockExport as rimTailBlock from "guitar_rim.kcl"
+
+xBraceBodies = [
+  xBraceBassPlanTrim,
+  xBraceTreblePlanTrim
+]
+secondaryBraceBodies = [
+  toneBarUpper,
+  toneBarLower,
+  topSideBrace1,
+  topSideBrace2,
+  topSideBrace3,
+  topSideBrace4
+]
+referenceBodies = [
+  rimTopKerfedLining,
+  rimNeckBlock,
+  rimTailBlock
+]
+
+topBraceIdentifierView = flatten([
+  patternLinear3d(
+    referenceBodies,
+    instances = 2,
+    distance = 0in,
+    axis = X,
+  ),
+  patternLinear3d(
+    xBraceBodies,
+    instances = 2,
+    distance = 0in,
+    axis = X,
+  ),
+  patternLinear3d(
+    secondaryBraceBodies,
+    instances = 2,
+    distance = 0in,
+    axis = X,
+  )
+])
+
+topBraceIdentifierView
