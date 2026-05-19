@@ -306,7 +306,14 @@ toneBarUpperEndFlatLength = 1.0in
 toneBarUpperCrownFlatLength = 1.80in
 toneBarUpperRightScallopRadius = 15.0in
 toneBarUpperLeftScallopRadius = 18.0in
-toneBarLowerHalfLength = 5.75in
+toneBarLowerKerfReach = 6.20in
+toneBarLowerXBraceReach = 6.55in
+toneBarLowerEndHeight = 0.125in
+toneBarLowerFullHeight = 0.50in
+toneBarLowerEndFlatLength = 1.0in
+toneBarLowerCrownFlatLength = 1.80in
+toneBarLowerRightScallopRadius = 15.0in
+toneBarLowerLeftScallopRadius = 18.0in
 
 toneBarUpperProfile = sketch(on = YZ) {
   glueFace = line(start = [var -5.70in, var -0.065in], end = [var 5.95in, var -0.065in])
@@ -354,28 +361,70 @@ toneBarUpperProfile = sketch(on = YZ) {
 toneBarUpperRegion = region(point = [0in, -0.28in], sketch = toneBarUpperProfile)
 
 toneBarLowerProfile = sketch(on = YZ) {
-  glueFace = line(start = [var -5.75in, var -0.065in], end = [var 5.75in, var -0.065in])
-  rightEnd = line(start = [var 5.75in, var -0.065in], end = [var 5.75in, var -0.225in])
-  topPeak = line(start = [var 5.75in, var -0.225in], end = [var 0in, var -0.565in])
-  leftPeak = line(start = [var 0in, var -0.565in], end = [var -5.75in, var -0.225in])
-  leftEnd = line(start = [var -5.75in, var -0.225in], end = [var -5.75in, var -0.065in])
+  glueFace = line(start = [var -6.55in, var -0.065in], end = [var 6.20in, var -0.065in])
+  rightEnd = line(start = [var 6.20in, var -0.065in], end = [var 6.20in, var -0.190in])
+  rightFlat = line(start = [var 6.20in, var -0.190in], end = [var 5.20in, var -0.190in])
+  rightScallop = arc(start = [var 5.20in, var -0.190in], end = [var 0.90in, var -0.565in], center = [var 4.34in, var -15.16in])
+  crownFlat = line(start = [var 0.90in, var -0.565in], end = [var -0.90in, var -0.565in])
+  leftScallop = arc(start = [var -0.90in, var -0.565in], end = [var -5.55in, var -0.190in], center = [var -4.66in, var -18.17in])
+  leftFlat = line(start = [var -5.55in, var -0.190in], end = [var -6.55in, var -0.190in])
+  leftEnd = line(start = [var -6.55in, var -0.190in], end = [var -6.55in, var -0.065in])
   coincident([glueFace.end, rightEnd.start])
-  coincident([rightEnd.end, topPeak.start])
-  coincident([topPeak.end, leftPeak.start])
-  coincident([leftPeak.end, leftEnd.start])
+  coincident([rightEnd.end, rightFlat.start])
+  coincident([rightFlat.end, rightScallop.start])
+  coincident([rightScallop.end, crownFlat.start])
+  coincident([crownFlat.end, leftScallop.start])
+  coincident([leftScallop.end, leftFlat.start])
+  coincident([leftFlat.end, leftEnd.start])
   coincident([leftEnd.end, glueFace.start])
   horizontal(glueFace)
   vertical(rightEnd)
+  horizontal(rightFlat)
+  horizontal(crownFlat)
+  horizontal(leftFlat)
   vertical(leftEnd)
-  horizontalDistance([glueFace.start, ORIGIN]) == toneBarLowerHalfLength
+  horizontalDistance([glueFace.start, ORIGIN]) == toneBarLowerXBraceReach
   verticalDistance([ORIGIN, glueFace.start]) == soundboardBraceGlueZ
-  distance([glueFace.start, glueFace.end]) == toneBarLowerHalfLength * 2
-  distance([rightEnd.start, rightEnd.end]) == 0.16in
-  distance([leftEnd.start, leftEnd.end]) == 0.16in
-  verticalDistance([topPeak.end, glueFace.start]) == 0.50in
+  distance([glueFace.start, glueFace.end]) == toneBarLowerXBraceReach + toneBarLowerKerfReach
+  distance([rightEnd.start, rightEnd.end]) == toneBarLowerEndHeight
+  distance([leftEnd.start, leftEnd.end]) == toneBarLowerEndHeight
+  distance([rightFlat.start, rightFlat.end]) == toneBarLowerEndFlatLength
+  distance([leftFlat.start, leftFlat.end]) == toneBarLowerEndFlatLength
+  horizontalDistance([ORIGIN, crownFlat.start]) == toneBarLowerCrownFlatLength / 2
+  horizontalDistance([crownFlat.end, ORIGIN]) == toneBarLowerCrownFlatLength / 2
+  distance([crownFlat.start, crownFlat.end]) == toneBarLowerCrownFlatLength
+  verticalDistance([crownFlat.start, glueFace.end]) == toneBarLowerFullHeight
+  radius(rightScallop) == toneBarLowerRightScallopRadius
+  distance([
+  rightScallop.start,
+  rightScallop.center
+]) == toneBarLowerRightScallopRadius
+  radius(leftScallop) == toneBarLowerLeftScallopRadius
+  distance([leftScallop.start, leftScallop.center]) == toneBarLowerLeftScallopRadius
 }
 
 toneBarLowerRegion = region(point = [0in, -0.28in], sketch = toneBarLowerProfile)
+
+toneBarLowerXBraceButtClipPlan = sketch(on = XY) {
+  cutEdge = line(start = [var 16.0687in, var -15.7594in], end = [var -16.2920in, var 7.7520in])
+  farEdge = line(start = [var -16.2920in, var 7.7520in], end = [var -30.9866in, var -12.4734in])
+  tailEdge = line(start = [var -30.9866in, var -12.4734in], end = [var 1.3741in, var -35.9848in])
+  returnEdge = line(start = [var 1.3741in, var -35.9848in], end = [var 16.0687in, var -15.7594in])
+  coincident([cutEdge.end, farEdge.start])
+  coincident([farEdge.end, tailEdge.start])
+  coincident([tailEdge.end, returnEdge.start])
+  coincident([returnEdge.end, cutEdge.start])
+  horizontalDistance([ORIGIN, cutEdge.start]) == 16.0687in
+  verticalDistance([ORIGIN, cutEdge.start]) == -15.7594in
+  horizontalDistance([cutEdge.end, ORIGIN]) == 16.2920in
+  verticalDistance([ORIGIN, cutEdge.end]) == 7.7520in
+  horizontalDistance([farEdge.end, ORIGIN]) == 30.9866in
+  verticalDistance([ORIGIN, farEdge.end]) == -12.4734in
+  horizontalDistance([ORIGIN, tailEdge.end]) == 1.3741in
+  verticalDistance([ORIGIN, tailEdge.end]) == -35.9848in
+}
+
+toneBarLowerXBraceButtClipRegion = region(point = [-3in, -12in], sketch = toneBarLowerXBraceButtClipPlan)
 
 xBraceBassPlanTrim = intersect(
   [
@@ -472,15 +521,26 @@ toneBarUpper = subtract(
 
 toneBarLower = intersect(
   [
+    intersect(
+      [
+        extrude(
+          toneBarLowerRegion,
+          length = 0.34in,
+          symmetric = true,
+          method = NEW,
+        )
+          |> rotate(axis = Z, angle = 110deg, global = true)
+          |> translate(x = -1.03in, y = -9.46in, global = true),
+        clone(guitarLiningInnerPlanSolid)
+      ],
+      legacyMethod = true,
+    ),
     extrude(
-      toneBarLowerRegion,
-      length = 0.34in,
+      toneBarLowerXBraceButtClipRegion,
+      length = 2in,
       symmetric = true,
       method = NEW,
     )
-      |> rotate(axis = Z, angle = 110deg, global = true)
-      |> translate(x = -1.03in, y = -9.46in, global = true),
-    clone(guitarInnerPlanSolid)
   ],
   legacyMethod = true,
 )
@@ -737,6 +797,8 @@ hiddenTopSketches = hide([
   toneBarUpperRegion,
   toneBarLowerProfile,
   toneBarLowerRegion,
+  toneBarLowerXBraceButtClipPlan,
+  toneBarLowerXBraceButtClipRegion,
   topSideBraceProfile,
   topSideBraceRegion1,
   topSideBraceRegion2,
