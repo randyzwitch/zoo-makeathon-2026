@@ -27,7 +27,7 @@ topPrimaryBraceBodies = [
 topSecondaryBraceBodies = [
   toneBarUpper,
   toneBarLower,
-  // topSideBrace1,
+  topSideBrace1,
   // topSideBrace2,
   // topSideBrace3,
   // topSideBrace4
