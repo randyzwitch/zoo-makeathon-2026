@@ -298,30 +298,57 @@ popsicleBraceProfile = sketch(on = YZ) {
 
 popsicleBraceRegion = region(point = [0in, -0.12in], sketch = popsicleBraceProfile)
 
-toneBarUpperKerfReach = 5.35in
+toneBarUpperKerfReach = 5.95in
 toneBarUpperXBraceReach = 5.70in
+toneBarUpperEndHeight = 0.125in
+toneBarUpperFullHeight = 0.50in
+toneBarUpperEndFlatLength = 1.0in
+toneBarUpperCrownFlatLength = 1.80in
+toneBarUpperRightScallopRadius = 15.0in
+toneBarUpperLeftScallopRadius = 18.0in
 toneBarLowerHalfLength = 5.75in
 
 toneBarUpperProfile = sketch(on = YZ) {
-  glueFace = line(start = [var -5.70in, var -0.065in], end = [var 5.35in, var -0.065in])
-  rightEnd = line(start = [var 5.35in, var -0.065in], end = [var 5.35in, var -0.225in])
-  topPeak = line(start = [var 5.35in, var -0.225in], end = [var 0in, var -0.565in])
-  leftPeak = line(start = [var 0in, var -0.565in], end = [var -5.70in, var -0.225in])
-  leftEnd = line(start = [var -5.70in, var -0.225in], end = [var -5.70in, var -0.065in])
+  glueFace = line(start = [var -5.70in, var -0.065in], end = [var 5.95in, var -0.065in])
+  rightEnd = line(start = [var 5.95in, var -0.065in], end = [var 5.95in, var -0.190in])
+  rightFlat = line(start = [var 5.95in, var -0.190in], end = [var 4.95in, var -0.190in])
+  rightScallop = arc(start = [var 4.95in, var -0.190in], end = [var 0.90in, var -0.565in], center = [var 4.30in, var -15.18in])
+  crownFlat = line(start = [var 0.90in, var -0.565in], end = [var -0.90in, var -0.565in])
+  leftScallop = arc(start = [var -0.90in, var -0.565in], end = [var -4.70in, var -0.190in], center = [var -4.56in, var -18.19in])
+  leftFlat = line(start = [var -4.70in, var -0.190in], end = [var -5.70in, var -0.190in])
+  leftEnd = line(start = [var -5.70in, var -0.190in], end = [var -5.70in, var -0.065in])
   coincident([glueFace.end, rightEnd.start])
-  coincident([rightEnd.end, topPeak.start])
-  coincident([topPeak.end, leftPeak.start])
-  coincident([leftPeak.end, leftEnd.start])
+  coincident([rightEnd.end, rightFlat.start])
+  coincident([rightFlat.end, rightScallop.start])
+  coincident([rightScallop.end, crownFlat.start])
+  coincident([crownFlat.end, leftScallop.start])
+  coincident([leftScallop.end, leftFlat.start])
+  coincident([leftFlat.end, leftEnd.start])
   coincident([leftEnd.end, glueFace.start])
   horizontal(glueFace)
   vertical(rightEnd)
+  horizontal(rightFlat)
+  horizontal(crownFlat)
+  horizontal(leftFlat)
   vertical(leftEnd)
   horizontalDistance([glueFace.start, ORIGIN]) == toneBarUpperXBraceReach
   verticalDistance([ORIGIN, glueFace.start]) == soundboardBraceGlueZ
   distance([glueFace.start, glueFace.end]) == toneBarUpperXBraceReach + toneBarUpperKerfReach
-  distance([rightEnd.start, rightEnd.end]) == 0.16in
-  distance([leftEnd.start, leftEnd.end]) == 0.16in
-  verticalDistance([topPeak.end, glueFace.start]) == 0.50in
+  distance([rightEnd.start, rightEnd.end]) == toneBarUpperEndHeight
+  distance([leftEnd.start, leftEnd.end]) == toneBarUpperEndHeight
+  distance([rightFlat.start, rightFlat.end]) == toneBarUpperEndFlatLength
+  distance([leftFlat.start, leftFlat.end]) == toneBarUpperEndFlatLength
+  horizontalDistance([ORIGIN, crownFlat.start]) == toneBarUpperCrownFlatLength / 2
+  horizontalDistance([crownFlat.end, ORIGIN]) == toneBarUpperCrownFlatLength / 2
+  distance([crownFlat.start, crownFlat.end]) == toneBarUpperCrownFlatLength
+  verticalDistance([crownFlat.start, glueFace.end]) == toneBarUpperFullHeight
+  radius(rightScallop) == toneBarUpperRightScallopRadius
+  distance([
+  rightScallop.start,
+  rightScallop.center
+]) == toneBarUpperRightScallopRadius
+  radius(leftScallop) == toneBarUpperLeftScallopRadius
+  distance([leftScallop.start, leftScallop.center]) == toneBarUpperLeftScallopRadius
 }
 
 toneBarUpperRegion = region(point = [0in, -0.28in], sketch = toneBarUpperProfile)
@@ -425,7 +452,7 @@ toneBarUpper = subtract(
       )
         |> rotate(axis = Z, angle = 110deg, global = true)
         |> translate(x = -1.99in, y = -8.28in, global = true),
-      clone(guitarInnerPlanSolid)
+      clone(guitarLiningInnerPlanSolid)
     ],
     legacyMethod = true,
   ),

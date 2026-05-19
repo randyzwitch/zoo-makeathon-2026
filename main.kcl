@@ -15,8 +15,8 @@ import backTransverseBrace1Export as backTransverseBrace1, backTransverseBrace2E
 import bridgeExport as bridge, saddleExport as saddle, bridgePin1Export as bridgePin1, bridgePin2Export as bridgePin2, bridgePin3Export as bridgePin3, bridgePin4Export as bridgePin4, bridgePin5Export as bridgePin5, bridgePin6Export as bridgePin6 from "guitar_bridge.kcl"
 
 topShellBodies = [
-topSoundboard, 
-//topBindingTrimmed
+  topSoundboard,
+  // topBindingTrimmed
 ]
 topPrimaryBraceBodies = [
   xBraceBassPlanTrim,
@@ -82,10 +82,10 @@ guitarAssembly = flatten([
     axis = X,
   ),
   patternLinear3d(
-  topSecondaryBraceBodies,
-  instances = 2,
-  distance = 0in,
-  axis = X,
+    topSecondaryBraceBodies,
+    instances = 2,
+    distance = 0in,
+    axis = X,
   ),
   patternLinear3d(
     topInternalBodies,
