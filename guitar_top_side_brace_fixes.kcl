@@ -52,7 +52,10 @@ topSideBraceLowerProfile = sketch(on = YZ) {
   distance([crownFlat.start, crownFlat.end]) == topSideBraceLowerCrownFlatLength
   verticalDistance([crownFlat.start, glueFace.end]) == topSideBraceLowerFullHeight
   radius(rightScallop) == topSideBraceLowerRightScallopRadius
-  distance([rightScallop.start, rightScallop.center]) == topSideBraceLowerRightScallopRadius
+  distance([
+  rightScallop.start,
+  rightScallop.center
+]) == topSideBraceLowerRightScallopRadius
   radius(leftScallop) == topSideBraceLowerLeftScallopRadius
   distance([leftScallop.start, leftScallop.center]) == topSideBraceLowerLeftScallopRadius
 }
