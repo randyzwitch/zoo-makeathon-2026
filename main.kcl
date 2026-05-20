@@ -3,6 +3,7 @@
 @settings(defaultLengthUnit = in)
 
 import topSoundboardExport as topSoundboard, topBindingTrimmedExport as topBindingTrimmed, xBraceBassPlanTrimExport as xBraceBassPlanTrim, xBraceTreblePlanTrimExport as xBraceTreblePlanTrim from "guitar_top.kcl"
+import rosetteInnerPurfling, rosetteMainInlay, rosetteOuterPurfling, rosetteChannelCutter from "guitar_rosette.kcl"
 import upperTransverseBraceExport as upperTransverseBrace, popsicleBraceExport as popsicleBrace, toneBarUpperExport as toneBarUpper, toneBarLowerExport as toneBarLower from "guitar_top.kcl"
 import topSideBrace1Export as topSideBrace1, topSideBrace2Export as topSideBrace2 from "guitar_top.kcl"
 import bridgePlateExport as bridgePlate, soundholeReinforcementExport as soundholeReinforcement from "guitar_top.kcl"
@@ -15,10 +16,17 @@ import backTransverseBrace1Export as backTransverseBrace1, backTransverseBrace2E
 
 import bridgeExport as bridge, saddleExport as saddle, bridgePin1Export as bridgePin1, bridgePin2Export as bridgePin2, bridgePin3Export as bridgePin3, bridgePin4Export as bridgePin4, bridgePin5Export as bridgePin5, bridgePin6Export as bridgePin6 from "guitar_bridge.kcl"
 
+topSoundboardWithRosetteChannel = subtract(topSoundboard, tools = [clone(rosetteChannelCutter)], legacyMethod = true)
+
 topShellBodies = [
-  topSoundboard,
-  // topBindingTrimmed
+  topSoundboardWithRosetteChannel,
+  topBindingTrimmed
 ]
+topRosetteBodies = flatten([
+  rosetteInnerPurfling,
+  rosetteMainInlay,
+  rosetteOuterPurfling
+])
 topPrimaryBraceBodies = [
   xBraceBassPlanTrim,
   xBraceTreblePlanTrim,
@@ -36,20 +44,17 @@ topSecondaryBraceBodies = [
 topInternalBodies = [bridgePlate, soundholeReinforcement]
 
 rimStructureBodies = [
-  // rimSides,
+  rimSides,
   rimNeckBlock,
   rimTailBlock,
-  // rimSideBlocks
+  rimSideBlocks
 ]
 rimLiningBodies = [
   rimTopKerfedLining,
-  // rimBackKerfedLining
+  rimBackKerfedLining
 ]
 
-backShellBodies = [
-  // backplate,
-  // backBinding
-]
+backShellBodies = [backplate, backBinding]
 backBraceBodies = [
   backCenterGlueSeamBrace,
   backTransverseBrace1,
@@ -72,6 +77,12 @@ bridgeBodies = [
 guitarAssembly = flatten([
   patternLinear3d(
     topShellBodies,
+    instances = 2,
+    distance = 0in,
+    axis = X,
+  ),
+  patternLinear3d(
+    topRosetteBodies,
     instances = 2,
     distance = 0in,
     axis = X,
@@ -106,24 +117,24 @@ guitarAssembly = flatten([
     distance = 0in,
     axis = X,
   ),
-  // patternLinear3d(
-  // backShellBodies,
-  // instances = 2,
-  // distance = 0in,
-  // axis = X,
-  // ),
-  // patternLinear3d(
-  // backBraceBodies,
-  // instances = 2,
-  // distance = 0in,
-  // axis = X,
-  // ),
-  // patternLinear3d(
-  // bridgeBodies,
-  // instances = 2,
-  // distance = 0in,
-  // axis = X,
-  // )
+  patternLinear3d(
+    backShellBodies,
+    instances = 2,
+    distance = 0in,
+    axis = X,
+  ),
+  patternLinear3d(
+    backBraceBodies,
+    instances = 2,
+    distance = 0in,
+    axis = X,
+  ),
+  patternLinear3d(
+    bridgeBodies,
+    instances = 2,
+    distance = 0in,
+    axis = X,
+  )
 ])
 
 guitarAssembly
