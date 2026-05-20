@@ -1,0 +1,147 @@
+@settings(defaultLengthUnit = in)
+
+// Protected final geometry notes.
+// Assistant guardrail for completed acoustic-guitar body components.
+
+// PROTECTED FINAL GEOMETRY:
+// The current acoustic-guitar body is finalized. Do not modify any existing
+// code, dimensions, sketches, regions, lofts, trims, booleans, intersections,
+// cutters, appearances, hide/export variables, names, imports, or assembly
+// references related to the bodies listed below unless the user explicitly
+// grants permission for that exact body or source section.
+//
+// This is not a project-wide read-only lock. New neck geometry may be added in
+// new neck-focused files and assembled with the body. If neck integration appears
+// to require changing any protected body, block, mortise, binding, lining,
+// soundboard, back, bridge, brace, rosette, or outline geometry, stop and ask
+// for explicit permission first.
+//
+// Protected top and soundboard shell pieces:
+// - topSoundboard
+// - topSoundboardExport
+// - topSoundboardWithRosetteChannel
+// - topBindingTrimmed
+// - topBindingTrimmedExport
+//
+// Protected rosette pieces and cutter:
+// - rosetteInnerPurfling
+// - rosetteMainInlay
+// - rosetteOuterPurfling
+// - rosetteChannelCutter
+// - all rosette* purfling, inlay, sector, envelope, channel, color, and export
+//   construction in guitar_rosette.kcl
+//
+// Protected top primary braces:
+// - xBraceBassPlanTrim
+// - xBraceTreblePlanTrim
+// - xBraceBassPlanTrimExport
+// - xBraceTreblePlanTrimExport
+// - upperTransverseBrace
+// - upperTransverseBraceExport
+// - popsicleBrace
+// - popsicleBraceExport
+//
+// Protected top secondary braces:
+// - toneBarUpper
+// - toneBarLower
+// - toneBarUpperExport
+// - toneBarLowerExport
+// - topSideBrace1
+// - topSideBrace2
+// - topSideBrace3
+// - topSideBrace4
+// - topSideBrace1Export
+// - topSideBrace2Export
+// - topSideBrace3Export
+// - topSideBrace4Export
+// - topSideBrace3FixedExport
+// - topSideBrace4FixedExport
+//
+// Protected top internal reinforcement pieces:
+// - bridgePlate
+// - bridgePlateExport
+// - soundholeReinforcement
+// - soundholeReinforcementExport
+//
+// Protected rim, block, lining, and side pieces:
+// - rimSides
+// - rimNeckBlock
+// - rimTailBlock
+// - rimSideBlocks
+// - rimTopKerfedLining
+// - rimBackKerfedLining
+// - rimSidesExport
+// - rimNeckBlockExport
+// - rimTailBlockExport
+// - rimSideBlocksExport
+// - rimTopKerfedLiningExport
+// - rimBackKerfedLiningExport
+//
+// Protected back shell and brace pieces:
+// - backplate
+// - backBinding
+// - backCenterGlueSeamBrace
+// - backTransverseBrace1
+// - backTransverseBrace2
+// - backTransverseBrace3
+// - backTransverseBrace4
+// - backplateExport
+// - backBindingExport
+// - backCenterGlueSeamBraceExport
+// - backTransverseBrace1Export
+// - backTransverseBrace2Export
+// - backTransverseBrace3Export
+// - backTransverseBrace4Export
+//
+// Protected bridge, saddle, and bridge-pin pieces:
+// - bridge
+// - saddle
+// - bridgePin1
+// - bridgePin2
+// - bridgePin3
+// - bridgePin4
+// - bridgePin5
+// - bridgePin6
+// - bridgeExport
+// - saddleExport
+// - bridgePin1Export
+// - bridgePin2Export
+// - bridgePin3Export
+// - bridgePin4Export
+// - bridgePin5Export
+// - bridgePin6Export
+//
+// Protected foundational source geometry because it drives the finalized pieces:
+// - sketchGuitar
+// - sketchGuitarInner
+// - guitarBodyRegion
+// - guitarInnerBodyRegion
+// - guitarOuterPlanSolid
+// - guitarInnerPlanSolid
+// - guitarLiningInnerPlanSolid
+// - bodySideProfile
+// - sideTopProfilePrism
+// - sideMiddleProfilePrism
+// - sideBackProfilePrism
+// - topLiningProfile and topLiningProfilePrism
+// - backLiningProfile and backLiningProfilePrism
+// - topBindingRabbetProfile and related binding profile prisms
+// - backKerfedLiningRemainingProfile and related remaining-lining prism
+// - bridge-pin layout variables in guitar_bridge_pin_holes.kcl
+//
+// Protected source files/sections:
+// - guitar_outline.kcl body outline and inner outline construction
+// - guitar_side_profile.kcl side/top/back profile construction
+// - guitar_kerfed_linings.kcl top/back lining profiles and lining inner plan
+// - guitar_top_binding_rabbet_profiles.kcl binding/rabbet profile construction
+// - guitar_top.kcl all soundboard, top binding, brace, bridge plate, and
+//   soundhole reinforcement construction
+// - guitar_top_side_brace_fixes.kcl lower side-brace compatibility exports
+// - guitar_rosette.kcl all rosette construction
+// - guitar_rim.kcl all rim, block, side block, and kerfed-lining construction
+// - guitar_back.kcl all backplate, back binding, center seam brace, and back
+//   transverse brace construction
+// - guitar_bridge.kcl all bridge, saddle, and bridge-pin construction
+// - guitar_bridge_pin_holes.kcl shared bridge-pin hole layout values
+
+protectedFinalGeometryMarker = 0

@@ -81,59 +81,164 @@ If the user reports that the viewport does not match the expected result, do not
 
 ## Protected final geometry
 
-The following visible/back/top assembly parts are final geometry:
+The current acoustic-guitar body is finalized. These protections are guardrails
+for the completed body, not a project-wide read-only lock.
 
+You may add new neck geometry in new neck-focused files and assemble it with the
+body. However, if neck integration appears to require changing any protected body,
+block, mortise, binding, lining, soundboard, back, bridge, brace, rosette, or
+outline geometry, stop and ask for explicit permission first.
+
+The following current body pieces are final geometry:
+
+### Top / soundboard shell
+
+- `topSoundboard`
+- `topSoundboardExport`
+- `topSoundboardWithRosetteChannel`
+- `topBindingTrimmed`
+- `topBindingTrimmedExport`
+
+### Rosette
+
+- `rosetteInnerPurfling`
+- `rosetteMainInlay`
+- `rosetteOuterPurfling`
+- `rosetteChannelCutter`
+
+### Top primary braces
+
+- `xBraceBassPlanTrim`
+- `xBraceTreblePlanTrim`
+- `xBraceBassPlanTrimExport`
+- `xBraceTreblePlanTrimExport`
+- `upperTransverseBrace`
+- `upperTransverseBraceExport`
+- `popsicleBrace`
+- `popsicleBraceExport`
+
+### Top secondary braces
+
+- `toneBarUpper`
+- `toneBarLower`
+- `toneBarUpperExport`
+- `toneBarLowerExport`
+- `topSideBrace1`
+- `topSideBrace2`
+- `topSideBrace3`
+- `topSideBrace4`
+- `topSideBrace1Export`
+- `topSideBrace2Export`
+- `topSideBrace3Export`
+- `topSideBrace4Export`
+- `topSideBrace3FixedExport`
+- `topSideBrace4FixedExport`
+
+### Top internal reinforcement
+
+- `bridgePlate`
+- `bridgePlateExport`
+- `soundholeReinforcement`
+- `soundholeReinforcementExport`
+
+### Rim, blocks, sides, and linings
+
+- `rimSides`
 - `rimNeckBlock`
 - `rimTailBlock`
+- `rimSideBlocks`
+- `rimTopKerfedLining`
 - `rimBackKerfedLining`
+- `rimSidesExport`
+- `rimNeckBlockExport`
+- `rimTailBlockExport`
+- `rimSideBlocksExport`
+- `rimTopKerfedLiningExport`
+- `rimBackKerfedLiningExport`
+
+### Back shell and back braces
+
+- `backplate`
+- `backBinding`
 - `backCenterGlueSeamBrace`
 - `backTransverseBrace1`
 - `backTransverseBrace2`
 - `backTransverseBrace3`
 - `backTransverseBrace4`
-- `xBraceBassPlanTrim`
-- `xBraceTreblePlanTrim`
-- `upperTransverseBrace`
-- `popsicleBrace`
-- `topSideBrace3`
-- `topSideBrace4`
+- `backplateExport`
+- `backBindingExport`
+- `backCenterGlueSeamBraceExport`
+- `backTransverseBrace1Export`
+- `backTransverseBrace2Export`
+- `backTransverseBrace3Export`
+- `backTransverseBrace4Export`
+
+### Bridge, saddle, and bridge pins
+
+- `bridge`
+- `saddle`
+- `bridgePin1`
+- `bridgePin2`
+- `bridgePin3`
+- `bridgePin4`
+- `bridgePin5`
+- `bridgePin6`
+- `bridgeExport`
+- `saddleExport`
+- `bridgePin1Export`
+- `bridgePin2Export`
+- `bridgePin3Export`
+- `bridgePin4Export`
+- `bridgePin5Export`
+- `bridgePin6Export`
+
+### Foundational geometry that drives finalized pieces
+
+Do not modify foundational geometry that affects the finalized body, including:
+
+- `sketchGuitar`
+- `sketchGuitarInner`
+- `guitarBodyRegion`
+- `guitarInnerBodyRegion`
+- `guitarOuterPlanSolid`
+- `guitarInnerPlanSolid`
+- `guitarLiningInnerPlanSolid`
+- `bodySideProfile`
+- `sideTopProfilePrism`
+- `sideMiddleProfilePrism`
+- `sideBackProfilePrism`
+- `topLiningProfile`
+- `topLiningProfilePrism`
+- `backLiningProfile`
+- `backLiningProfilePrism`
+- `topBindingRabbetProfile`
+- related top/back binding profile prisms
+- `backKerfedLiningRemainingProfile`
+- related remaining-lining prism
+- bridge-pin layout variables in `guitar_bridge_pin_holes.kcl`
 
 Do not modify any code, dimensions, sketches, regions, lofts, trims, booleans,
 intersections, cutters, appearances, hide/export variables, names, imports,
-display-group references, or assembly references related to those parts.
+display-group references, or assembly references related to the protected bodies
+above unless I explicitly grant permission for that exact body or source section.
 
 This includes, but is not limited to:
 
-- neck/tail block construction in `guitar_rim.kcl`, including `neckBlock*`,
-  `tailBlock*`, `rimNeckBlock`, and `rimTailBlock`
-- back kerfing construction in `guitar_rim.kcl`, including
-  `backLiningBlockButtJoint*`, `backLiningPlanBandWithBlockButts`, and
-  `rimBackKerfedLining`
-- back kerfing source profile construction in `guitar_kerfed_linings.kcl`,
-  including `backLiningProfile`, `backLiningProfileRegion`, and
-  `backLiningProfilePrism`
-- back center seam brace construction in `guitar_back.kcl`, including
-  `centerSeamBrace*` and `backCenterGlueSeamBrace*`
-- back transverse brace construction in `guitar_back.kcl`, including the related
-  `b1*`, `b2*`, `b3*`, and `b4*` profile sketches, regions, half-span
-  parameters, bottom-Z parameters, trim-span parameters, and brace construction
-  logic
-- top X-brace construction in `guitar_top.kcl`, including all `xBrace*`
-  parameters, sketches, profiles, scallops, upper/tail arm lengths, post-trim
-  butt-height references, plan trims, intersections, kerfing boundary trims,
-  appearances, exports, and assembly references related to
-  `xBraceBassPlanTrim` and `xBraceTreblePlanTrim`
-- top upper transverse and popsicle brace construction in `guitar_top.kcl`,
-  including all `upperTransverse*` and `popsicleBrace*` parameters, sketches,
-  profiles, scallops/free faces, regions, trims/intersections, appearances,
-  exports, and assembly references related to `upperTransverseBrace` and
-  `popsicleBrace`
-- fixed lower top side brace construction in `guitar_top_side_brace_fixes.kcl`,
-  including all `topSideBraceLower*` parameters, lower brace profile sketches,
-  `topSideBrace3*` and `topSideBrace4*` regions and X-brace butt clip plans,
-  lining-inner-edge intersections with `guitarLiningInnerPlanSolid`, appearances,
-  exports, and assembly references related to `topSideBrace3` and
-  `topSideBrace4`
+- body outline and inner outline construction in `guitar_outline.kcl`
+- side/top/back profile construction in `guitar_side_profile.kcl`
+- top/back lining profiles and lining inner plan construction in
+  `guitar_kerfed_linings.kcl`
+- binding/rabbet profile construction in
+  `guitar_top_binding_rabbet_profiles.kcl`
+- all soundboard, top binding, brace, bridge plate, and soundhole reinforcement
+  construction in `guitar_top.kcl`
+- lower side-brace compatibility exports in `guitar_top_side_brace_fixes.kcl`
+- all rosette construction in `guitar_rosette.kcl`
+- all rim, block, side block, and kerfed-lining construction in `guitar_rim.kcl`
+- all backplate, back binding, center seam brace, and back transverse brace
+  construction in `guitar_back.kcl`
+- all bridge, saddle, and bridge-pin construction in `guitar_bridge.kcl`
+- shared bridge-pin hole layout values in `guitar_bridge_pin_holes.kcl`
 
-If a future request appears to require changing any of these protected parts,
-stop and ask for explicit permission before making the edit.
+If a future request appears to require changing any protected body, stop and ask
+for explicit permission before making the edit.

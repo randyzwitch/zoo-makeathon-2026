@@ -54,7 +54,9 @@ rimLiningBodies = [
   rimBackKerfedLining
 ]
 
-backShellBodies = [backplate, backBinding]
+backShellBodies = [
+backplate, 
+backBinding]
 backBraceBodies = [
   backCenterGlueSeamBrace,
   backTransverseBrace1,

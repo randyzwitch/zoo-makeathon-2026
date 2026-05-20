@@ -10,3 +10,6 @@ fixed_size_grid = false
 [settings.debug]
 show_modeling_machine_state = true
 show_panel = true
+
+[cloud."zoo.dev"]
+project_id = "c676f1db-54f3-449c-bea5-71c930f974ba"
